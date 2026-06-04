@@ -656,9 +656,11 @@
                     <select class="form-input" name="categoryId" id="income-category-select" required></select>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">ربط بشغلانة (اختياري)</label>
-                    <select class="form-input" name="jobId" id="income-job-select">
-                        <option value="">— بدون ربط —</option>
+                    <label class="form-label">الربط بورشة</label>
+                    <select class="form-input" name="workshopId" required>
+                        <option value="all">عام / مشترك</option>
+                        <option value="sila">ورشة سيلا</option>
+                        <option value="fayoum">ورشة الفيوم</option>
                     </select>
                 </div>
                 <button type="submit" class="btn btn-primary">تسجيل الوارد</button>
@@ -694,9 +696,11 @@
                     <select class="form-input" name="categoryId" id="expense-category-select" required></select>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">ربط بشغلانة (اختياري)</label>
-                    <select class="form-input" name="jobId" id="expense-job-select">
-                        <option value="">— مصروف عام —</option>
+                    <label class="form-label">الربط بورشة</label>
+                    <select class="form-input" name="workshopId" required>
+                        <option value="all">عام / مشترك</option>
+                        <option value="sila">ورشة سيلا</option>
+                        <option value="fayoum">ورشة الفيوم</option>
                     </select>
                 </div>
                 <button type="submit" class="btn btn-danger">تسجيل المصروف</button>
@@ -1094,8 +1098,8 @@ function openModal(id) {
     document.getElementById(id).classList.add('active');
     document.body.style.overflow = 'hidden';
     if (id === 'new-request-modal') populateWarehouseMaterialsForJobForm();
-    if (id === 'new-income-modal') { populateCategorySelect('income-category-select','income'); populateJobSelect('income-job-select'); }
-    if (id === 'new-expense-modal') { populateCategorySelect('expense-category-select','expense'); populateJobSelect('expense-job-select'); }
+    if (id === 'new-income-modal') { populateCategorySelect('income-category-select','income'); }
+    if (id === 'new-expense-modal') { populateCategorySelect('expense-category-select','expense'); }
     if (id === 'new-labor-modal') populateCategorySelect('labor-category-select','labor');
     setTodayDates();
 }
@@ -1116,12 +1120,7 @@ function populateCategorySelect(selectId, type) {
     const cats = appData.categories.filter(c => c.type === type);
     sel.innerHTML = cats.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
 }
-function populateJobSelect(selectId) {
-    const sel = document.getElementById(selectId);
-    if (!sel) return;
-    sel.innerHTML = '<option value="">— بدون ربط —</option>' +
-        appData.jobs.map(j => `<option value="${j.id}">${j.name}</option>`).join('');
-}
+
 
 // ==================== DASHBOARD ====================
 function updateDashboard() {
@@ -1805,7 +1804,7 @@ function saveJob(event) {
             amount: advance,
             description: 'دفعة مقدمة - ' + newJob.name,
             categoryId: 'cat_deposit',
-            workshopId: 'all',
+            workshopId: newJob.workshop,
             jobId: newJob.id
         });
     }
@@ -1821,15 +1820,14 @@ function saveJob(event) {
 function saveIncome(event) {
     event.preventDefault();
     const fd = new FormData(event.target);
-    const jobId = fd.get('jobId');
     appData.treasury.income.unshift({
         id: Date.now(),
         date: fd.get('date'),
         amount: parseInt(fd.get('amount')) || 0,
         description: fd.get('description'),
         categoryId: fd.get('categoryId'),
-        workshopId: 'all',
-        jobId: jobId ? parseInt(jobId) : ''
+        workshopId: fd.get('workshopId') || 'all',
+        jobId: ''
     });
     saveData();
     closeModal('new-income-modal');
@@ -1841,15 +1839,14 @@ function saveIncome(event) {
 function saveExpense(event) {
     event.preventDefault();
     const fd = new FormData(event.target);
-    const jobId = fd.get('jobId');
     appData.treasury.expenses.unshift({
         id: Date.now(),
         date: fd.get('date'),
         amount: parseInt(fd.get('amount')) || 0,
         description: fd.get('description'),
         categoryId: fd.get('categoryId'),
-        workshopId: 'all',
-        jobId: jobId ? parseInt(jobId) : ''
+        workshopId: fd.get('workshopId') || 'all',
+        jobId: ''
     });
     saveData();
     closeModal('new-expense-modal');
@@ -1954,7 +1951,7 @@ function savePayment(event) {
         amount: amount,
         description: 'دفعة نقدية - ' + job.name,
         categoryId: 'cat_deposit',
-        workshopId: 'all',
+        workshopId: job.workshop,
         jobId: job.id
     });
     saveData();
