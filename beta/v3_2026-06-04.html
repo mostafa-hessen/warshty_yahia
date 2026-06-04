@@ -492,6 +492,7 @@
             </div>
             <div id="categories-list"></div>
             <button class="btn btn-primary mt-4" onclick="openAddCategoryModal()" style="margin-top:16px">+ إضافة تصنيف جديد</button>
+            <button class="btn btn-danger mt-3" onclick="resetDatabaseConfirm()" style="margin-top:12px;background:rgba(239,68,68,0.15);border:1px solid var(--danger);color:var(--danger)">⚠️ إعادة تهيئة النظام (مسح كل البيانات)</button>
         </div>
     </main>
 
@@ -997,48 +998,24 @@ function initDefaultCategories() {
 }
 
 function initializeSampleData() {
-    appData.warehouse = [
-        {id:1, name:'لوح أبلاكاش كوري 3مم', unit:'لوح', cost:280, quantity:60, minQuantity:10},
-        {id:2, name:'لوح خشب MDF سمك 18مم', unit:'لوح', cost:650, quantity:25, minQuantity:5},
-        {id:3, name:'خشب زان روماني (متر مكعب)', unit:'متر مكعب', cost:18500, quantity:4, minQuantity:1},
-        {id:4, name:'مجرى درج تلسكوب 40سم', unit:'زوج', cost:95, quantity:30, minQuantity:8},
-        {id:5, name:'مفصلة هيدروليك باكم', unit:'قطعة', cost:35, quantity:120, minQuantity:20},
-        {id:6, name:'غراء ألماني علبة 1كجم', unit:'علبة', cost:120, quantity:15, minQuantity:4}
-    ];
-    appData.jobs = [
-        {id:1, name:'غرفة نوم كاملة مودرن خشب زان', workshop:'sila', productType:'غرفة نوم', status:'active', client:'الأستاذ أحمد كمال - 0122345678', agreedAmount:85000, createdAt:'2026-05-10', notes:'سرير 160سم، دولاب 260سم، 2 كومودينو. التشطيب دهان أبيض مطعم بذهبي.',
-         requests:[{id:1,description:'خشب زان روماني (متر مكعب)',cost:18500,quantity:2,fromWarehouse:true,warehouseItemId:3},{id:2,description:'لوح أبلاكاش كوري 3مم',cost:280,quantity:12,fromWarehouse:true,warehouseItemId:1},{id:3,description:'مفصلة هيدروليك باكم',cost:35,quantity:24,fromWarehouse:true,warehouseItemId:5}],
-         laborItems:[{id:1,description:'أجرة نجار - تصنيع غرفة النوم',amount:8000,categoryId:'cat_carpenter'},{id:2,description:'أجرة دهان كامل',amount:4500,categoryId:'cat_painter'}],
-         payments:[{id:1,amount:35000,date:'2026-05-10'},{id:2,amount:20000,date:'2026-05-25'}]},
-        {id:2, name:'مطبخ أرو كلاسيك متكامل', workshop:'fayoum', productType:'مطبخ', status:'active', client:'المهندس مصطفى عثمان - 0100987654', agreedAmount:62000, createdAt:'2026-05-18', notes:'مطبخ حرف L مقاس 4*3 متر. درف خشب أرو طبيعي.',
-         requests:[{id:1,description:'لوح خشب MDF سمك 18مم',cost:650,quantity:8,fromWarehouse:true,warehouseItemId:2},{id:2,description:'مجرى درج تلسكوب 40سم',cost:95,quantity:10,fromWarehouse:true,warehouseItemId:4},{id:3,description:'مقبض مطبخ مخصص ذهبي',cost:60,quantity:20,fromWarehouse:false}],
-         laborItems:[{id:1,description:'أجرة نجار - تركيب مطبخ',amount:6000,categoryId:'cat_carpenter'},{id:2,description:'أجرة تركيب',amount:2500,categoryId:'cat_install'}],
-         payments:[{id:1,amount:30000,date:'2026-05-18'}]},
-        {id:3, name:'صالون كلاسيك مذهب كامل', workshop:'sila', productType:'أنتريه/صالون', status:'completed', client:'الحاج ريان الشريف - 0155667788', agreedAmount:48000, createdAt:'2026-04-01', notes:'صالون خشب زان أحمر كنب كبرى و 4 كراسي فوتيه.',
-         requests:[{id:1,description:'خشب زان روماني (متر مكعب)',cost:18500,quantity:1,fromWarehouse:true,warehouseItemId:3},{id:2,description:'إسفنج وقماش صالون تركي',cost:8500,quantity:1,fromWarehouse:false}],
-         laborItems:[{id:1,description:'أجرة نجار وعامل',amount:7000,categoryId:'cat_carpenter'}],
-         payments:[{id:1,amount:25000,date:'2026-04-01'},{id:2,amount:23000,date:'2026-04-28'}]}
-    ];
-    appData.archivedJobs = [
-        {id:101, name:'مكتب خشب موحّد للشركة الهندسية', workshop:'fayoum', productType:'مكتب', status:'archived', client:'شركة النور للمقاولات', agreedAmount:18000, createdAt:'2026-02-15', notes:'مكتب مدير 180سم مع وحدة أدراج جانبية.',
-         requests:[{id:1,description:'لوح خشب MDF سمك 18مم',cost:650,quantity:3,fromWarehouse:true,warehouseItemId:2}],
-         laborItems:[{id:1,description:'أجرة نجار',amount:2500,categoryId:'cat_carpenter'}],
-         payments:[{id:1,amount:18000,date:'2026-03-01'}]}
-    ];
-    // Sample treasury
-    appData.treasury.income = [
-        {id:Date.now()+1, date:'2026-05-10', amount:35000, description:'عربون غرفة نوم - أحمد كمال', categoryId:'cat_deposit', workshopId:'sila', jobId:1},
-        {id:Date.now()+2, date:'2026-05-18', amount:30000, description:'عربون مطبخ - مصطفى عثمان', categoryId:'cat_deposit', workshopId:'fayoum', jobId:2},
-        {id:Date.now()+3, date:'2026-05-25', amount:20000, description:'دفعة ثانية - غرفة نوم', categoryId:'cat_payment', workshopId:'sila', jobId:1},
-    ];
-    appData.treasury.expenses = [
-        {id:Date.now()+10, date:'2026-05-01', amount:4500, description:'فاتورة كهرباء شهر مايو - سيلا', categoryId:'cat_elec', workshopId:'sila', jobId:''},
-        {id:Date.now()+11, date:'2026-05-01', amount:3200, description:'فاتورة كهرباء شهر مايو - الفيوم', categoryId:'cat_elec', workshopId:'fayoum', jobId:''},
-        {id:Date.now()+12, date:'2026-05-05', amount:8000, description:'إيجار ورشة سيلا شهر مايو', categoryId:'cat_rent', workshopId:'sila', jobId:''},
-        {id:Date.now()+13, date:'2026-05-05', amount:6000, description:'إيجار ورشة الفيوم شهر مايو', categoryId:'cat_rent', workshopId:'fayoum', jobId:''},
-        {id:Date.now()+14, date:'2026-05-10', amount:12000, description:'رواتب العمال - مايو', categoryId:'cat_salary', workshopId:'all', jobId:''},
-    ];
+    appData.warehouse = [];
+    appData.jobs = [];
+    appData.archivedJobs = [];
+    appData.treasury = { income: [], expenses: [] };
     saveData();
+}
+
+function resetDatabaseConfirm() {
+    if (confirm('تنبيه هام جداً!\nهل أنت متأكد من مسح جميع البيانات (الشغلانات، الحسابات، المخزن) وإعادة تهيئة النظام بالكامل للتشغيل؟\nلا يمكن التراجع عن هذا الإجراء.')) {
+        appData.jobs = [];
+        appData.archivedJobs = [];
+        appData.warehouse = [];
+        appData.treasury = { income: [], expenses: [] };
+        initDefaultCategories();
+        saveData();
+        alert('تم مسح جميع البيانات وإعادة تهيئة النظام بنجاح!');
+        location.reload();
+    }
 }
 
 // ==================== HELPERS ====================
