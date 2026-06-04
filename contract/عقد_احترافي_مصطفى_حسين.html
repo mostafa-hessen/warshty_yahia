@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>عقد توريد وتنفيذ نظام - الأستاذ يحي</title>
+    <!-- Google Fonts: Cairo for Professional Arabic Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0369a1; /* Deep Professional Blue */
+            --accent: #0ea5e9;
+            --success: #059669;
+            --dark: #0f172a;
+            --muted: #64748b;
+            --border: #cbd5e1;
+            --bg-page: #f8fafc;
+        }
+
+        /* Essential Print Rules */
+        @media print {
+            body { background: white !important; margin: 0; padding: 0; }
+            .container { box-shadow: none !important; border: none !important; width: 100% !important; margin: 0 !important; max-width: none !important; padding: 15mm !important; }
+            .no-print { display: none !important; }
+            .page-break { page-break-before: always; }
+            .avoid-break { page-break-inside: avoid; break-inside: avoid; }
+            footer { position: fixed; bottom: 0; width: 100%; text-align: center; }
+        }
+
+        @page {
+            size: A4;
+            margin: 0;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--bg-page);
+            color: var(--dark);
+            margin: 0;
+            padding: 40px 0;
+            line-height: 1.5;
+        }
+
+        .container {
+            width: 210mm;
+            min-height: 297mm;
+            margin: auto;
+            background: #fff;
+            padding: 20mm;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.05);
+            position: relative;
+            box-sizing: border-box;
+            border: 1px solid #e2e8f0;
+        }
+
+        /* Professional Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 3px solid var(--primary);
+            padding-bottom: 25px;
+            margin-bottom: 30px;
+        }
+
+        .brand-info h1 {
+            margin: 0;
+            font-size: 32px;
+            font-weight: 900;
+            color: var(--primary);
+            letter-spacing: -1px;
+        }
+
+        .brand-info span {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--muted);
+            margin-top: -5px;
+        }
+
+        .meta-info {
+            text-align: left;
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .doc-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .doc-header h2 {
+            font-size: 26px;
+            font-weight: 800;
+            background: #f1f5f9;
+            padding: 15px 30px;
+            display: inline-block;
+            border-radius: 4px;
+            border: 1px solid var(--border);
+            color: var(--dark);
+            margin: 0;
+        }
+
+        /* Parties Grid */
+        .parties-box {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .party {
+            border: 1.5px solid var(--border);
+            padding: 20px;
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .party label {
+            position: absolute;
+            top: -12px;
+            right: 15px;
+            background: white;
+            padding: 0 10px;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .party h4 {
+            margin: 0 0 5px;
+            font-size: 19px;
+            font-weight: 800;
+        }
+
+        .party p {
+            margin: 0;
+            font-size: 14px;
+            color: var(--muted);
+        }
+
+        /* Structured Articles */
+        .article {
+            margin-bottom: 30px;
+        }
+
+        .article-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+            border-right: 4px solid var(--primary);
+            padding-right: 15px;
+        }
+
+        .article-title span {
+            font-weight: 900;
+            font-size: 18px;
+            color: var(--primary);
+        }
+
+        /* Financial Box */
+        .financial-summary {
+            background: #fdfdfd;
+            border: 2px solid var(--dark);
+            border-radius: 12px;
+            padding: 0;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .fin-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 25px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .fin-row.total {
+            background: var(--dark);
+            color: white;
+            font-weight: 800;
+            font-size: 22px;
+        }
+
+        /* Scope of Work Grid */
+        .scope-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+
+        .scope-item h5 {
+            margin: 0 0 10px;
+            font-size: 16px;
+            color: var(--primary);
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 5px;
+        }
+
+        .scope-item ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .scope-item li {
+            font-size: 13px;
+            margin-bottom: 8px;
+            position: relative;
+            padding-right: 20px;
+        }
+
+        .scope-item li::before {
+            content: '●';
+            color: var(--accent);
+            position: absolute;
+            right: 0;
+            font-size: 12px;
+        }
+
+        /* Grouped Signature Area (Prevents Splitting) */
+        .execution-block {
+            margin-top: 50px;
+            border: 2px solid var(--primary);
+            padding: 30px;
+            border-radius: 15px;
+            background: #fafafa;
+        }
+
+        .signatures-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            text-align: center;
+        }
+
+        .sig-box {
+            border-top: 1px solid #333;
+            padding-top: 15px;
+            margin-top: 60px;
+        }
+
+        .sig-box h5 {
+            margin: 0 0 5px;
+            font-size: 16px;
+        }
+
+        /* Table Styles for Financials */
+        .financial-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        .financial-table th {
+            background: #f1f5f9;
+            color: var(--primary);
+            text-align: right;
+            padding: 10px 15px;
+            border: 1px solid var(--border);
+            font-weight: 800;
+        }
+
+        .financial-table td {
+            padding: 10px 15px;
+            border: 1px solid var(--border);
+        }
+
+        .financial-table tr:nth-child(even) {
+            background: #fafafa;
+        }
+
+        .stamp-area {
+            width: 120px;
+            height: 120px;
+            border: 2px dashed #cbd5e1;
+            border-radius: 50%;
+            margin: 20px auto 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #cbd5e1;
+            font-size: 10px;
+            transform: rotate(-15deg);
+        }
+
+        /* UI Controls */
+        .no-print-btn {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background: var(--primary);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 800;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            z-index: 999;
+            cursor: pointer;
+            border: none;
+            transition: 0.3s;
+        }
+
+        .no-print-btn:hover {
+            transform: scale(1.05);
+            background: var(--dark);
+        }
+
+    </style>
+</head>
+<body>
+
+    <button onclick="window.print()" class="no-print-btn no-print">⎙ طباعة / حفظ PDF احترافي</button>
+
+    <div class="container">
+        <!-- Header Section -->
+        <header>
+            <div class="brand-info">
+                <h1>مصطفى حسين</h1>
+                <span>تطوير البرمجيات والنظم الذكية</span>
+            </div>
+            <div class="meta-info">
+                <div>تاريخ العقد: 4 يونيو 2026</div>
+                <div>رقم المرجع: MH-ERP-01/26</div>
+            </div>
+        </header>
+
+        <div class="doc-header">
+            <h2>عقـــد تنفيـــذ تطبيق إدارة الورشة (الباقة الاحترافية)</h2>
+        </div>
+
+        <!-- 1. The Parties -->
+        <div class="parties-box">
+            <div class="party">
+                <label>الطرف الأول (المطور):</label>
+                <h4>م / مصطفى حسين</h4>
+                <p>مهندس حلول رقمية</p>
+            </div>
+            <div class="party">
+                <label>الطرف الثاني (العميل):</label>
+                <h4>الأستاذ / يحي</h4>
+                <p>صاحب مصنع النجارة والأثاث</p>
+            </div>
+        </div>
+
+        <!-- Article 1: Object of Contract -->
+        <div class="article">
+            <div class="article-title">
+                <span>المادة الأولى: موضوع الاتفاق</span>
+            </div>
+            <p style="font-size: 15px; text-align: justify;">
+                يلتزم الطرف الأول بتصميم وتطوير نظام إلكتروني متكامل (تطبيق ويب/موبايل ذكي) مخصص لإدارة مصنع النجارة والأثاث التابع للطرف الثاني، يركز بشكل أساسي على إدارة الورش المتعددة، ومتابعة الشغلانات (المشاريع)، وحساب التكاليف والأرباح بشكل دقيق، وإدارة الخزنة والماليات العامة والتشغيلية، مما يحقق الأتمتة الكاملة لإجراءات العمل والمتابعة المالية بدون الحاجة لنظام مخازن معقد.
+            </p>
+        </div>
+
+        <!-- Article 2: Scope of Work -->
+        <div class="article">
+            <div class="article-title">
+                <span>المادة الثانية: المواصفات الفنية ونطاق العمل التفصيلي (Scope of Work)</span>
+            </div>
+            <p style="font-size: 13px; margin-bottom: 20px; color: var(--muted);">يلتزم المطور بتنفيذ الوحدات البرمجية التالية بالمواصفات الموضحة أدناه:</p>
+            
+            <style>
+                .detailed-scope {
+                    display: grid;
+                    grid-template-columns: repeat(3, 1fr);
+                    gap: 15px;
+                }
+                .scope-card {
+                    border: 1px solid #f1f5f9;
+                    background: #fcfcfc;
+                    padding: 12px;
+                    border-radius: 6px;
+                }
+                .scope-card h6 {
+                    margin: 0 0 8px;
+                    font-size: 14px;
+                    color: var(--primary);
+                    display: flex;
+                    align-items: center;
+                    gap: 5px;
+                    border-bottom: 1px solid #eee;
+                    padding-bottom: 5px;
+                }
+                .scope-card ul {
+                    padding: 0;
+                    margin: 0;
+                    list-style: none;
+                }
+                .scope-card li {
+                    font-size: 11px;
+                    margin-bottom: 5px;
+                    color: #475569;
+                    position: relative;
+                    padding-right: 12px;
+                }
+                .scope-card li::before {
+                    content: '•';
+                    position: absolute;
+                    right: 0;
+                    color: var(--accent);
+                }
+                @media print {
+                    .detailed-scope { grid-template-columns: repeat(2, 1fr); }
+                }
+            </style>
+
+            <div class="detailed-scope">
+                <div class="scope-card">
+                    <h6>🗂️ إدارة الشغلانات التفصيلية</h6>
+                    <ul>
+                        <li>إنشاء شغلانة جديدة وتحديد الورشة المسؤولة (سيلا / الفيوم).</li>
+                        <li>تسجيل بيانات العميل، تاريخ البدء، ووصف العمل المطلوب.</li>
+                        <li>تسجيل القيمة الإجمالية للشغلانة وتحديث المدفوعات (الواصل).</li>
+                        <li>حساب المتبقي تلقائياً على العميل وتنبيه الإدارة به.</li>
+                        <li>أرشفة الشغلانات المكتملة لسهولة الرجوع إليها وحفظ تاريخها المالي.</li>
+                    </ul>
+                </div>
+                <div class="scope-card">
+                    <h6>📈 حساب التكاليف وصافي أرباح الشغلانة</h6>
+                    <ul>
+                        <li>تسجيل تكلفة الخامات والمواد الخارجية لكل شغلانة على حدة.</li>
+                        <li>تسجيل مصنعية العمال والفنيين الخاصة بكل شغلانة.</li>
+                        <li>تسجيل أي مصاريف نثرية أو طارئة مرتبطة بالشغلانة.</li>
+                        <li>احتساب تلقائي لصافي ربح الشغلانة الفعلي: (الإجمالي - الخامات - المصنعية - المصاريف).</li>
+                    </ul>
+                </div>
+                <div class="scope-card">
+                    <h6>💰 الخزنة والمالية الموحدة</h6>
+                    <ul>
+                        <li>تسجيل حركات الواردات (دفعات العملاء، إيرادات أخرى) وتحديث الخزنة.</li>
+                        <li>تسجيل حركات المصروفات (أجور، إيجارات، مصاريف تشغيلية) مصنفة.</li>
+                        <li>عرض فوري ولحظي لرصيد الخزنة الحالي في أي وقت.</li>
+                        <li>ربط مباشر وتلقائي بين ماليات الشغلانات وحركة الخزنة.</li>
+                    </ul>
+                </div>
+                <div class="scope-card">
+                    <h6>🏭 إدارة الورش المتعددة</h6>
+                    <ul>
+                        <li>دعم كامل لورشتين منفصلتين (سيلا والفيوم).</li>
+                        <li>فلترة البيانات والتقارير المالية والتشغيلية حسب الورشة.</li>
+                        <li>تقييم أداء كل ورشة بشكل مستقل لتسهيل اتخاذ القرارات.</li>
+                    </ul>
+                </div>
+                <div class="scope-card">
+                    <h6>📊 لوحة التحكم والتقارير</h6>
+                    <ul>
+                        <li>واجهة رسومية تلخص الأداء المالي العام (إجمالي الإيرادات، المصروفات، الأرباح).</li>
+                        <li>تقارير تفصيلية للأرباح والخسائر خلال فترة زمنية محددة.</li>
+                        <li>تقارير حالة الشغلانات ونسب الإنجاز.</li>
+                    </ul>
+                </div>
+                <div class="scope-card">
+                    <h6>📱 التقارير والتواصل والنسخ</h6>
+                    <ul>
+                        <li>إمكانية إرسال تقرير فوري ومنظم لبيانات الشغلانة والحسابات للعميل عبر WhatsApp.</li>
+                        <li>تطبيق سريع ومتوافق مع الموبايل لسهولة الاستخدام الميداني.</li>
+                        <li>نسخ احتياطي تلقائي وآمن لقاعدة البيانات على Google Drive لحماية البيانات من الفقد.</li>
+                    </ul>
+                </div>
+                <div class="scope-card">
+                    <h6>🎁 هدية للأستاذ يحي</h6>
+                    <ul>
+                        <li>إضافة إمكانية التحكم في إدارة أصناف الوارد والمصروف، يعني تقدر تضيف براحتك فئات جديدة (مثال: مصروف كهرباء، فاتورة مياه، نقل، الخ) عشان ترتب حساباتك.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Article 3: Financials -->
+        <div class="article">
+            <div class="article-title">
+                <span>المادة الثالثة: القيمة المالية وطريقة السداد</span>
+            </div>
+            <p style="font-size: 15px; text-align: justify;">
+                اتفق الطرفان على أن القيمة الإجمالية لتنفيذ النظام البرمجي المتفق عليه هي <b>7,500 ج.م</b> (سبعة آلاف وخمسمائة جنيه مصري لا غير)، ويتم سدادها وفقاً للجدول التالي:
+            </p>
+            
+            <div class="financial-summary">
+                <div class="fin-row">
+                    <span>إجمالي قيمة التعاقد (الباقة الاحترافية):</span>
+                    <span>7,500 ج.م</span>
+                </div>
+                <div class="fin-row total">
+                    <span>الصافي المطلوب سداده:</span>
+                    <span>7,500 ج.م</span>
+                </div>
+            </div>
+            
+            <table class="financial-table">
+                <thead>
+                    <tr>
+                        <th>الدفعة المالية</th>
+                        <th>القيمة (ج.م)</th>
+                        <th>موعد الاستحقاق</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>مقدم التعاقد (الدفعة الأولى)</td>
+                        <td>4,000 ج.م</td>
+                        <td>عند توقيع هذا العقد والبدء في أعمال التحليل والبرمجة</td>
+                    </tr>
+                    <tr>
+                        <td>الدفعة النهائية (عند التسليم)</td>
+                        <td>3,500 ج.م</td>
+                        <td>عند تسليم النظام كاملاً وتدريب الطرف الثاني وفريقه عليه</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Article 4: مدة التنفيذ والالتزامات -->
+        <div class="article avoid-break">
+            <div class="article-title">
+                <span>المادة الرابعة: مدة التنفيذ والالتزامات القانونية</span>
+            </div>
+            
+            <style>
+                .terms-container {
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    gap: 15px;
+                    margin-top: 15px;
+                }
+                .term-card {
+                    padding: 15px;
+                    border: 1px solid #e2e8f0;
+                    border-radius: 8px;
+                    font-size: 13px;
+                }
+                .term-card strong {
+                    display: block;
+                    color: var(--primary);
+                    margin-bottom: 5px;
+                    font-weight: 800;
+                }
+                .term-warning {
+                    border-color: #fca5a5;
+                    background-color: #fef2f2;
+                }
+                .term-warning strong {
+                    color: #dc2626; /* Warning Red */
+                }
+            </style>
+
+            <div class="terms-container">
+                <div class="term-card">
+                    <strong>⏱️ مدة التنفيذ المتوقعة</strong>
+                     10 إلى 15 يوم بعد يومين من النسخة التجريبية
+                </div>
+                <div class="term-card">
+                    <strong>🛡️ ضمان جودة الأداء</strong>
+                    يتم تخصيص الوقت الكافي لضمان (جودة التنفيذ - الاختبار الشامل للنظام - تقليل نسبة الأخطاء البرمجية).
+                </div>
+                <div class="term-card">
+                    <strong>🖥️ حقوق الملكية الفكرية</strong>
+                    الكود البرمجي ملك للمطور، وللعميل حق الاستخدام الشخصي المفتوح على أجهزته.
+                </div>
+                <div class="term-card">
+                    <strong>🎓 الدعم الفني والتدريب</strong>
+                    يشمل العقد تدريب العميل وتوفير فيديوهات شرح، مع <b>دعم تقني مجاني لمدة شهر</b> يشمل (حل كافة المشاكل التقنية المتعلقة بتشغيل البرنامج).
+                </div>
+                <div class="term-card">
+                    <strong>🎨 تعديلات التصميم</strong>
+                    يحق للعميل طلب <b>تعديلين فقط</b> على تصميم واجهات النظام أثناء التنفيذ، وما زاد عن ذلك يتم احتسابه بتكلفة إضافية.
+                </div>
+                <div class="term-card term-warning">
+                    <strong>⚠️ الإضافات البرمجية</strong>
+                    أي تطوير أو إضافة لميزات جديدة خارج نطاق (المادة الثانية) يتم تسعيرها بشكل منفصل حسب حجم العمل.
+                </div>
+                <div class="term-card">
+                    <strong>🔌 بيئة التشغيل والتثبيت</strong>
+                    النظام يعمل بنظام **أوفلاين (Offline)** لضمان الاستقرار، ويتم تثبيته وترخيصه للعمل على <b>جهاز واحد فقط</b> للطرف الثاني.
+                </div>
+                <div class="term-card">
+                    <strong>🏗️ جودة البنية التحتية</strong>
+                    يلتزم المطور ببناء النظام كقاعدة قابلة للتطوير المستقبلي (Scalable Infrastructure)، مما يسمح بإضافة ميزات أو فروع جديدة لاحقاً.
+                </div>
+                <div class="term-card term-warning" style="grid-column: span 2;">
+                    <strong>❌ المرتجعات والسياسة القانونية</strong>
+                    حال طلب الإلغاء بعد مرور <b>24 ساعة</b> من الدفعة الأولى، لا يتم استرداد المقدم مقابل الجهد المبذول في التصميم والتحليل الفني.
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Article 5: Execution Block (Signatures - GROUPED) -->
+        <div class="avoid-break execution-block">
+            <h4 style="text-align: center; margin: 0 0 20px; color: var(--primary); font-weight: 900;">الإقرار والموافقة</h4>
+            <p style="font-size: 12px; text-align: center; margin-bottom: 30px;">
+                يقر الطرفان بموافقتهم التامة على كافة البنود الموضحة أعلاه، ويُعد توقيع الطرف الثاني واستلام الطرف الأول للمقدم بمثابة تفعيل رسمي لهذا العقد.
+            </p>
+            <style>
+                .signatures-grid-v2 {
+                    display: grid;
+                    grid-template-columns: 1fr 1fr 1fr;
+                    gap: 30px;
+                    text-align: center;
+                }
+            </style>
+            <div class="signatures-grid-v2">
+                <div>
+                    <strong>الطرف الأول (المطور)</strong>
+                    <div class="sig-box">
+                        <h5>م / مصطفى حسين</h5>
+                        <div style="font-size: 11px; color: var(--muted);">توقيع رقمي معتمد</div>
+                    </div>
+                </div>
+                <div>
+                    <strong>عن الطرف الثاني (العميل)</strong>
+                    <div class="sig-box">
+                        <h5>الأستاذ / يحيى</h5>
+                        <div class="stamp-area">ختم المؤسسة</div>
+                    </div>
+                </div>
+                <div>
+                    <strong>الشاهد على العقد</strong>
+                    <div class="sig-box">
+                        <h5>الأستاذ / أحمد عاشور</h5>
+                        <div style="font-size: 11px; color: var(--muted);">توقيع الشاهد</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer style="text-align: center; margin-top: 40px; font-size: 10px; color: var(--muted); border-top: 1px solid #f1f5f9; padding-top: 15px;">
+            هذا العقد صادر عن المكتب الهندسي للمهندس مصطفى حسين - كافة الحقوق محفوظة 2026 ©
+        </footer>
+    </div>
+
+</body>
+</html>

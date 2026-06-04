@@ -1,0 +1,2171 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>نظام إدارة ورش نجارة سيلا والفيوم والمخزن</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0f1a;
+            --bg-secondary: #111827;
+            --bg-card: #1a2235;
+            --bg-card-hover: #222d42;
+            --accent: #00d4aa;
+            --accent-glow: rgba(0, 212, 170, 0.3);
+            --text-primary: #f0f4f8;
+            --text-secondary: #8892a4;
+            --text-muted: #5a6478;
+            --border: #2a3548;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --info: #3b82f6;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Tajawal', sans-serif; background: var(--bg-primary); color: var(--text-primary); min-height: 100vh; overflow-x: hidden; }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: var(--bg-secondary); }
+        ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 4px; }
+        .app-container { max-width: 430px; margin: 0 auto; min-height: 100vh; position: relative; background: var(--bg-primary); overflow: hidden; display: flex; flex-direction: column; }
+        .bg-effects { position: fixed; top: 0; left: 0; right: 0; bottom: 0; pointer-events: none; z-index: 0; }
+        .bg-blob { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.3; animation: float 20s ease-in-out infinite; }
+        .bg-blob-1 { width: 300px; height: 300px; background: linear-gradient(135deg, #00d4aa, #0066ff); top: -100px; right: -100px; }
+        .bg-blob-2 { width: 200px; height: 200px; background: linear-gradient(135deg, #ff9f43, #ff5252); bottom: 200px; left: -80px; animation-delay: -10s; }
+        @keyframes float { 0%,100%{transform:translate(0,0) scale(1)} 33%{transform:translate(30px,-30px) scale(1.1)} 66%{transform:translate(-20px,20px) scale(0.9)} }
+        .app-header { position: sticky; top: 0; z-index: 100; padding: 16px 20px; background: linear-gradient(180deg, var(--bg-primary) 0%, transparent 100%); backdrop-filter: blur(20px); }
+        .header-content { display: flex; align-items: center; justify-content: space-between; }
+        .logo { display: flex; align-items: center; gap: 10px; }
+        .logo-icon { width: 40px; height: 40px; background: linear-gradient(135deg, #a0522d, var(--accent)); border-radius: 12px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 20px rgba(160,82,45,0.4); }
+        .logo-text { font-size: 18px; font-weight: 800; background: linear-gradient(135deg, var(--text-primary), var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .header-actions { display: flex; gap: 10px; }
+        .icon-btn { width: 40px; height: 40px; border-radius: 12px; background: var(--bg-card); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s ease; color: var(--text-secondary); }
+        .icon-btn:hover { background: var(--bg-card-hover); color: var(--accent); border-color: var(--accent); }
+        .main-content { padding: 0 20px 120px; position: relative; z-index: 1; flex-grow: 1; }
+        .view { display: none; animation: fadeIn 0.4s ease; }
+        .view.active { display: block; }
+        @keyframes fadeIn { from{opacity:0;transform:translateY(15px)} to{opacity:1;transform:translateY(0)} }
+        .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 24px; }
+        .stats-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px; }
+        .stat-card { background: var(--bg-card); border-radius: 16px; padding: 16px; border: 1px solid var(--border); position: relative; overflow: hidden; transition: all 0.3s ease; }
+        .stat-card:hover { transform: translateY(-4px); border-color: var(--accent); box-shadow: 0 8px 30px rgba(0,212,170,0.1); }
+        .stat-card::before { content:''; position:absolute; top:0; right:0; width:60px; height:60px; border-radius:50%; opacity:0.1; }
+        .stat-card.accent::before{background:var(--accent)} .stat-card.warning::before{background:var(--warning)} .stat-card.success::before{background:var(--success)} .stat-card.info::before{background:var(--info)} .stat-card.danger::before{background:var(--danger)} .stat-card.purple::before{background:#8b5cf6}
+        .stat-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; }
+        .stat-card.accent .stat-icon{background:rgba(0,212,170,0.2);color:var(--accent)} .stat-card.warning .stat-icon{background:rgba(245,158,11,0.2);color:var(--warning)} .stat-card.success .stat-icon{background:rgba(16,185,129,0.2);color:var(--success)} .stat-card.info .stat-icon{background:rgba(59,130,246,0.2);color:var(--info)} .stat-card.danger .stat-icon{background:rgba(239,68,68,0.2);color:var(--danger)} .stat-card.purple .stat-icon{background:rgba(139,92,246,0.2);color:#8b5cf6}
+        .stat-value { font-size: 18px; font-weight: 800; margin-bottom: 4px; }
+        .stat-label { font-size: 11px; color: var(--text-secondary); }
+        .section-title { font-size: 16px; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; }
+        .section-title a { font-size: 13px; color: var(--accent); text-decoration: none; font-weight: 500; }
+        .chart-container { background: var(--bg-card); border-radius: 16px; padding: 20px; border: 1px solid var(--border); margin-bottom: 24px; }
+        .chart-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+        .chart-title { font-size: 14px; font-weight: 600; }
+        .chart-period { font-size: 12px; color: var(--text-secondary); background: var(--bg-secondary); padding: 4px 12px; border-radius: 20px; }
+        .bar-chart { display: flex; align-items: flex-end; justify-content: space-between; height: 120px; gap: 8px; }
+        .bar-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+        .bar { width: 100%; border-radius: 6px 6px 0 0; background: linear-gradient(180deg, var(--accent), rgba(0,212,170,0.3)); transition: all 0.5s ease; position: relative; overflow: hidden; }
+        .bar.expense { background: linear-gradient(180deg, var(--danger), rgba(239,68,68,0.3)); }
+        .bar::after { content:''; position:absolute; top:0; left:0; right:0; height:50%; background:linear-gradient(180deg,rgba(255,255,255,0.2),transparent); }
+        .bar-label { font-size: 9px; color: var(--text-secondary); }
+        .bar-value { font-size: 9px; color: var(--text-primary); font-weight: 600; }
+        .job-list { display: flex; flex-direction: column; gap: 12px; }
+        .job-card { background: var(--bg-card); border-radius: 16px; padding: 16px; border: 1px solid var(--border); cursor: pointer; transition: all 0.3s ease; }
+        .job-card:hover { transform: translateX(-4px); border-color: var(--accent); }
+        .job-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 12px; }
+        .job-title { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+        .job-client { font-size: 12px; color: var(--text-secondary); }
+        .job-status { font-size: 10px; padding: 4px 10px; border-radius: 20px; font-weight: 600; }
+        .job-status.active{background:rgba(0,212,170,0.2);color:var(--accent)} .job-status.pending{background:rgba(245,158,11,0.2);color:var(--warning)} .job-status.completed{background:rgba(16,185,129,0.2);color:var(--success)}
+        .job-footer { display: flex; align-items: center; justify-content: space-between; }
+        .job-amount { font-size: 16px; font-weight: 800; color: var(--accent); }
+        .job-date { font-size: 11px; color: var(--text-muted); }
+        .workshop-toggle { display: flex; background: var(--bg-card); border-radius: 12px; padding: 4px; border: 1px solid var(--border); margin-bottom: 20px; gap: 4px; }
+        .workshop-btn { flex: 1; padding: 10px; text-align: center; font-size: 12px; font-weight: 700; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; color: var(--text-secondary); }
+        .workshop-btn.active { background: var(--accent); color: var(--bg-primary); box-shadow: 0 4px 15px rgba(0,212,170,0.2); }
+        .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 430px; background: rgba(17,24,39,0.95); backdrop-filter: blur(20px); border-top: 1px solid var(--border); padding: 8px 4px; padding-bottom: calc(8px + env(safe-area-inset-bottom)); z-index: 200; }
+        .nav-items { display: flex; justify-content: space-around; align-items: center; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 8px 10px; border-radius: 12px; cursor: pointer; transition: all 0.3s ease; color: var(--text-muted); }
+        .nav-item.active { color: var(--accent); background: rgba(0,212,170,0.1); }
+        .nav-item:hover { color: var(--text-primary); }
+        .nav-icon { width: 22px; height: 22px; }
+        .nav-label { font-size: 9px; font-weight: 600; }
+        .fab { position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%); width: 56px; height: 56px; border-radius: 16px; background: linear-gradient(135deg, var(--accent), #00b894); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 30px var(--accent-glow); transition: all 0.3s ease; z-index: 150; }
+        .fab:hover { transform: translateX(-50%) scale(1.1); box-shadow: 0 12px 40px var(--accent-glow); }
+        .fab svg { width: 24px; height: 24px; color: var(--bg-primary); }
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 300; display: none; align-items: flex-end; justify-content: center; backdrop-filter: blur(4px); }
+        .modal-overlay.active { display: flex; }
+        .modal { background: var(--bg-secondary); border-radius: 24px 24px 0 0; padding: 24px; width: 100%; max-width: 430px; max-height: 92vh; overflow-y: auto; border: 1px solid var(--border); border-bottom: none; }
+        .modal-handle { width: 40px; height: 4px; background: var(--border); border-radius: 2px; margin: 0 auto 20px; }
+        .modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
+        .modal-title { font-size: 20px; font-weight: 800; }
+        .modal-close { width: 32px; height: 32px; border-radius: 50%; background: var(--bg-card); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text-secondary); transition: all 0.3s ease; }
+        .modal-close:hover { background: var(--danger); color: white; }
+        .form-group { margin-bottom: 20px; }
+        .form-label { display: block; font-size: 13px; font-weight: 600; color: var(--text-secondary); margin-bottom: 8px; }
+        .form-input { width: 100%; padding: 14px 16px; border-radius: 12px; background: var(--bg-card); border: 1px solid var(--border); color: var(--text-primary); font-size: 15px; font-family: inherit; transition: all 0.3s ease; }
+        .form-input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
+        .form-input::placeholder { color: var(--text-muted); }
+        select.form-input { cursor: pointer; }
+        textarea.form-input { min-height: 80px; resize: vertical; }
+        .form-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+        .btn { width: 100%; padding: 16px; border-radius: 12px; border: none; font-size: 15px; font-weight: 700; font-family: inherit; cursor: pointer; transition: all 0.3s ease; text-align: center; display: block; }
+        .btn-primary { background: linear-gradient(135deg, var(--accent), #00b894); color: var(--bg-primary); }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px var(--accent-glow); }
+        .btn-secondary { background: var(--bg-card); color: var(--text-primary); border: 1px solid var(--border); }
+        .btn-secondary:hover { background: var(--bg-card-hover); border-color: var(--accent); }
+        .btn-danger { background: rgba(239,68,68,0.2); color: var(--danger); border: 1px solid rgba(239,68,68,0.4); }
+        .btn-danger:hover { background: var(--danger); color: white; }
+        .btn-warning { background: rgba(245,158,11,0.2); color: var(--warning); border: 1px solid rgba(245,158,11,0.4); }
+        .btn-warning:hover { background: var(--warning); color: #000; }
+        .detail-header { margin-bottom: 24px; }
+        .detail-title { font-size: 24px; font-weight: 800; margin-bottom: 8px; }
+        .detail-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; font-size: 13px; color: var(--text-secondary); }
+        .badge-workshop { padding: 2px 8px; border-radius: 20px; font-weight: 700; font-size: 11px; }
+        .badge-sila{background:rgba(0,212,170,0.2);color:var(--accent)} .badge-fayoum{background:rgba(59,130,246,0.2);color:var(--info)}
+        .detail-section { background: var(--bg-card); border-radius: 16px; padding: 20px; margin-bottom: 16px; border: 1px solid var(--border); }
+        .detail-section-title { font-size: 14px; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+        .detail-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border); }
+        .detail-row:last-child { border-bottom: none; }
+        .detail-label { font-size: 13px; color: var(--text-secondary); }
+        .detail-value { font-size: 14px; font-weight: 600; }
+        .material-card { background: var(--bg-card); border-radius: 16px; padding: 16px; border: 1px solid var(--border); margin-bottom: 12px; position: relative; overflow: hidden; transition: all 0.3s ease; }
+        .material-card:hover { border-color: var(--accent); }
+        .material-card.low-stock{border-color:var(--warning);box-shadow:inset 0 0 10px rgba(245,158,11,0.1)}
+        .material-card.out-of-stock{border-color:var(--danger);box-shadow:inset 0 0 10px rgba(239,68,68,0.1)}
+        .material-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+        .material-name { font-size: 15px; font-weight: 700; }
+        .material-badge { font-size: 11px; padding: 2px 8px; border-radius: 12px; font-weight: 700; }
+        .badge-instock{background:rgba(16,185,129,0.2);color:var(--success)} .badge-low{background:rgba(245,158,11,0.2);color:var(--warning)} .badge-out{background:rgba(239,68,68,0.2);color:var(--danger)}
+        .material-progress-bg { height: 6px; background: var(--bg-secondary); border-radius: 3px; margin: 12px 0; overflow: hidden; }
+        .material-progress-bar { height: 100%; background: linear-gradient(90deg, var(--accent), #00b894); border-radius: 3px; transition: width 0.5s ease; }
+        .material-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+        .material-stat { text-align: center; background: var(--bg-secondary); border-radius: 8px; padding: 6px; }
+        .material-stat-value { font-size: 13px; font-weight: 700; color: var(--text-primary); }
+        .material-stat-label { font-size: 9px; color: var(--text-muted); }
+        .tabs { display: flex; gap: 8px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 4px; }
+        .tab { padding: 10px 20px; border-radius: 12px; background: var(--bg-card); border: 1px solid var(--border); font-size: 13px; font-weight: 600; color: var(--text-secondary); cursor: pointer; white-space: nowrap; transition: all 0.3s ease; }
+        .tab.active { background: var(--accent); color: var(--bg-primary); border-color: var(--accent); }
+        .request-item { background: var(--bg-secondary); border-radius: 12px; padding: 14px; margin-bottom: 10px; border: 1px solid var(--border); }
+        .request-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+        .request-desc { font-size: 14px; font-weight: 600; }
+        .request-details { display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: var(--text-secondary); }
+        .request-total { color: var(--accent); font-weight: 700; font-size: 13px; }
+        .request-del-btn { color: var(--danger); cursor: pointer; padding: 2px 6px; border-radius: 4px; transition: background 0.3s; }
+        .request-del-btn:hover { background: rgba(239,68,68,0.1); }
+        .payment-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border); }
+        .payment-item:last-child { border-bottom: none; }
+        .payment-amount { font-size: 16px; font-weight: 700; color: var(--success); }
+        .payment-date { font-size: 12px; color: var(--text-muted); }
+        .summary-card { background: linear-gradient(135deg, rgba(0,212,170,0.1), rgba(0,102,255,0.1)); border-radius: 16px; padding: 20px; border: 1px solid var(--accent); margin-bottom: 16px; }
+        .summary-row { display: flex; justify-content: space-between; margin-bottom: 12px; }
+        .summary-row:last-child { margin-bottom: 0; padding-top: 12px; border-top: 1px dashed var(--border); }
+        .summary-label { font-size: 13px; color: var(--text-secondary); }
+        .summary-value { font-size: 14px; font-weight: 700; }
+        .summary-total { font-size: 18px; color: var(--accent); }
+        .search-box { position: relative; margin-bottom: 20px; }
+        .search-input { width: 100%; padding: 14px 16px 14px 44px; border-radius: 12px; background: var(--bg-card); border: 1px solid var(--border); color: var(--text-primary); font-size: 14px; font-family: inherit; }
+        .search-input:focus { outline: none; border-color: var(--accent); }
+        .search-icon { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
+        .empty-state { text-align: center; padding: 60px 20px; }
+        .empty-icon { width: 80px; height: 80px; margin: 0 auto 20px; background: var(--bg-card); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--text-muted); }
+        .empty-title { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+        .empty-text { font-size: 14px; color: var(--text-secondary); }
+        .particles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+        .particle { position: absolute; width: 4px; height: 4px; background: var(--accent); border-radius: 50%; opacity: 0.3; animation: rise 10s infinite; }
+        @keyframes rise { 0%{transform:translateY(100vh) scale(0);opacity:0} 50%{opacity:0.3} 100%{transform:translateY(-100vh) scale(1);opacity:0} }
+        /* Treasury specific */
+        .treasury-card { background: var(--bg-card); border-radius: 16px; padding: 16px; border: 1px solid var(--border); margin-bottom: 12px; transition: all 0.3s ease; }
+        .treasury-card.income-card { border-right: 4px solid var(--success); }
+        .treasury-card.expense-card { border-right: 4px solid var(--danger); }
+        .treasury-amount-income { color: var(--success); font-size: 16px; font-weight: 800; }
+        .treasury-amount-expense { color: var(--danger); font-size: 16px; font-weight: 800; }
+        .balance-card { background: linear-gradient(135deg, rgba(0,212,170,0.15), rgba(0,102,255,0.1)); border-radius: 20px; padding: 24px; border: 1px solid var(--accent); margin-bottom: 24px; text-align: center; }
+        .balance-amount { font-size: 36px; font-weight: 900; color: var(--accent); margin: 8px 0; }
+        .balance-label { font-size: 14px; color: var(--text-secondary); }
+        .category-chip { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; margin: 2px; background: var(--bg-secondary); border: 1px solid var(--border); color: var(--text-secondary); cursor: pointer; transition: all 0.2s; }
+        .category-chip.active, .category-chip:hover { background: var(--accent); color: var(--bg-primary); border-color: var(--accent); }
+        /* Category management */
+        .cat-item { display: flex; justify-content: space-between; align-items: center; padding: 14px 16px; background: var(--bg-card); border-radius: 12px; margin-bottom: 10px; border: 1px solid var(--border); }
+        .cat-name { font-size: 14px; font-weight: 700; }
+        .cat-type { font-size: 11px; padding: 2px 8px; border-radius: 20px; font-weight: 600; }
+        .cat-type.income { background: rgba(16,185,129,0.2); color: var(--success); }
+        .cat-type.expense { background: rgba(239,68,68,0.2); color: var(--danger); }
+        /* P&L Report */
+        .pl-section { background: var(--bg-card); border-radius: 16px; padding: 20px; margin-bottom: 16px; border: 1px solid var(--border); }
+        .pl-section-title { font-size: 15px; font-weight: 800; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px dashed var(--border); }
+        .pl-row { display: flex; justify-content: space-between; padding: 8px 0; font-size: 13px; border-bottom: 1px solid rgba(42,53,72,0.5); }
+        .pl-row:last-child { border-bottom: none; }
+        .pl-total-row { display: flex; justify-content: space-between; padding: 14px 16px; border-radius: 12px; font-weight: 800; font-size: 15px; margin-top: 12px; }
+        .pl-total-row.profit { background: rgba(16,185,129,0.15); color: var(--success); }
+        .pl-total-row.loss { background: rgba(239,68,68,0.15); color: var(--danger); }
+        /* Period filter */
+        .period-filter { display: flex; gap: 6px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 4px; }
+        .period-btn { padding: 8px 14px; border-radius: 10px; background: var(--bg-card); border: 1px solid var(--border); font-size: 12px; font-weight: 600; color: var(--text-secondary); cursor: pointer; white-space: nowrap; transition: all 0.3s; font-family: inherit; }
+        .period-btn.active { background: var(--accent); color: var(--bg-primary); border-color: var(--accent); }
+        /* Labor item */
+        .labor-item { background: var(--bg-secondary); border-radius: 12px; padding: 12px 14px; margin-bottom: 10px; border: 1px solid rgba(245,158,11,0.3); display: flex; justify-content: space-between; align-items: center; }
+        .labor-desc { font-size: 14px; font-weight: 600; color: var(--warning); }
+        .labor-amount { font-size: 14px; font-weight: 800; color: var(--warning); }
+        @media (min-width: 768px) {
+            .app-container { border-radius: 24px; margin: 20px auto; box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
+            .bottom-nav { border-radius: 0 0 24px 24px; }
+        }
+        @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; } }
+    </style>
+</head>
+<body>
+<div class="app-container">
+    <div class="bg-effects">
+        <div class="bg-blob bg-blob-1"></div>
+        <div class="bg-blob bg-blob-2"></div>
+    </div>
+    <div class="particles" id="particles"></div>
+
+    <!-- Header -->
+    <header class="app-header">
+        <div class="header-content">
+            <div class="logo">
+                <div class="logo-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                        <path d="M14 2v6h6M3 10h10M3 14h6M3 18h14"/>
+                    </svg>
+                </div>
+                <div class="flex flex-col justify-start">
+                    <span class="logo-text leading-tight">ورش نجارة م. مصطفى</span>
+                    <span class="text-[9px] text-amber-500 font-extrabold self-start mt-0.5 px-1.5 py-0.5 bg-amber-500/10 rounded border border-amber-500/20">ERP Pro v2</span>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button class="icon-btn" onclick="openNotifications()" aria-label="الإشعارات">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                    </svg>
+                </button>
+                <button class="icon-btn" onclick="switchView('categories-view')" aria-label="التصنيفات">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
+                        <line x1="7" y1="7" x2="7.01" y2="7"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <!-- Workshop Selector -->
+        <div class="workshop-toggle" id="workshop-filter-container">
+            <div class="workshop-btn active" data-ws="all" onclick="setWorkshopFilter('all')">كل الورش</div>
+            <div class="workshop-btn" data-ws="sila" onclick="setWorkshopFilter('sila')">ورشة سيلا</div>
+            <div class="workshop-btn" data-ws="fayoum" onclick="setWorkshopFilter('fayoum')">ورشة الفيوم</div>
+        </div>
+
+        <!-- ===== DASHBOARD VIEW ===== -->
+        <div class="view active" id="dashboard-view">
+            <!-- Treasury Balance -->
+            <div class="balance-card">
+                <div class="balance-label">💰 رصيد الخزنة الحالي</div>
+                <div class="balance-amount" id="dash-treasury-balance">0 ج.م</div>
+                <div class="flex justify-center gap-4 mt-2 text-sm">
+                    <span class="text-green-400 font-bold">↑ وارد: <span id="dash-total-income">0</span> ج.م</span>
+                    <span class="text-red-400 font-bold">↓ صادر: <span id="dash-total-expense">0</span> ج.م</span>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card accent">
+                    <div class="stat-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></div>
+                    <div class="stat-value" id="active-jobs-count">0</div>
+                    <div class="stat-label">شغلانات نشطة</div>
+                </div>
+                <div class="stat-card success">
+                    <div class="stat-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></div>
+                    <div class="stat-value" id="total-profit">0</div>
+                    <div class="stat-label">صافي الأرباح</div>
+                </div>
+                <div class="stat-card warning">
+                    <div class="stat-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+                    <div class="stat-value" id="total-costs">0</div>
+                    <div class="stat-label">إجمالي المصاريف</div>
+                </div>
+                <div class="stat-card info">
+                    <div class="stat-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+                    <div class="stat-value" id="completed-jobs-count">0</div>
+                    <div class="stat-label">مكتملة</div>
+                </div>
+            </div>
+
+            <!-- Quick stats row -->
+            <div class="stats-grid-3" style="margin-bottom:24px">
+                <div class="stat-card purple" style="padding:12px">
+                    <div class="stat-value text-sm" id="dash-best-workshop">—</div>
+                    <div class="stat-label">أكثر ورشة ربحاً</div>
+                </div>
+                <div class="stat-card danger" style="padding:12px">
+                    <div class="stat-value text-sm" id="dash-top-expense-cat">—</div>
+                    <div class="stat-label">أعلى مصروف</div>
+                </div>
+                <div class="stat-card accent" style="padding:12px">
+                    <div class="stat-value text-sm" id="dash-pending-collect">0</div>
+                    <div class="stat-label">مستحق التحصيل</div>
+                </div>
+            </div>
+
+            <div class="section-title"><span>الواردات والمصروفات (6 شهور)</span></div>
+            <div class="chart-container">
+                <div class="chart-header">
+                    <span class="chart-title">التدفق المالي الشهري</span>
+                    <span class="chart-period" id="chart-year">2026</span>
+                </div>
+                <div style="display:flex;gap:12px;margin-bottom:8px;font-size:11px;">
+                    <span style="color:var(--accent)">■ وارد</span>
+                    <span style="color:var(--danger)">■ مصروف</span>
+                </div>
+                <div class="bar-chart" id="profit-chart"></div>
+            </div>
+
+            <div class="section-title">
+                <span>آخر الشغلانات</span>
+                <a href="#" onclick="switchView('jobs-view')">عرض الكل</a>
+            </div>
+            <div class="job-list" id="recent-jobs-list"></div>
+        </div>
+
+        <!-- ===== JOBS VIEW ===== -->
+        <div class="view" id="jobs-view">
+            <div class="tabs">
+                <div class="tab active" data-filter="active" onclick="filterJobs('active')">قيد التصنيع</div>
+                <div class="tab" data-filter="completed" onclick="filterJobs('completed')">مكتملة</div>
+                <div class="tab" data-filter="pending" onclick="filterJobs('pending')">باقي تحصيل</div>
+            </div>
+            <div class="job-list" id="jobs-list"></div>
+        </div>
+
+        <!-- ===== TREASURY VIEW ===== -->
+        <div class="view" id="treasury-view">
+            <div class="balance-card">
+                <div class="balance-label">💰 رصيد الخزنة الحالي</div>
+                <div class="balance-amount" id="treasury-balance">0 ج.م</div>
+                <div class="flex justify-center gap-6 mt-3">
+                    <div class="text-center">
+                        <div class="text-green-400 font-black text-lg" id="treas-total-income">0</div>
+                        <div class="text-xs text-slate-400">إجمالي الوارد</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-red-400 font-black text-lg" id="treas-total-expense">0</div>
+                        <div class="text-xs text-slate-400">إجمالي الصادر</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tabs">
+                <div class="tab active" data-ttab="income" onclick="switchTreasuryTab('income')">💚 الواردات</div>
+                <div class="tab" data-ttab="expenses" onclick="switchTreasuryTab('expenses')">🔴 المصروفات</div>
+            </div>
+
+            <div id="treasury-income-section">
+                <div id="treasury-income-list"></div>
+            </div>
+            <div id="treasury-expenses-section" style="display:none">
+                <div id="treasury-expense-list"></div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3 mt-4">
+                <button class="btn btn-primary" onclick="openModal('new-income-modal')">+ إضافة وارد</button>
+                <button class="btn btn-danger" onclick="openModal('new-expense-modal')">− إضافة مصروف</button>
+            </div>
+        </div>
+
+        <!-- ===== WAREHOUSE VIEW ===== -->
+        <div class="view" id="warehouse-view">
+            <div class="search-box">
+                <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input type="text" class="search-input" placeholder="البحث في المواد..." id="warehouse-search" oninput="renderWarehouse()">
+            </div>
+            <div class="section-title">
+                <span>مخزون الورشة الذكي</span>
+                <span id="low-stock-warning" class="text-red-500 font-bold text-xs" style="display:none;">⚠️ بعض المواد توشك على النفاد!</span>
+            </div>
+            <div id="warehouse-list" class="mb-4"></div>
+            <div class="grid grid-cols-2 gap-3" style="margin-top:12px">
+                <button class="btn btn-secondary" onclick="openModal('new-warehouse-item-modal')">إضافة مادة جديدة</button>
+                <button class="btn btn-primary" onclick="openRestockModal()">توريد خامات</button>
+            </div>
+        </div>
+
+        <!-- ===== ARCHIVE VIEW ===== -->
+        <div class="view" id="archive-view">
+            <div class="search-box">
+                <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input type="text" class="search-input" placeholder="بحث في الأرشيف..." id="archive-search" oninput="searchArchive()">
+            </div>
+            <div class="section-title"><span>الشغلانات المؤرشفة</span></div>
+            <div class="job-list" id="archive-list"></div>
+        </div>
+
+        <!-- ===== REPORTS VIEW ===== -->
+        <div class="view" id="reports-view">
+            <div class="tabs" style="margin-bottom:12px">
+                <div class="tab active" data-rtab="pl" onclick="switchReportTab('pl')">أرباح وخسائر</div>
+                <div class="tab" data-rtab="treasury" onclick="switchReportTab('treasury')">الخزنة</div>
+                <div class="tab" data-rtab="jobs" onclick="switchReportTab('jobs')">الشغلانات</div>
+                <div class="tab" data-rtab="workshops" onclick="switchReportTab('workshops')">الورش</div>
+            </div>
+
+            <!-- Period Filter -->
+            <div class="period-filter" id="period-filter-bar">
+                <button class="period-btn active" data-period="all" onclick="setPeriod('all')">الكل</button>
+                <button class="period-btn" data-period="today" onclick="setPeriod('today')">اليوم</button>
+                <button class="period-btn" data-period="week" onclick="setPeriod('week')">أسبوع</button>
+                <button class="period-btn" data-period="month" onclick="setPeriod('month')">شهر</button>
+                <button class="period-btn" data-period="year" onclick="setPeriod('year')">سنة</button>
+                <button class="period-btn" data-period="custom" onclick="setPeriod('custom')">مخصص</button>
+            </div>
+
+            <!-- Custom date range -->
+            <div id="custom-date-range" style="display:none;gap:10px;margin-bottom:16px" class="grid grid-cols-2">
+                <div>
+                    <label class="form-label">من تاريخ</label>
+                    <input type="date" class="form-input" id="report-date-from" onchange="updateReports()">
+                </div>
+                <div>
+                    <label class="form-label">إلى تاريخ</label>
+                    <input type="date" class="form-input" id="report-date-to" onchange="updateReports()">
+                </div>
+            </div>
+
+            <!-- P&L Report -->
+            <div id="report-pl-section">
+                <div class="pl-section">
+                    <div class="pl-section-title" style="color:var(--success)">📈 الإيرادات</div>
+                    <div id="pl-revenue-rows"></div>
+                    <div class="pl-total-row profit" style="margin-top:8px">
+                        <span>إجمالي الإيرادات</span>
+                        <span id="pl-total-revenue">0 ج.م</span>
+                    </div>
+                </div>
+                <div class="pl-section">
+                    <div class="pl-section-title" style="color:var(--danger)">📉 المصروفات</div>
+                    <div id="pl-expense-rows"></div>
+                    <div class="pl-total-row loss">
+                        <span>إجمالي المصروفات</span>
+                        <span id="pl-total-expense">0 ج.م</span>
+                    </div>
+                </div>
+                <div class="pl-total-row profit" id="pl-net-row" style="font-size:18px;padding:18px 20px">
+                    <span>✨ صافي الربح</span>
+                    <span id="pl-net-profit">0 ج.م</span>
+                </div>
+                <button class="btn btn-secondary mt-4" onclick="window.print()" style="margin-top:16px">🖨️ طباعة التقرير</button>
+            </div>
+
+            <!-- Treasury Report -->
+            <div id="report-treasury-section" style="display:none">
+                <div class="summary-card">
+                    <div class="summary-row"><span class="summary-label">إجمالي الوارد</span><span class="summary-value text-green-400" id="rep-treasury-income">0 ج.م</span></div>
+                    <div class="summary-row"><span class="summary-label">إجمالي المصروف</span><span class="summary-value text-red-400" id="rep-treasury-expense">0 ج.م</span></div>
+                    <div class="summary-row"><span class="summary-label">الرصيد الحالي</span><span class="summary-value summary-total" id="rep-treasury-balance">0 ج.م</span></div>
+                </div>
+                <div class="section-title"><span>توزيع المصروفات بالتصنيف</span></div>
+                <div id="rep-expense-by-cat"></div>
+                <div class="section-title" style="margin-top:16px"><span>آخر الحركات</span></div>
+                <div id="rep-treasury-txns"></div>
+            </div>
+
+            <!-- Jobs Report -->
+            <div id="report-jobs-section" style="display:none">
+                <div id="rep-jobs-list"></div>
+            </div>
+
+            <!-- Workshops Report -->
+            <div id="report-workshops-section" style="display:none">
+                <div id="rep-workshops-content"></div>
+            </div>
+        </div>
+
+        <!-- ===== JOB DETAIL VIEW ===== -->
+        <div class="view" id="job-detail-view">
+            <button class="icon-btn" onclick="goBack()" style="margin-bottom:16px">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+            <div id="job-detail-content"></div>
+        </div>
+
+        <!-- ===== CATEGORIES VIEW ===== -->
+        <div class="view" id="categories-view">
+            <button class="icon-btn" onclick="switchView('dashboard-view')" style="margin-bottom:16px">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+            <div class="section-title"><span>إدارة التصنيفات</span></div>
+            <div class="tabs">
+                <div class="tab active" data-cattab="expense" onclick="switchCatTab('expense')">تصنيفات المصروفات</div>
+                <div class="tab" data-cattab="income" onclick="switchCatTab('income')">تصنيفات الواردات</div>
+            </div>
+            <div id="categories-list"></div>
+            <button class="btn btn-primary mt-4" onclick="openAddCategoryModal()" style="margin-top:16px">+ إضافة تصنيف جديد</button>
+        </div>
+    </main>
+
+    <!-- FAB Button -->
+    <button class="fab" id="fab-button" onclick="openModal('new-job-modal')" aria-label="إضافة شغلانة جديدة">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    </button>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <div class="nav-items">
+            <div class="nav-item active" data-view="dashboard-view" onclick="switchView('dashboard-view')">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                <span class="nav-label">الرئيسية</span>
+            </div>
+            <div class="nav-item" data-view="jobs-view" onclick="switchView('jobs-view')">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+                <span class="nav-label">الشغلانات</span>
+            </div>
+            <div class="nav-item" data-view="treasury-view" onclick="switchView('treasury-view')">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+                <span class="nav-label">الخزنة</span>
+            </div>
+            <div class="nav-item" data-view="warehouse-view" onclick="switchView('warehouse-view')">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+                <span class="nav-label">المخزن</span>
+            </div>
+            <div class="nav-item" data-view="reports-view" onclick="switchView('reports-view')">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                <span class="nav-label">التقارير</span>
+            </div>
+            <div class="nav-item" data-view="archive-view" onclick="switchView('archive-view')">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
+                <span class="nav-label">الأرشيف</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ========== MODALS ========== -->
+
+    <!-- New Job Modal -->
+    <div class="modal-overlay" id="new-job-modal">
+        <div class="modal">
+            <div class="modal-handle"></div>
+            <div class="modal-header">
+                <h2 class="modal-title">شغلانة نجارة جديدة</h2>
+                <button class="modal-close" onclick="closeModal('new-job-modal')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+            </div>
+            <form id="new-job-form" onsubmit="saveJob(event)">
+                <div class="form-group">
+                    <label class="form-label">اسم الشغلانة / الطلب</label>
+                    <input type="text" class="form-input" name="name" required placeholder="مثال: مطبخ خشب زان">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">الورشة</label>
+                        <select class="form-input" name="workshop" required>
+                            <option value="sila">ورشة سيلا</option>
+                            <option value="fayoum">ورشة الفيوم</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">نوع المنتج الخشبي</label>
+                        <select class="form-input" name="productType" required>
+                            <option value="مطبخ">مطبخ</option>
+                            <option value="غرفة نوم">غرفة نوم كاملة</option>
+                            <option value="غرفة أطفال">غرفة أطفال</option>
+                            <option value="أنتريه/صالون">أنتريه / صالون</option>
+                            <option value="سفرة">سفرة</option>
+                            <option value="أبواب وشبابيك">أبواب وشبابيك</option>
+                            <option value="مكتب">مكتب</option>
+                            <option value="أخرى">أثاث مخصص / أخرى</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">المبلغ المتفق عليه (ج.م)</label>
+                        <input type="number" class="form-input" name="amount" required placeholder="0" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">اسم العميل</label>
+                        <input type="text" class="form-input" name="client" required placeholder="اسم العميل">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">ملاحظات الشغلانة</label>
+                    <textarea class="form-input" name="notes" placeholder="نوع الخشب، المقاسات، الألوان..."></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">إنشاء الطلب</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- New Income Modal -->
+    <div class="modal-overlay" id="new-income-modal">
+        <div class="modal">
+            <div class="modal-handle"></div>
+            <div class="modal-header">
+                <h2 class="modal-title">💚 تسجيل وارد جديد</h2>
+                <button class="modal-close" onclick="closeModal('new-income-modal')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+            </div>
+            <form id="new-income-form" onsubmit="saveIncome(event)">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">التاريخ</label>
+                        <input type="date" class="form-input" name="date" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">القيمة (ج.م)</label>
+                        <input type="number" class="form-input" name="amount" required placeholder="0" min="1">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">الوصف</label>
+                    <input type="text" class="form-input" name="description" required placeholder="مثال: عربون عميل - مطبخ السيد أحمد">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">نوع الوارد</label>
+                        <select class="form-input" name="categoryId" id="income-category-select" required></select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">الورشة</label>
+                        <select class="form-input" name="workshopId">
+                            <option value="all">كل الورش</option>
+                            <option value="sila">ورشة سيلا</option>
+                            <option value="fayoum">ورشة الفيوم</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">ربط بشغلانة (اختياري)</label>
+                    <select class="form-input" name="jobId" id="income-job-select">
+                        <option value="">— بدون ربط —</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">تسجيل الوارد</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- New Expense Modal -->
+    <div class="modal-overlay" id="new-expense-modal">
+        <div class="modal">
+            <div class="modal-handle"></div>
+            <div class="modal-header">
+                <h2 class="modal-title">🔴 تسجيل مصروف جديد</h2>
+                <button class="modal-close" onclick="closeModal('new-expense-modal')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+            </div>
+            <form id="new-expense-form" onsubmit="saveExpense(event)">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">التاريخ</label>
+                        <input type="date" class="form-input" name="date" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">القيمة (ج.م)</label>
+                        <input type="number" class="form-input" name="amount" required placeholder="0" min="1">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">الوصف</label>
+                    <input type="text" class="form-input" name="description" required placeholder="مثال: فاتورة كهرباء شهر مايو">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">التصنيف</label>
+                        <select class="form-input" name="categoryId" id="expense-category-select" required></select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">الورشة</label>
+                        <select class="form-input" name="workshopId">
+                            <option value="all">كل الورش</option>
+                            <option value="sila">ورشة سيلا</option>
+                            <option value="fayoum">ورشة الفيوم</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">ربط بشغلانة (اختياري)</label>
+                    <select class="form-input" name="jobId" id="expense-job-select">
+                        <option value="">— مصروف عام —</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-danger">تسجيل المصروف</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Labor to Job Modal -->
+    <div class="modal-overlay" id="new-labor-modal">
+        <div class="modal">
+            <div class="modal-handle"></div>
+            <div class="modal-header">
+                <h2 class="modal-title">🔨 إضافة مصنعية للشغلانة</h2>
+                <button class="modal-close" onclick="closeModal('new-labor-modal')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+            </div>
+            <form id="new-labor-form" onsubmit="saveLabor(event)">
+                <div class="form-group">
+                    <label class="form-label">نوع المصنعية</label>
+                    <select class="form-input" name="categoryId" id="labor-category-select"></select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">الوصف التفصيلي</label>
+                    <input type="text" class="form-input" name="description" required placeholder="مثال: أجرة نجار - تركيب مطبخ كامل">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">المبلغ (ج.م)</label>
+                    <input type="number" class="form-input" name="amount" required placeholder="0" min="1">
+                </div>
+                <button type="submit" class="btn btn-warning" style="background:linear-gradient(135deg,#f59e0b,#d97706);color:#000">إضافة المصنعية</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Warehouse Item Modal -->
+    <div class="modal-overlay" id="new-warehouse-item-modal">
+        <div class="modal">
+            <div class="modal-handle"></div>
+            <div class="modal-header">
+                <h2 class="modal-title">إضافة مادة جديدة للمخزن</h2>
+                <button class="modal-close" onclick="closeModal('new-warehouse-item-modal')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+            </div>
+            <form id="new-warehouse-form" onsubmit="saveWarehouseItem(event)">
+                <div class="form-group">
+                    <label class="form-label">اسم المادة الخام</label>
+                    <input type="text" class="form-input" name="name" required placeholder="مثال: أبلاكاش كوري 3مم">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">الوحدة</label>
+                        <select class="form-input" name="unit" required>
+                            <option value="لوح">لوح</option><option value="قطعة">قطعة</option><option value="متر">متر</option><option value="متر مكعب">متر مكعب</option><option value="زوج">زوج</option><option value="علبة">علبة</option><option value="كجم">كجم</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">سعر التكلفة للوحدة (ج.م)</label>
+                        <input type="number" class="form-input" name="cost" required placeholder="0" min="0">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">الكمية الحالية</label>
+                        <input type="number" class="form-input" name="quantity" required placeholder="0" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">حد الأمان للتنبيه</label>
+                        <input type="number" class="form-input" name="minQuantity" required placeholder="5" min="0">
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">إضافة للمخزن</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Restock Modal -->
+    <div class="modal-overlay" id="restock-modal">
+        <div class="modal">
+            <div class="modal-handle"></div>
+            <div class="modal-header">
+                <h2 class="modal-title">توريد / شحن خامات للمخزن</h2>
+                <button class="modal-close" onclick="closeModal('restock-modal')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+            </div>
+            <form id="restock-form" onsubmit="saveRestock(event)">
+                <div class="form-group">
+                    <label class="form-label">اختر الخامة المراد شحنها</label>
+                    <select class="form-input" name="materialId" id="restock-material-select" required></select>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">الكمية المضافة</label>
+                        <input type="number" class="form-input" name="quantity" required placeholder="0" min="1">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">سعر التكلفة الجديد (اختياري)</label>
+                        <input type="number" class="form-input" name="cost" placeholder="اتركه فارغاً" min="0">
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">شحن الكمية</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Job Material Modal -->
+    <div class="modal-overlay" id="new-request-modal">
+        <div class="modal">
+            <div class="modal-handle"></div>
+            <div class="modal-header">
+                <h2 class="modal-title">إضافة خامات للشغلانة</h2>
+                <button class="modal-close" onclick="closeModal('new-request-modal')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+            </div>
+            <form id="new-request-form" onsubmit="saveJobMaterial(event)">
+                <div class="form-group">
+                    <div class="flex items-center justify-between mb-2">
+                        <label class="form-label mb-0">مصدر الخامة</label>
+                        <label class="flex items-center gap-2 text-xs text-teal-400 cursor-pointer">
+                            <input type="checkbox" id="custom-material-checkbox" onchange="toggleMaterialSource()">
+                            خامة خارجية
+                        </label>
+                    </div>
+                    <div id="warehouse-select-container">
+                        <select class="form-input" id="job-material-warehouse-select" onchange="fillWarehouseMaterialDetails()"></select>
+                    </div>
+                    <div id="custom-material-input-container" style="display:none">
+                        <input type="text" class="form-input" id="job-material-custom-name" placeholder="مثال: غراء إضافي">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">تكلفة الوحدة (ج.م)</label>
+                        <input type="number" class="form-input" id="job-material-cost" required placeholder="0" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">الكمية</label>
+                        <input type="number" class="form-input" id="job-material-quantity" required placeholder="1" min="1">
+                    </div>
+                </div>
+                <div id="material-stock-warning" class="text-red-400 text-xs font-bold mb-3" style="display:none">⚠️ الكمية غير متوفرة بالكامل! المتبقي: <span id="material-avail-qty">0</span></div>
+                <button type="submit" class="btn btn-primary">إضافة للشغلانة</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Payment Modal -->
+    <div class="modal-overlay" id="new-payment-modal">
+        <div class="modal">
+            <div class="modal-handle"></div>
+            <div class="modal-header">
+                <h2 class="modal-title">تسجيل دفعة من العميل</h2>
+                <button class="modal-close" onclick="closeModal('new-payment-modal')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+            </div>
+            <form id="new-payment-form" onsubmit="savePayment(event)">
+                <div class="form-group">
+                    <label class="form-label">قيمة الدفعة المستلمة (ج.م)</label>
+                    <input type="number" class="form-input" name="amount" required placeholder="0" min="1">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">تاريخ الاستلام</label>
+                    <input type="date" class="form-input" name="date" required>
+                </div>
+                <button type="submit" class="btn btn-primary">تسجيل الدفعة</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Category Modal -->
+    <div class="modal-overlay" id="new-category-modal">
+        <div class="modal">
+            <div class="modal-handle"></div>
+            <div class="modal-header">
+                <h2 class="modal-title">إضافة تصنيف جديد</h2>
+                <button class="modal-close" onclick="closeModal('new-category-modal')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+            </div>
+            <form id="new-category-form" onsubmit="saveCategory(event)">
+                <input type="hidden" name="editId" id="cat-edit-id" value="">
+                <div class="form-group">
+                    <label class="form-label">اسم التصنيف</label>
+                    <input type="text" class="form-input" name="name" required placeholder="مثال: كهرباء">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">نوع التصنيف</label>
+                    <select class="form-input" name="type" id="cat-type-select" required>
+                        <option value="expense">مصروف</option>
+                        <option value="income">وارد</option>
+                        <option value="labor">مصنعية</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">حفظ التصنيف</button>
+            </form>
+        </div>
+    </div>
+
+</div><!-- end app-container -->
+
+<script>
+// ==================== DATA STORE V2 ====================
+let appData = {
+    jobs: [],
+    archivedJobs: [],
+    warehouse: [],
+    treasury: { income: [], expenses: [] },
+    categories: [],
+    _version: 2
+};
+
+let currentJobId = null;
+let currentFilter = 'active';
+let currentWorkshopFilter = 'all';
+let currentTreasuryTab = 'income';
+let currentReportTab = 'pl';
+let currentCatTab = 'expense';
+let currentPeriod = 'all';
+let reportDateFrom = '';
+let reportDateTo = '';
+
+// ==================== INIT ====================
+document.addEventListener('DOMContentLoaded', function() {
+    loadData();
+    createParticles();
+    setTodayDates();
+    updateDashboard();
+    renderJobs();
+    renderWarehouse();
+    renderArchive();
+    updateReports();
+    renderTreasury();
+    renderCategories();
+    animateBars();
+});
+
+function setTodayDates() {
+    const today = new Date().toISOString().split('T')[0];
+    document.querySelectorAll('input[type="date"]').forEach(i => { if (!i.value) i.value = today; });
+}
+
+// ==================== DATA MANAGEMENT ====================
+function loadData() {
+    const saved = localStorage.getItem('carpentryERP_V2');
+    if (saved) {
+        try {
+            const parsed = JSON.parse(saved);
+            appData = parsed;
+            // Ensure all jobs have laborItems
+            [...appData.jobs, ...appData.archivedJobs].forEach(j => {
+                if (!j.laborItems) j.laborItems = [];
+            });
+        } catch(e) { initializeSampleData(); }
+    } else {
+        // Try migrating V1
+        const oldSaved = localStorage.getItem('carpentryWorkshopData_V1');
+        if (oldSaved) {
+            try {
+                const old = JSON.parse(oldSaved);
+                appData.jobs = old.jobs.map(j => ({...j, laborItems: j.laborItems || []}));
+                appData.archivedJobs = old.archivedJobs.map(j => ({...j, laborItems: j.laborItems || []}));
+                appData.warehouse = old.warehouse;
+            } catch(e) {}
+        }
+        initDefaultCategories();
+        initializeSampleData();
+    }
+    if (!appData.categories || appData.categories.length === 0) initDefaultCategories();
+}
+
+function saveData() {
+    localStorage.setItem('carpentryERP_V2', JSON.stringify(appData));
+}
+
+function initDefaultCategories() {
+    appData.categories = [
+        {id: 'cat_elec', name: 'كهرباء', type: 'expense'},
+        {id: 'cat_water', name: 'مياه', type: 'expense'},
+        {id: 'cat_rent', name: 'إيجار', type: 'expense'},
+        {id: 'cat_salary', name: 'رواتب', type: 'expense'},
+        {id: 'cat_labor', name: 'مصنعيات', type: 'expense'},
+        {id: 'cat_transport', name: 'نقل', type: 'expense'},
+        {id: 'cat_maint', name: 'صيانة', type: 'expense'},
+        {id: 'cat_materials', name: 'خامات', type: 'expense'},
+        {id: 'cat_admin', name: 'مصروف إداري', type: 'expense'},
+        {id: 'cat_misc_exp', name: 'مصروف متنوع', type: 'expense'},
+        {id: 'cat_deposit', name: 'عربون عميل', type: 'income'},
+        {id: 'cat_payment', name: 'دفعة من عميل', type: 'income'},
+        {id: 'cat_sale', name: 'إيراد بيع', type: 'income'},
+        {id: 'cat_misc_inc', name: 'إيراد متنوع', type: 'income'},
+        {id: 'cat_carpenter', name: 'أجرة نجار', type: 'labor'},
+        {id: 'cat_painter', name: 'أجرة دهان', type: 'labor'},
+        {id: 'cat_install', name: 'أجرة تركيب', type: 'labor'},
+        {id: 'cat_worker', name: 'أجرة عامل', type: 'labor'},
+    ];
+}
+
+function initializeSampleData() {
+    appData.warehouse = [
+        {id:1, name:'لوح أبلاكاش كوري 3مم', unit:'لوح', cost:280, quantity:60, minQuantity:10},
+        {id:2, name:'لوح خشب MDF سمك 18مم', unit:'لوح', cost:650, quantity:25, minQuantity:5},
+        {id:3, name:'خشب زان روماني (متر مكعب)', unit:'متر مكعب', cost:18500, quantity:4, minQuantity:1},
+        {id:4, name:'مجرى درج تلسكوب 40سم', unit:'زوج', cost:95, quantity:30, minQuantity:8},
+        {id:5, name:'مفصلة هيدروليك باكم', unit:'قطعة', cost:35, quantity:120, minQuantity:20},
+        {id:6, name:'غراء ألماني علبة 1كجم', unit:'علبة', cost:120, quantity:15, minQuantity:4}
+    ];
+    appData.jobs = [
+        {id:1, name:'غرفة نوم كاملة مودرن خشب زان', workshop:'sila', productType:'غرفة نوم', status:'active', client:'الأستاذ أحمد كمال - 0122345678', agreedAmount:85000, createdAt:'2026-05-10', notes:'سرير 160سم، دولاب 260سم، 2 كومودينو. التشطيب دهان أبيض مطعم بذهبي.',
+         requests:[{id:1,description:'خشب زان روماني (متر مكعب)',cost:18500,quantity:2,fromWarehouse:true,warehouseItemId:3},{id:2,description:'لوح أبلاكاش كوري 3مم',cost:280,quantity:12,fromWarehouse:true,warehouseItemId:1},{id:3,description:'مفصلة هيدروليك باكم',cost:35,quantity:24,fromWarehouse:true,warehouseItemId:5}],
+         laborItems:[{id:1,description:'أجرة نجار - تصنيع غرفة النوم',amount:8000,categoryId:'cat_carpenter'},{id:2,description:'أجرة دهان كامل',amount:4500,categoryId:'cat_painter'}],
+         payments:[{id:1,amount:35000,date:'2026-05-10'},{id:2,amount:20000,date:'2026-05-25'}]},
+        {id:2, name:'مطبخ أرو كلاسيك متكامل', workshop:'fayoum', productType:'مطبخ', status:'active', client:'المهندس مصطفى عثمان - 0100987654', agreedAmount:62000, createdAt:'2026-05-18', notes:'مطبخ حرف L مقاس 4*3 متر. درف خشب أرو طبيعي.',
+         requests:[{id:1,description:'لوح خشب MDF سمك 18مم',cost:650,quantity:8,fromWarehouse:true,warehouseItemId:2},{id:2,description:'مجرى درج تلسكوب 40سم',cost:95,quantity:10,fromWarehouse:true,warehouseItemId:4},{id:3,description:'مقبض مطبخ مخصص ذهبي',cost:60,quantity:20,fromWarehouse:false}],
+         laborItems:[{id:1,description:'أجرة نجار - تركيب مطبخ',amount:6000,categoryId:'cat_carpenter'},{id:2,description:'أجرة تركيب',amount:2500,categoryId:'cat_install'}],
+         payments:[{id:1,amount:30000,date:'2026-05-18'}]},
+        {id:3, name:'صالون كلاسيك مذهب كامل', workshop:'sila', productType:'أنتريه/صالون', status:'completed', client:'الحاج ريان الشريف - 0155667788', agreedAmount:48000, createdAt:'2026-04-01', notes:'صالون خشب زان أحمر كنب كبرى و 4 كراسي فوتيه.',
+         requests:[{id:1,description:'خشب زان روماني (متر مكعب)',cost:18500,quantity:1,fromWarehouse:true,warehouseItemId:3},{id:2,description:'إسفنج وقماش صالون تركي',cost:8500,quantity:1,fromWarehouse:false}],
+         laborItems:[{id:1,description:'أجرة نجار وعامل',amount:7000,categoryId:'cat_carpenter'}],
+         payments:[{id:1,amount:25000,date:'2026-04-01'},{id:2,amount:23000,date:'2026-04-28'}]}
+    ];
+    appData.archivedJobs = [
+        {id:101, name:'مكتب خشب موحّد للشركة الهندسية', workshop:'fayoum', productType:'مكتب', status:'archived', client:'شركة النور للمقاولات', agreedAmount:18000, createdAt:'2026-02-15', notes:'مكتب مدير 180سم مع وحدة أدراج جانبية.',
+         requests:[{id:1,description:'لوح خشب MDF سمك 18مم',cost:650,quantity:3,fromWarehouse:true,warehouseItemId:2}],
+         laborItems:[{id:1,description:'أجرة نجار',amount:2500,categoryId:'cat_carpenter'}],
+         payments:[{id:1,amount:18000,date:'2026-03-01'}]}
+    ];
+    // Sample treasury
+    appData.treasury.income = [
+        {id:Date.now()+1, date:'2026-05-10', amount:35000, description:'عربون غرفة نوم - أحمد كمال', categoryId:'cat_deposit', workshopId:'sila', jobId:1},
+        {id:Date.now()+2, date:'2026-05-18', amount:30000, description:'عربون مطبخ - مصطفى عثمان', categoryId:'cat_deposit', workshopId:'fayoum', jobId:2},
+        {id:Date.now()+3, date:'2026-05-25', amount:20000, description:'دفعة ثانية - غرفة نوم', categoryId:'cat_payment', workshopId:'sila', jobId:1},
+    ];
+    appData.treasury.expenses = [
+        {id:Date.now()+10, date:'2026-05-01', amount:4500, description:'فاتورة كهرباء شهر مايو - سيلا', categoryId:'cat_elec', workshopId:'sila', jobId:''},
+        {id:Date.now()+11, date:'2026-05-01', amount:3200, description:'فاتورة كهرباء شهر مايو - الفيوم', categoryId:'cat_elec', workshopId:'fayoum', jobId:''},
+        {id:Date.now()+12, date:'2026-05-05', amount:8000, description:'إيجار ورشة سيلا شهر مايو', categoryId:'cat_rent', workshopId:'sila', jobId:''},
+        {id:Date.now()+13, date:'2026-05-05', amount:6000, description:'إيجار ورشة الفيوم شهر مايو', categoryId:'cat_rent', workshopId:'fayoum', jobId:''},
+        {id:Date.now()+14, date:'2026-05-10', amount:12000, description:'رواتب العمال - مايو', categoryId:'cat_salary', workshopId:'all', jobId:''},
+    ];
+    saveData();
+}
+
+// ==================== HELPERS ====================
+function fmt(n) { return (n||0).toLocaleString('ar-EG'); }
+function getCatName(id) {
+    const c = appData.categories.find(c => c.id === id);
+    return c ? c.name : 'متنوع';
+}
+function getWorkshopLabel(id) {
+    if (id === 'sila') return 'ورشة سيلا';
+    if (id === 'fayoum') return 'ورشة الفيوم';
+    return 'كل الورش';
+}
+function getJobCost(job) {
+    const materials = (job.requests||[]).reduce((s,r) => s + r.cost * r.quantity, 0);
+    const labor = (job.laborItems||[]).reduce((s,l) => s + l.amount, 0);
+    // linked expenses from treasury
+    const linkedExp = appData.treasury.expenses.filter(e => String(e.jobId) === String(job.id)).reduce((s,e) => s + e.amount, 0);
+    return { materials, labor, linkedExp, total: materials + labor + linkedExp };
+}
+
+// Period filtering
+function isInPeriod(dateStr) {
+    if (currentPeriod === 'all') return true;
+    const d = new Date(dateStr);
+    const now = new Date();
+    if (currentPeriod === 'today') {
+        return d.toDateString() === now.toDateString();
+    }
+    if (currentPeriod === 'week') {
+        const week = new Date(now); week.setDate(now.getDate() - 7);
+        return d >= week;
+    }
+    if (currentPeriod === 'month') {
+        return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+    }
+    if (currentPeriod === 'year') {
+        return d.getFullYear() === now.getFullYear();
+    }
+    if (currentPeriod === 'custom') {
+        const from = reportDateFrom ? new Date(reportDateFrom) : null;
+        const to = reportDateTo ? new Date(reportDateTo) : null;
+        if (from && d < from) return false;
+        if (to && d > to) return false;
+        return true;
+    }
+    return true;
+}
+
+// ==================== VIEW NAVIGATION ====================
+function switchView(viewId) {
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    document.getElementById(viewId).classList.add('active');
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    const navItem = document.querySelector(`.nav-item[data-view="${viewId}"]`);
+    if (navItem) navItem.classList.add('active');
+    const fab = document.getElementById('fab-button');
+    const wsFilter = document.getElementById('workshop-filter-container');
+    const showFab = ['dashboard-view','jobs-view'].includes(viewId);
+    const showFilter = ['dashboard-view','jobs-view','reports-view'].includes(viewId);
+    fab.style.display = showFab ? 'flex' : 'none';
+    wsFilter.style.display = showFilter ? 'flex' : 'none';
+    window.scrollTo(0, 0);
+    if (viewId === 'warehouse-view') renderWarehouse();
+    else if (viewId === 'reports-view') updateReports();
+    else if (viewId === 'jobs-view') renderJobs();
+    else if (viewId === 'dashboard-view') updateDashboard();
+    else if (viewId === 'treasury-view') renderTreasury();
+    else if (viewId === 'categories-view') renderCategories();
+    else if (viewId === 'archive-view') renderArchive();
+}
+
+function goBack() { switchView('jobs-view'); }
+function openModal(id) {
+    document.getElementById(id).classList.add('active');
+    document.body.style.overflow = 'hidden';
+    if (id === 'new-request-modal') populateWarehouseMaterialsForJobForm();
+    if (id === 'new-income-modal') { populateCategorySelect('income-category-select','income'); populateJobSelect('income-job-select'); }
+    if (id === 'new-expense-modal') { populateCategorySelect('expense-category-select','expense'); populateJobSelect('expense-job-select'); }
+    if (id === 'new-labor-modal') populateCategorySelect('labor-category-select','labor');
+    setTodayDates();
+}
+function closeModal(id) {
+    document.getElementById(id).classList.remove('active');
+    document.body.style.overflow = '';
+}
+function setWorkshopFilter(ws) {
+    currentWorkshopFilter = ws;
+    document.querySelectorAll('.workshop-btn').forEach(b => b.classList.remove('active'));
+    document.querySelector(`.workshop-btn[data-ws="${ws}"]`).classList.add('active');
+    updateDashboard(); renderJobs(); updateReports();
+}
+
+function populateCategorySelect(selectId, type) {
+    const sel = document.getElementById(selectId);
+    if (!sel) return;
+    const cats = appData.categories.filter(c => c.type === type);
+    sel.innerHTML = cats.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+}
+function populateJobSelect(selectId) {
+    const sel = document.getElementById(selectId);
+    if (!sel) return;
+    sel.innerHTML = '<option value="">— بدون ربط —</option>' +
+        appData.jobs.map(j => `<option value="${j.id}">${j.name}</option>`).join('');
+}
+
+// ==================== DASHBOARD ====================
+function updateDashboard() {
+    let jobs = appData.jobs;
+    if (currentWorkshopFilter !== 'all') jobs = jobs.filter(j => j.workshop === currentWorkshopFilter);
+
+    const activeJobs = jobs.filter(j => j.status === 'active').length;
+    const completedJobs = jobs.filter(j => j.status === 'completed').length;
+
+    // Treasury
+    let income = appData.treasury.income;
+    let expenses = appData.treasury.expenses;
+    if (currentWorkshopFilter !== 'all') {
+        income = income.filter(i => i.workshopId === currentWorkshopFilter || i.workshopId === 'all');
+        expenses = expenses.filter(e => e.workshopId === currentWorkshopFilter || e.workshopId === 'all');
+    }
+    const totalIncome = income.reduce((s,i) => s + i.amount, 0);
+    const totalExpense = expenses.reduce((s,e) => s + e.amount, 0);
+    // Also add labor costs from jobs
+    const totalLabor = jobs.reduce((s,j) => s + (j.laborItems||[]).reduce((ss,l) => ss + l.amount, 0), 0);
+    const totalAllExpenses = totalExpense + totalLabor;
+    const balance = totalIncome - totalExpense;
+    const netProfit = jobs.reduce((s,j) => {
+        const cost = getJobCost(j);
+        return s + j.agreedAmount - cost.total;
+    }, 0);
+
+    const pendingCollect = jobs.reduce((s,j) => {
+        const paid = j.payments.reduce((ss,p) => ss + p.amount, 0);
+        return s + Math.max(0, j.agreedAmount - paid);
+    }, 0);
+
+    animateCounter('dash-treasury-balance', balance, ' ج.م');
+    animateCounter('dash-total-income', totalIncome, '');
+    animateCounter('dash-total-expense', totalExpense, '');
+    animateCounter('active-jobs-count', activeJobs);
+    animateCounter('total-profit', netProfit, ' ج.م');
+    animateCounter('total-costs', totalAllExpenses, ' ج.م');
+    animateCounter('completed-jobs-count', completedJobs);
+    animateCounter('dash-pending-collect', pendingCollect, ' ج.م');
+
+    // Best workshop
+    const silaJobs = appData.jobs.filter(j => j.workshop === 'sila');
+    const fayoumJobs = appData.jobs.filter(j => j.workshop === 'fayoum');
+    const silaProfit = silaJobs.reduce((s,j) => s + j.agreedAmount - getJobCost(j).total, 0);
+    const fayoumProfit = fayoumJobs.reduce((s,j) => s + j.agreedAmount - getJobCost(j).total, 0);
+    document.getElementById('dash-best-workshop').textContent = silaProfit >= fayoumProfit ? 'سيلا' : 'الفيوم';
+
+    // Top expense category
+    const catTotals = {};
+    appData.treasury.expenses.forEach(e => {
+        catTotals[e.categoryId] = (catTotals[e.categoryId]||0) + e.amount;
+    });
+    let topCat = '—';
+    let maxAmt = 0;
+    Object.entries(catTotals).forEach(([id, amt]) => { if (amt > maxAmt) { maxAmt = amt; topCat = getCatName(id); } });
+    document.getElementById('dash-top-expense-cat').textContent = topCat;
+
+    renderRecentJobs();
+    renderCashflowChart();
+}
+
+function animateCounter(elementId, target, suffix='') {
+    const el = document.getElementById(elementId);
+    if (!el) return;
+    const start = parseInt(el.textContent.replace(/[^\d-]/g, '')) || 0;
+    const duration = 600;
+    const startTime = performance.now();
+    function update(currentTime) {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        const current = Math.floor(start + (target - start) * eased);
+        el.textContent = fmt(current) + suffix;
+        if (progress < 1) requestAnimationFrame(update);
+    }
+    requestAnimationFrame(update);
+}
+
+function renderRecentJobs() {
+    const container = document.getElementById('recent-jobs-list');
+    let jobs = appData.jobs;
+    if (currentWorkshopFilter !== 'all') jobs = jobs.filter(j => j.workshop === currentWorkshopFilter);
+    const recent = jobs.slice(0, 3);
+    if (recent.length === 0) {
+        container.innerHTML = `<div class="empty-state"><div class="empty-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/></svg></div><div class="empty-title">لا توجد شغلانات</div><div class="empty-text">ابدأ بإضافة طلب نجارة جديد</div></div>`;
+        return;
+    }
+    container.innerHTML = recent.map(j => createJobCard(j)).join('');
+}
+
+function renderCashflowChart() {
+    const container = document.getElementById('profit-chart');
+    if (!container) return;
+    const months = ['يناير','فبراير','مارس','أبريل','مايو','يونيو'];
+    const now = new Date();
+    const year = now.getFullYear();
+    const data = months.map((m, i) => {
+        const inc = appData.treasury.income.filter(x => {
+            const d = new Date(x.date);
+            return d.getFullYear() === year && d.getMonth() === i;
+        }).reduce((s,x) => s + x.amount, 0);
+        const exp = appData.treasury.expenses.filter(x => {
+            const d = new Date(x.date);
+            return d.getFullYear() === year && d.getMonth() === i;
+        }).reduce((s,x) => s + x.amount, 0);
+        return { inc, exp };
+    });
+    const maxVal = Math.max(...data.map(d => Math.max(d.inc, d.exp)), 1);
+    document.getElementById('chart-year').textContent = year;
+    container.innerHTML = months.map((m, i) => `
+        <div class="bar-item">
+            <div style="display:flex;gap:2px;align-items:flex-end;height:100px;width:100%">
+                <div class="bar" style="height:${(data[i].inc/maxVal)*100}%;flex:1" title="${fmt(data[i].inc)} ج.م وارد"></div>
+                <div class="bar expense" style="height:${(data[i].exp/maxVal)*100}%;flex:1" title="${fmt(data[i].exp)} ج.م صادر"></div>
+            </div>
+            <span class="bar-label">${m.substring(0,3)}</span>
+        </div>
+    `).join('');
+}
+
+// ==================== JOBS VIEW ====================
+function renderJobs() {
+    const container = document.getElementById('jobs-list');
+    if (!container) return;
+    let jobs = appData.jobs;
+    if (currentWorkshopFilter !== 'all') jobs = jobs.filter(j => j.workshop === currentWorkshopFilter);
+    if (currentFilter === 'active') jobs = jobs.filter(j => j.status === 'active');
+    else if (currentFilter === 'completed') jobs = jobs.filter(j => j.status === 'completed');
+    else if (currentFilter === 'pending') jobs = jobs.filter(j => {
+        const paid = j.payments.reduce((s,p) => s + p.amount, 0);
+        return j.agreedAmount - paid > 0;
+    });
+    if (jobs.length === 0) {
+        container.innerHTML = `<div class="empty-state"><div class="empty-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></div><div class="empty-title">لا توجد شغلانات</div><div class="empty-text">اضغط + لإضافة شغلانة جديدة</div></div>`;
+        return;
+    }
+    container.innerHTML = jobs.map(j => createJobCard(j)).join('');
+}
+
+function createJobCard(job) {
+    const paid = job.payments.reduce((s,p) => s + p.amount, 0);
+    const remaining = job.agreedAmount - paid;
+    const cost = getJobCost(job);
+    const profit = job.agreedAmount - cost.total;
+    const profitPct = job.agreedAmount > 0 ? Math.round((profit/job.agreedAmount)*100) : 0;
+    const statusClass = job.status === 'active' ? 'active' : job.status === 'completed' ? 'completed' : 'pending';
+    const statusText = job.status === 'active' ? 'قيد التصنيع' : job.status === 'completed' ? 'مكتملة' : 'أرشيف';
+    const wsLabel = getWorkshopLabel(job.workshop);
+    const wsBadge = job.workshop === 'sila' ? 'badge-sila' : 'badge-fayoum';
+    return `
+        <div class="job-card" onclick="openJobDetail(${job.id})">
+            <div class="job-header">
+                <div>
+                    <div class="job-title">${job.name}</div>
+                    <div class="flex items-center gap-2 mt-1">
+                        <span class="badge-workshop ${wsBadge}">${wsLabel}</span>
+                        <span class="text-xs text-slate-400 font-bold">(${job.productType})</span>
+                    </div>
+                    <div class="job-client mt-1">${job.client}</div>
+                </div>
+                <span class="job-status ${statusClass}">${statusText}</span>
+            </div>
+            <div class="job-footer">
+                <div>
+                    <div class="job-amount">${fmt(job.agreedAmount)} ج.م</div>
+                    <div class="text-xs text-slate-400">متبقي: <span class="font-bold text-amber-500">${fmt(remaining)} ج.م</span></div>
+                </div>
+                <div class="text-left">
+                    <div class="text-xs font-bold ${profit >= 0 ? 'text-green-400' : 'text-red-400'}">ربح: ${fmt(profit)} ج.م</div>
+                    <div class="job-date">${profitPct}% | ${job.createdAt}</div>
+                </div>
+            </div>
+        </div>`;
+}
+
+function filterJobs(filter) {
+    currentFilter = filter;
+    document.querySelectorAll('.tab[data-filter]').forEach(t => t.classList.remove('active'));
+    document.querySelector(`.tab[data-filter="${filter}"]`).classList.add('active');
+    renderJobs();
+}
+
+// ==================== JOB DETAIL ====================
+function openJobDetail(jobId) {
+    currentJobId = jobId;
+    const job = appData.jobs.find(j => j.id === jobId) || appData.archivedJobs.find(j => j.id === jobId);
+    if (!job) return;
+    const paid = job.payments.reduce((s,p) => s + p.amount, 0);
+    const remaining = job.agreedAmount - paid;
+    const cost = getJobCost(job);
+    const profit = job.agreedAmount - cost.total;
+    const profitPct = job.agreedAmount > 0 ? ((profit/job.agreedAmount)*100).toFixed(1) : 0;
+    const isArchived = job.status === 'archived';
+    const wsLabel = getWorkshopLabel(job.workshop);
+    const wsBadge = job.workshop === 'sila' ? 'badge-sila' : 'badge-fayoum';
+
+    // Linked treasury expenses
+    const linkedExpenses = appData.treasury.expenses.filter(e => String(e.jobId) === String(job.id));
+
+    document.getElementById('job-detail-content').innerHTML = `
+        <div class="detail-header">
+            <div class="detail-title">${job.name}</div>
+            <div class="detail-meta">
+                <span class="badge-workshop ${wsBadge}">${wsLabel}</span>
+                <span class="font-bold">النوع: ${job.productType}</span>
+                <span>الزبون: ${job.client}</span>
+                <span>البدء: ${job.createdAt}</span>
+            </div>
+        </div>
+
+        <!-- Financial Summary -->
+        <div class="detail-section">
+            <div class="detail-section-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+                الحسابات والمالية
+            </div>
+            <div class="detail-row"><span class="detail-label">المبلغ المتفق عليه</span><span class="detail-value text-lg font-black">${fmt(job.agreedAmount)} ج.م</span></div>
+            <div class="detail-row"><span class="detail-label">المدفوع (المقبوضات)</span><span class="detail-value text-green-400 font-bold">${fmt(paid)} ج.م</span></div>
+            <div class="detail-row"><span class="detail-label">المتبقي للتحصيل</span><span class="detail-value text-amber-500 font-bold text-lg">${fmt(remaining)} ج.م</span></div>
+            ${job.notes ? `<div class="mt-4 pt-4 border-t border-slate-700"><div class="detail-label mb-1">الملاحظات:</div><div class="text-slate-300 text-sm leading-relaxed bg-slate-900/50 p-3 rounded-lg border border-slate-800">${job.notes}</div></div>` : ''}
+        </div>
+
+        <!-- Materials -->
+        <div class="detail-section">
+            <div class="detail-section-title justify-between">
+                <span class="flex items-center gap-2">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 2.17l-5.63 5.63a6 6 0 0 1 2.17-7.94l3.77 3.77z"/></svg>
+                    المواد والخامات (${job.requests.length})
+                </span>
+                <span class="text-xs text-teal-400 font-bold">إجمالي: ${fmt(cost.materials)} ج.م</span>
+            </div>
+            <div>
+                ${job.requests.length > 0 ? job.requests.map(r => `
+                    <div class="request-item">
+                        <div class="request-header">
+                            <div class="request-desc">${r.description}</div>
+                            ${!isArchived ? `<div class="request-del-btn" onclick="deleteJobMaterialConfirm(${job.id},${r.id})"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></div>` : ''}
+                        </div>
+                        <div class="request-details">
+                            <span>${r.cost} × ${r.quantity} ${r.fromWarehouse ? '<span class="text-[10px] bg-slate-800 text-teal-400 px-1 rounded">مخزن</span>' : '<span class="text-[10px] bg-slate-800 text-rose-400 px-1 rounded">خارجي</span>'}</span>
+                            <span class="request-total">${fmt(r.cost * r.quantity)} ج.م</span>
+                        </div>
+                    </div>`) .join('') : '<div class="text-center text-slate-500 py-4">لا توجد مواد مضافة</div>'}
+            </div>
+            ${!isArchived ? `<button class="btn btn-secondary mt-3" onclick="openModal('new-request-modal')" style="margin-top:12px">+ إضافة خامة</button>` : ''}
+        </div>
+
+        <!-- Labor (Masna3eyat) -->
+        <div class="detail-section">
+            <div class="detail-section-title justify-between">
+                <span class="flex items-center gap-2">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+                    المصنعيات (${(job.laborItems||[]).length})
+                </span>
+                <span class="text-xs text-amber-400 font-bold">إجمالي: ${fmt(cost.labor)} ج.م</span>
+            </div>
+            <div>
+                ${(job.laborItems||[]).length > 0 ? job.laborItems.map(l => `
+                    <div class="labor-item">
+                        <div>
+                            <div class="labor-desc">${l.description}</div>
+                            <div class="text-xs text-slate-400">${getCatName(l.categoryId)}</div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="labor-amount">${fmt(l.amount)} ج.م</span>
+                            ${!isArchived ? `<div class="request-del-btn" onclick="deleteJobLabor(${job.id},${l.id})"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></div>` : ''}
+                        </div>
+                    </div>`) .join('') : '<div class="text-center text-slate-500 py-4">لا توجد مصنعيات مضافة</div>'}
+            </div>
+            ${!isArchived ? `<button class="btn btn-secondary mt-3" onclick="openModal('new-labor-modal')" style="margin-top:12px;border-color:rgba(245,158,11,0.4);color:var(--warning)">+ إضافة مصنعية</button>` : ''}
+        </div>
+
+        <!-- Linked Expenses -->
+        ${linkedExpenses.length > 0 ? `
+        <div class="detail-section">
+            <div class="detail-section-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--danger)" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                مصروفات مرتبطة بالشغلانة
+                <span class="text-xs text-red-400 font-bold mr-auto">${fmt(cost.linkedExp)} ج.م</span>
+            </div>
+            ${linkedExpenses.map(e => `
+                <div class="detail-row">
+                    <span class="detail-label">${e.description} <span class="text-xs text-slate-500">(${e.date})</span></span>
+                    <span class="detail-value text-red-400">−${fmt(e.amount)} ج.م</span>
+                </div>`).join('')}
+        </div>` : ''}
+
+        <!-- Payments -->
+        <div class="detail-section">
+            <div class="detail-section-title justify-between">
+                <span class="flex items-center gap-2">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                    الدفعات المالية (${job.payments.length})
+                </span>
+                <span class="text-xs text-green-400 font-bold">مستلم: ${fmt(paid)} ج.م</span>
+            </div>
+            ${job.payments.length > 0 ? job.payments.map(p => `
+                <div class="payment-item">
+                    <div>
+                        <div class="payment-amount">+${fmt(p.amount)} ج.م</div>
+                        <div class="payment-date">تاريخ: ${p.date}</div>
+                    </div>
+                </div>`).join('') : '<div class="text-center text-slate-500 py-4">لا توجد دفعات مسجلة</div>'}
+            ${!isArchived ? `<button class="btn btn-secondary" onclick="openModal('new-payment-modal')" style="margin-top:12px">+ تسجيل دفعة مالية</button>` : ''}
+        </div>
+
+        <!-- Full Cost Summary -->
+        <div class="summary-card">
+            <div class="summary-row"><span class="summary-label">قيمة الشغلانة</span><span class="summary-value">${fmt(job.agreedAmount)} ج.م</span></div>
+            <div class="summary-row"><span class="summary-label">تكلفة الخامات</span><span class="summary-value text-red-400">−${fmt(cost.materials)} ج.م</span></div>
+            <div class="summary-row"><span class="summary-label">تكلفة المصنعيات</span><span class="summary-value text-amber-400">−${fmt(cost.labor)} ج.م</span></div>
+            ${cost.linkedExp > 0 ? `<div class="summary-row"><span class="summary-label">مصروفات مرتبطة</span><span class="summary-value text-orange-400">−${fmt(cost.linkedExp)} ج.م</span></div>` : ''}
+            <div class="summary-row"><span class="summary-label">إجمالي التكلفة</span><span class="summary-value text-red-400 font-black">${fmt(cost.total)} ج.م</span></div>
+            <div class="summary-row">
+                <span class="summary-label">صافي الربح</span>
+                <span class="summary-value summary-total ${profit < 0 ? 'text-red-400' : ''}">${fmt(profit)} ج.م (${profitPct}%)</span>
+            </div>
+        </div>
+
+        ${!isArchived ? `
+        <div class="grid grid-cols-2 gap-3" style="margin-top:16px">
+            <button class="btn btn-primary" onclick="archiveJob(${job.id})">أرشفة الشغلانة</button>
+            <button class="btn btn-secondary" onclick="sendWhatsApp(${job.id})">تقرير واتساب</button>
+        </div>` : ''}
+    `;
+    switchView('job-detail-view');
+}
+
+// ==================== TREASURY ====================
+function switchTreasuryTab(tab) {
+    currentTreasuryTab = tab;
+    document.querySelectorAll('.tab[data-ttab]').forEach(t => t.classList.remove('active'));
+    document.querySelector(`.tab[data-ttab="${tab}"]`).classList.add('active');
+    document.getElementById('treasury-income-section').style.display = tab === 'income' ? 'block' : 'none';
+    document.getElementById('treasury-expenses-section').style.display = tab === 'expenses' ? 'block' : 'none';
+}
+
+function renderTreasury() {
+    const totalIncome = appData.treasury.income.reduce((s,i) => s + i.amount, 0);
+    const totalExpense = appData.treasury.expenses.reduce((s,e) => s + e.amount, 0);
+    const balance = totalIncome - totalExpense;
+
+    document.getElementById('treasury-balance').textContent = fmt(balance) + ' ج.م';
+    document.getElementById('treasury-balance').style.color = balance >= 0 ? 'var(--accent)' : 'var(--danger)';
+    document.getElementById('treas-total-income').textContent = fmt(totalIncome) + ' ج.م';
+    document.getElementById('treas-total-expense').textContent = fmt(totalExpense) + ' ج.م';
+
+    // Income list
+    const incList = document.getElementById('treasury-income-list');
+    const sortedInc = [...appData.treasury.income].sort((a,b) => new Date(b.date)-new Date(a.date));
+    if (sortedInc.length === 0) {
+        incList.innerHTML = `<div class="empty-state"><div class="empty-title">لا توجد واردات</div></div>`;
+    } else {
+        incList.innerHTML = sortedInc.map(i => `
+            <div class="treasury-card income-card">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <div class="font-bold text-sm">${i.description}</div>
+                        <div class="text-xs text-slate-400 mt-1">${getCatName(i.categoryId)} · ${getWorkshopLabel(i.workshopId)} · ${i.date}</div>
+                        ${i.jobId ? `<div class="text-xs text-teal-400">مرتبط بشغلانة #${i.jobId}</div>` : ''}
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div class="treasury-amount-income">+${fmt(i.amount)} ج.م</div>
+                        <div class="request-del-btn" onclick="deleteIncome(${i.id})"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></div>
+                    </div>
+                </div>
+            </div>`).join('');
+    }
+
+    // Expense list
+    const expList = document.getElementById('treasury-expense-list');
+    const sortedExp = [...appData.treasury.expenses].sort((a,b) => new Date(b.date)-new Date(a.date));
+    if (sortedExp.length === 0) {
+        expList.innerHTML = `<div class="empty-state"><div class="empty-title">لا توجد مصروفات</div></div>`;
+    } else {
+        expList.innerHTML = sortedExp.map(e => `
+            <div class="treasury-card expense-card">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <div class="font-bold text-sm">${e.description}</div>
+                        <div class="text-xs text-slate-400 mt-1">${getCatName(e.categoryId)} · ${getWorkshopLabel(e.workshopId)} · ${e.date}</div>
+                        ${e.jobId ? `<div class="text-xs text-amber-400">مرتبط بشغلانة #${e.jobId}</div>` : ''}
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div class="treasury-amount-expense">−${fmt(e.amount)} ج.م</div>
+                        <div class="request-del-btn" onclick="deleteExpense(${e.id})"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></div>
+                    </div>
+                </div>
+            </div>`).join('');
+    }
+}
+
+// ==================== REPORTS ====================
+function switchReportTab(tab) {
+    currentReportTab = tab;
+    document.querySelectorAll('.tab[data-rtab]').forEach(t => t.classList.remove('active'));
+    document.querySelector(`.tab[data-rtab="${tab}"]`).classList.add('active');
+    ['pl','treasury','jobs','workshops'].forEach(t => {
+        document.getElementById(`report-${t}-section`).style.display = t === tab ? 'block' : 'none';
+    });
+    updateReports();
+}
+
+function setPeriod(period) {
+    currentPeriod = period;
+    document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
+    document.querySelector(`.period-btn[data-period="${period}"]`).classList.add('active');
+    const customRange = document.getElementById('custom-date-range');
+    customRange.style.display = period === 'custom' ? 'grid' : 'none';
+    updateReports();
+}
+
+function updateReports() {
+    if (currentReportTab === 'pl') renderPLReport();
+    else if (currentReportTab === 'treasury') renderTreasuryReport();
+    else if (currentReportTab === 'jobs') renderJobsReport();
+    else if (currentReportTab === 'workshops') renderWorkshopsReport();
+}
+
+function renderPLReport() {
+    // Income side
+    let jobs = appData.jobs;
+    if (currentWorkshopFilter !== 'all') jobs = jobs.filter(j => j.workshop === currentWorkshopFilter);
+
+    const incomeFiltered = appData.treasury.income.filter(i => {
+        const wsOk = currentWorkshopFilter === 'all' || i.workshopId === currentWorkshopFilter || i.workshopId === 'all';
+        return wsOk && isInPeriod(i.date);
+    });
+    const expenseFiltered = appData.treasury.expenses.filter(e => {
+        const wsOk = currentWorkshopFilter === 'all' || e.workshopId === currentWorkshopFilter || e.workshopId === 'all';
+        return wsOk && isInPeriod(e.date);
+    });
+
+    // Group income by category
+    const incByCat = {};
+    incomeFiltered.forEach(i => { incByCat[i.categoryId] = (incByCat[i.categoryId]||0) + i.amount; });
+    const totalIncome = Object.values(incByCat).reduce((s,v) => s+v, 0);
+
+    // Group expenses by category
+    const expByCat = {};
+    expenseFiltered.forEach(e => { expByCat[e.categoryId] = (expByCat[e.categoryId]||0) + e.amount; });
+    // Add labor from jobs
+    jobs.forEach(j => (j.laborItems||[]).forEach(l => {
+        expByCat[l.categoryId] = (expByCat[l.categoryId]||0) + l.amount;
+    }));
+    // Add materials from jobs
+    let totalMaterials = jobs.reduce((s,j) => s + (j.requests||[]).reduce((ss,r) => ss + r.cost*r.quantity,0),0);
+    if (totalMaterials > 0) expByCat['cat_materials'] = (expByCat['cat_materials']||0) + totalMaterials;
+    const totalExpense = Object.values(expByCat).reduce((s,v) => s+v, 0);
+    const netProfit = totalIncome - totalExpense;
+
+    document.getElementById('pl-revenue-rows').innerHTML = Object.entries(incByCat).map(([id,amt]) =>
+        `<div class="pl-row"><span>${getCatName(id)}</span><span class="text-green-400 font-bold">${fmt(amt)} ج.م</span></div>`
+    ).join('') || '<div class="pl-row text-slate-500">لا توجد إيرادات في هذه الفترة</div>';
+
+    document.getElementById('pl-expense-rows').innerHTML = Object.entries(expByCat).map(([id,amt]) =>
+        `<div class="pl-row"><span>${getCatName(id)}</span><span class="text-red-400 font-bold">${fmt(amt)} ج.م</span></div>`
+    ).join('') || '<div class="pl-row text-slate-500">لا توجد مصروفات في هذه الفترة</div>';
+
+    document.getElementById('pl-total-revenue').textContent = fmt(totalIncome) + ' ج.م';
+    document.getElementById('pl-total-expense').textContent = fmt(totalExpense) + ' ج.م';
+    document.getElementById('pl-net-profit').textContent = fmt(netProfit) + ' ج.م';
+    const netRow = document.getElementById('pl-net-row');
+    netRow.className = `pl-total-row ${netProfit >= 0 ? 'profit' : 'loss'}`;
+    document.querySelector('#pl-net-row span:last-child').style.color = netProfit >= 0 ? 'var(--success)' : 'var(--danger)';
+}
+
+function renderTreasuryReport() {
+    const incomeFiltered = appData.treasury.income.filter(i => isInPeriod(i.date));
+    const expenseFiltered = appData.treasury.expenses.filter(e => isInPeriod(e.date));
+    const totalIncome = incomeFiltered.reduce((s,i) => s+i.amount, 0);
+    const totalExpense = expenseFiltered.reduce((s,e) => s+e.amount, 0);
+
+    document.getElementById('rep-treasury-income').textContent = fmt(totalIncome) + ' ج.م';
+    document.getElementById('rep-treasury-expense').textContent = fmt(totalExpense) + ' ج.م';
+    document.getElementById('rep-treasury-balance').textContent = fmt(totalIncome - totalExpense) + ' ج.م';
+
+    // By category
+    const byCat = {};
+    expenseFiltered.forEach(e => { byCat[e.categoryId] = (byCat[e.categoryId]||0) + e.amount; });
+    document.getElementById('rep-expense-by-cat').innerHTML = Object.entries(byCat).sort((a,b) => b[1]-a[1]).map(([id,amt]) => {
+        const pct = totalExpense > 0 ? Math.round((amt/totalExpense)*100) : 0;
+        return `<div style="margin-bottom:10px">
+            <div class="flex justify-between text-sm mb-1"><span>${getCatName(id)}</span><span class="font-bold text-red-400">${fmt(amt)} ج.م (${pct}%)</span></div>
+            <div class="material-progress-bg"><div style="width:${pct}%;height:100%;background:linear-gradient(90deg,var(--danger),rgba(239,68,68,0.4));border-radius:3px"></div></div>
+        </div>`;
+    }).join('') || '<div class="text-slate-500 text-sm">لا توجد مصروفات</div>';
+
+    // Last transactions
+    const allTxns = [
+        ...incomeFiltered.map(i => ({...i, txType:'income'})),
+        ...expenseFiltered.map(e => ({...e, txType:'expense'}))
+    ].sort((a,b) => new Date(b.date)-new Date(a.date)).slice(0,10);
+    document.getElementById('rep-treasury-txns').innerHTML = allTxns.map(t => `
+        <div class="treasury-card ${t.txType === 'income' ? 'income-card' : 'expense-card'}" style="margin-bottom:8px">
+            <div class="flex justify-between">
+                <div>
+                    <div class="text-sm font-bold">${t.description}</div>
+                    <div class="text-xs text-slate-400">${getCatName(t.categoryId)} · ${t.date}</div>
+                </div>
+                <div class="${t.txType === 'income' ? 'treasury-amount-income' : 'treasury-amount-expense'}">${t.txType === 'income' ? '+' : '−'}${fmt(t.amount)} ج.م</div>
+            </div>
+        </div>`).join('') || '<div class="text-slate-500 text-sm text-center py-4">لا توجد حركات</div>';
+}
+
+function renderJobsReport() {
+    let jobs = [...appData.jobs, ...appData.archivedJobs];
+    if (currentWorkshopFilter !== 'all') jobs = jobs.filter(j => j.workshop === currentWorkshopFilter);
+    document.getElementById('rep-jobs-list').innerHTML = jobs.map(j => {
+        const cost = getJobCost(j);
+        const profit = j.agreedAmount - cost.total;
+        const pct = j.agreedAmount > 0 ? ((profit/j.agreedAmount)*100).toFixed(1) : 0;
+        const paid = j.payments.reduce((s,p) => s+p.amount, 0);
+        return `<div class="pl-section" style="margin-bottom:12px">
+            <div class="pl-section-title">${j.name} <span class="text-xs font-normal text-slate-400">(${j.productType})</span></div>
+            <div class="pl-row"><span>قيمة الشغلانة</span><span class="font-bold">${fmt(j.agreedAmount)} ج.م</span></div>
+            <div class="pl-row"><span>تكلفة الخامات</span><span class="text-red-400">${fmt(cost.materials)} ج.م</span></div>
+            <div class="pl-row"><span>تكلفة المصنعيات</span><span class="text-amber-400">${fmt(cost.labor)} ج.م</span></div>
+            ${cost.linkedExp > 0 ? `<div class="pl-row"><span>مصروفات مرتبطة</span><span class="text-orange-400">${fmt(cost.linkedExp)} ج.م</span></div>` : ''}
+            <div class="pl-row"><span>إجمالي التكلفة</span><span class="text-red-400 font-black">${fmt(cost.total)} ج.م</span></div>
+            <div class="pl-row"><span>المقبوض</span><span class="text-green-400">${fmt(paid)} ج.م</span></div>
+            <div class="pl-total-row ${profit >= 0 ? 'profit' : 'loss'}">
+                <span>صافي الربح</span>
+                <span>${fmt(profit)} ج.م (${pct}%)</span>
+            </div>
+        </div>`;
+    }).join('') || '<div class="empty-state"><div class="empty-title">لا توجد شغلانات</div></div>';
+}
+
+function renderWorkshopsReport() {
+    const workshops = ['sila', 'fayoum'];
+    document.getElementById('rep-workshops-content').innerHTML = workshops.map(ws => {
+        const wsJobs = [...appData.jobs, ...appData.archivedJobs].filter(j => j.workshop === ws);
+        const totalRevenue = wsJobs.reduce((s,j) => s+j.agreedAmount, 0);
+        const totalCost = wsJobs.reduce((s,j) => s+getJobCost(j).total, 0);
+        const profit = totalRevenue - totalCost;
+        const wsIncome = appData.treasury.income.filter(i => i.workshopId === ws || i.workshopId === 'all');
+        const wsExpense = appData.treasury.expenses.filter(e => e.workshopId === ws || e.workshopId === 'all');
+        const totalIncomeWs = wsIncome.reduce((s,i) => s+i.amount, 0);
+        const totalExpenseWs = wsExpense.reduce((s,e) => s+e.amount, 0);
+        const color = ws === 'sila' ? 'var(--accent)' : 'var(--info)';
+        return `<div class="pl-section" style="border-right:4px solid ${color};margin-bottom:16px">
+            <div class="pl-section-title" style="color:${color}">${getWorkshopLabel(ws)}</div>
+            <div class="pl-row"><span>عدد الشغلانات</span><span class="font-bold">${wsJobs.length} شغلانة</span></div>
+            <div class="pl-row"><span>إجمالي قيمة الشغلانات</span><span class="font-bold">${fmt(totalRevenue)} ج.م</span></div>
+            <div class="pl-row"><span>إجمالي تكاليف الشغلانات</span><span class="text-red-400">${fmt(totalCost)} ج.م</span></div>
+            <div class="pl-row"><span>إجمالي الواردات (الخزنة)</span><span class="text-green-400">${fmt(totalIncomeWs)} ج.م</span></div>
+            <div class="pl-row"><span>إجمالي المصروفات (الخزنة)</span><span class="text-red-400">${fmt(totalExpenseWs)} ج.م</span></div>
+            <div class="pl-total-row ${profit >= 0 ? 'profit' : 'loss'}">
+                <span>صافي الأرباح</span>
+                <span>${fmt(profit)} ج.م</span>
+            </div>
+        </div>`;
+    }).join('');
+}
+
+// ==================== CATEGORIES ====================
+function switchCatTab(tab) {
+    currentCatTab = tab;
+    document.querySelectorAll('.tab[data-cattab]').forEach(t => t.classList.remove('active'));
+    document.querySelector(`.tab[data-cattab="${tab}"]`).classList.add('active');
+    renderCategories();
+}
+
+function renderCategories() {
+    const container = document.getElementById('categories-list');
+    if (!container) return;
+    const filtered = appData.categories.filter(c => c.type === currentCatTab);
+    if (filtered.length === 0) {
+        container.innerHTML = `<div class="empty-state"><div class="empty-title">لا توجد تصنيفات</div><div class="empty-text">اضغط "إضافة تصنيف جديد" أدناه</div></div>`;
+        return;
+    }
+    container.innerHTML = filtered.map(c => `
+        <div class="cat-item">
+            <span class="cat-name">${c.name}</span>
+            <div class="flex items-center gap-3">
+                <span class="cat-type ${c.type}">${c.type === 'expense' ? 'مصروف' : c.type === 'income' ? 'وارد' : 'مصنعية'}</span>
+                <div class="request-del-btn" onclick="deleteCategoryConfirm('${c.id}')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></div>
+            </div>
+        </div>`).join('');
+}
+
+function openAddCategoryModal() {
+    document.getElementById('cat-edit-id').value = '';
+    document.getElementById('new-category-form').reset();
+    document.getElementById('cat-type-select').value = currentCatTab;
+    openModal('new-category-modal');
+}
+
+function saveCategory(event) {
+    event.preventDefault();
+    const form = event.target;
+    const fd = new FormData(form);
+    const editId = fd.get('editId');
+    const name = fd.get('name').trim();
+    const type = fd.get('type');
+    if (editId) {
+        const cat = appData.categories.find(c => c.id === editId);
+        if (cat) { cat.name = name; cat.type = type; }
+    } else {
+        appData.categories.push({ id: 'cat_' + Date.now(), name, type });
+    }
+    saveData();
+    closeModal('new-category-modal');
+    renderCategories();
+}
+
+function deleteCategoryConfirm(id) {
+    if (confirm('هل تريد حذف هذا التصنيف؟')) {
+        appData.categories = appData.categories.filter(c => c.id !== id);
+        saveData();
+        renderCategories();
+    }
+}
+
+// ==================== FORM HANDLERS ====================
+function saveJob(event) {
+    event.preventDefault();
+    const fd = new FormData(event.target);
+    const newJob = {
+        id: Date.now(),
+        name: fd.get('name'),
+        workshop: fd.get('workshop'),
+        productType: fd.get('productType'),
+        status: 'active',
+        client: fd.get('client'),
+        agreedAmount: parseInt(fd.get('amount')) || 0,
+        createdAt: new Date().toISOString().split('T')[0],
+        notes: fd.get('notes'),
+        requests: [],
+        laborItems: [],
+        payments: []
+    };
+    appData.jobs.unshift(newJob);
+    saveData();
+    closeModal('new-job-modal');
+    event.target.reset();
+    setTodayDates();
+    updateDashboard();
+    renderJobs();
+}
+
+function saveIncome(event) {
+    event.preventDefault();
+    const fd = new FormData(event.target);
+    const jobId = fd.get('jobId');
+    appData.treasury.income.unshift({
+        id: Date.now(),
+        date: fd.get('date'),
+        amount: parseInt(fd.get('amount')) || 0,
+        description: fd.get('description'),
+        categoryId: fd.get('categoryId'),
+        workshopId: fd.get('workshopId'),
+        jobId: jobId ? parseInt(jobId) : ''
+    });
+    saveData();
+    closeModal('new-income-modal');
+    event.target.reset();
+    renderTreasury();
+    updateDashboard();
+}
+
+function saveExpense(event) {
+    event.preventDefault();
+    const fd = new FormData(event.target);
+    const jobId = fd.get('jobId');
+    appData.treasury.expenses.unshift({
+        id: Date.now(),
+        date: fd.get('date'),
+        amount: parseInt(fd.get('amount')) || 0,
+        description: fd.get('description'),
+        categoryId: fd.get('categoryId'),
+        workshopId: fd.get('workshopId'),
+        jobId: jobId ? parseInt(jobId) : ''
+    });
+    saveData();
+    closeModal('new-expense-modal');
+    event.target.reset();
+    renderTreasury();
+    updateDashboard();
+}
+
+function saveLabor(event) {
+    event.preventDefault();
+    const fd = new FormData(event.target);
+    const job = appData.jobs.find(j => j.id === currentJobId);
+    if (!job) return;
+    if (!job.laborItems) job.laborItems = [];
+    job.laborItems.push({
+        id: Date.now(),
+        description: fd.get('description'),
+        amount: parseInt(fd.get('amount')) || 0,
+        categoryId: fd.get('categoryId')
+    });
+    saveData();
+    closeModal('new-labor-modal');
+    event.target.reset();
+    openJobDetail(currentJobId);
+    updateDashboard();
+}
+
+function saveWarehouseItem(event) {
+    event.preventDefault();
+    const fd = new FormData(event.target);
+    appData.warehouse.push({
+        id: Date.now(),
+        name: fd.get('name'),
+        unit: fd.get('unit'),
+        cost: parseInt(fd.get('cost')) || 0,
+        quantity: parseInt(fd.get('quantity')) || 0,
+        minQuantity: parseInt(fd.get('minQuantity')) || 5
+    });
+    saveData();
+    closeModal('new-warehouse-item-modal');
+    event.target.reset();
+    renderWarehouse();
+}
+
+function openRestockModal() {
+    if (appData.warehouse.length === 0) { alert('المخزن فارغ! أضف خامة جديدة أولاً.'); return; }
+    document.getElementById('restock-material-select').innerHTML = appData.warehouse.map(i => `<option value="${i.id}">${i.name} (${i.quantity} ${i.unit} متوفر)</option>`).join('');
+    openModal('restock-modal');
+}
+
+function saveRestock(event) {
+    event.preventDefault();
+    const fd = new FormData(event.target);
+    const item = appData.warehouse.find(w => w.id === parseInt(fd.get('materialId')));
+    if (item) {
+        item.quantity += parseInt(fd.get('quantity')) || 0;
+        const newCost = parseInt(fd.get('cost'));
+        if (newCost > 0) item.cost = newCost;
+        saveData();
+        closeModal('restock-modal');
+        event.target.reset();
+        renderWarehouse();
+        updateDashboard();
+    }
+}
+
+function savePayment(event) {
+    event.preventDefault();
+    const fd = new FormData(event.target);
+    const job = appData.jobs.find(j => j.id === currentJobId);
+    if (!job) return;
+    const amount = parseInt(fd.get('amount')) || 0;
+    const paid = job.payments.reduce((s,p) => s+p.amount, 0);
+    const remaining = job.agreedAmount - paid;
+    if (amount > remaining) {
+        if (!confirm(`المبلغ (${fmt(amount)}) يتجاوز المتبقي (${fmt(remaining)}). هل تريد الاستمرار؟`)) return;
+    }
+    job.payments.push({ id: Date.now(), amount, date: fd.get('date') });
+    saveData();
+    closeModal('new-payment-modal');
+    event.target.reset();
+    setTodayDates();
+    openJobDetail(currentJobId);
+    updateDashboard();
+}
+
+function toggleMaterialSource() {
+    const isCustom = document.getElementById('custom-material-checkbox').checked;
+    document.getElementById('warehouse-select-container').style.display = isCustom ? 'none' : 'block';
+    document.getElementById('custom-material-input-container').style.display = isCustom ? 'block' : 'none';
+    if (isCustom) {
+        document.getElementById('job-material-cost').value = '';
+        document.getElementById('material-stock-warning').style.display = 'none';
+    } else {
+        fillWarehouseMaterialDetails();
+    }
+}
+
+function populateWarehouseMaterialsForJobForm() {
+    const sel = document.getElementById('job-material-warehouse-select');
+    const cb = document.getElementById('custom-material-checkbox');
+    cb.checked = false;
+    document.getElementById('warehouse-select-container').style.display = 'block';
+    document.getElementById('custom-material-input-container').style.display = 'none';
+    if (appData.warehouse.length === 0) {
+        sel.innerHTML = '<option value="">لا توجد خامات في المخزن</option>';
+        cb.checked = true;
+        toggleMaterialSource();
+        return;
+    }
+    sel.innerHTML = appData.warehouse.map(i => `<option value="${i.id}">${i.name}</option>`).join('');
+    fillWarehouseMaterialDetails();
+}
+
+function fillWarehouseMaterialDetails() {
+    const sel = document.getElementById('job-material-warehouse-select');
+    const item = appData.warehouse.find(w => w.id === parseInt(sel.value));
+    if (item) {
+        document.getElementById('job-material-cost').value = item.cost;
+        document.getElementById('job-material-quantity').value = 1;
+        checkStockAvailability();
+    }
+}
+
+function checkStockAvailability() {
+    const sel = document.getElementById('job-material-warehouse-select');
+    const item = appData.warehouse.find(w => w.id === parseInt(sel.value));
+    const qty = parseInt(document.getElementById('job-material-quantity').value) || 1;
+    const warn = document.getElementById('material-stock-warning');
+    if (item && qty > item.quantity) {
+        warn.style.display = 'block';
+        document.getElementById('material-avail-qty').textContent = `${item.quantity} ${item.unit}`;
+    } else {
+        warn.style.display = 'none';
+    }
+}
+
+document.getElementById('job-material-quantity').addEventListener('input', function() {
+    if (!document.getElementById('custom-material-checkbox').checked) checkStockAvailability();
+});
+
+function saveJobMaterial(event) {
+    event.preventDefault();
+    const isCustom = document.getElementById('custom-material-checkbox').checked;
+    const cost = parseInt(document.getElementById('job-material-cost').value) || 0;
+    const qty = parseInt(document.getElementById('job-material-quantity').value) || 1;
+    let description = '', fromWarehouse = false, warehouseItemId = null;
+
+    if (isCustom) {
+        description = document.getElementById('job-material-custom-name').value.trim();
+        if (!description) { alert('يرجى كتابة وصف الخامة!'); return; }
+    } else {
+        const sel = document.getElementById('job-material-warehouse-select');
+        warehouseItemId = parseInt(sel.value);
+        const item = appData.warehouse.find(w => w.id === warehouseItemId);
+        if (!item) { alert('يرجى اختيار مادة من المخزن!'); return; }
+        description = item.name;
+        fromWarehouse = true;
+        if (qty > item.quantity) {
+            if (!confirm(`الكمية المتاحة (${item.quantity}) أقل من المطلوبة (${qty}). هل تريد الاستمرار؟`)) return;
+        }
+        item.quantity -= qty;
+    }
+
+    const job = appData.jobs.find(j => j.id === currentJobId);
+    if (job) {
+        job.requests.push({ id: Date.now(), description, cost, quantity: qty, fromWarehouse, warehouseItemId });
+        saveData();
+        closeModal('new-request-modal');
+        document.getElementById('new-request-form').reset();
+        openJobDetail(currentJobId);
+        updateDashboard();
+    }
+}
+
+// ==================== DELETIONS ====================
+function deleteJobMaterialConfirm(jobId, matId) {
+    if (confirm('هل تريد حذف هذه المادة؟\n(سيتم إرجاع الكمية للمخزن تلقائياً)')) deleteJobMaterial(jobId, matId);
+}
+function deleteJobMaterial(jobId, matId) {
+    const job = appData.jobs.find(j => j.id === jobId);
+    if (!job) return;
+    const idx = job.requests.findIndex(r => r.id === matId);
+    if (idx !== -1) {
+        const mat = job.requests[idx];
+        if (mat.fromWarehouse && mat.warehouseItemId) {
+            const item = appData.warehouse.find(w => w.id === mat.warehouseItemId);
+            if (item) item.quantity += mat.quantity;
+        }
+        job.requests.splice(idx, 1);
+        saveData();
+        openJobDetail(currentJobId);
+        updateDashboard();
+    }
+}
+function deleteJobLabor(jobId, laborId) {
+    if (!confirm('هل تريد حذف هذه المصنعية؟')) return;
+    const job = appData.jobs.find(j => j.id === jobId);
+    if (job) {
+        job.laborItems = (job.laborItems||[]).filter(l => l.id !== laborId);
+        saveData();
+        openJobDetail(currentJobId);
+        updateDashboard();
+    }
+}
+function deleteIncome(id) {
+    if (!confirm('هل تريد حذف هذا الوارد؟')) return;
+    appData.treasury.income = appData.treasury.income.filter(i => i.id !== id);
+    saveData(); renderTreasury(); updateDashboard();
+}
+function deleteExpense(id) {
+    if (!confirm('هل تريد حذف هذا المصروف؟')) return;
+    appData.treasury.expenses = appData.treasury.expenses.filter(e => e.id !== id);
+    saveData(); renderTreasury(); updateDashboard();
+}
+
+// ==================== ARCHIVE ====================
+function archiveJob(jobId) {
+    if (!confirm('هل تريد أرشفة هذه الشغلانة؟\n(لن يمكن التعديل عليها لاحقاً)')) return;
+    const idx = appData.jobs.findIndex(j => j.id === jobId);
+    if (idx !== -1) {
+        const job = appData.jobs[idx];
+        job.status = 'archived';
+        appData.archivedJobs.unshift(job);
+        appData.jobs.splice(idx, 1);
+        saveData();
+        switchView('jobs-view');
+        renderJobs();
+        renderArchive();
+        updateDashboard();
+    }
+}
+
+function renderArchive() {
+    const container = document.getElementById('archive-list');
+    if (!container) return;
+    if (appData.archivedJobs.length === 0) {
+        container.innerHTML = `<div class="empty-state"><div class="empty-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/></svg></div><div class="empty-title">الأرشيف فارغ</div><div class="empty-text">الشغلانات المؤرشفة ستظهر هنا</div></div>`;
+        return;
+    }
+    container.innerHTML = appData.archivedJobs.map(j => createJobCard(j)).join('');
+}
+
+function searchArchive() {
+    const query = document.getElementById('archive-search').value.toLowerCase();
+    const container = document.getElementById('archive-list');
+    const filtered = appData.archivedJobs.filter(j =>
+        j.name.toLowerCase().includes(query) || j.client.toLowerCase().includes(query) || j.productType.toLowerCase().includes(query)
+    );
+    container.innerHTML = filtered.map(j => createJobCard(j)).join('') || '<div class="text-center text-slate-500 py-8">لا توجد نتائج</div>';
+}
+
+// ==================== WAREHOUSE ====================
+function renderWarehouse() {
+    const container = document.getElementById('warehouse-list');
+    if (!container) return;
+    const q = document.getElementById('warehouse-search').value.trim().toLowerCase();
+    let filtered = q ? appData.warehouse.filter(i => i.name.toLowerCase().includes(q)) : appData.warehouse;
+    let lowCount = 0;
+    if (filtered.length === 0) {
+        container.innerHTML = `<div class="empty-state"><div class="empty-title">لا توجد مواد</div><div class="empty-text">أضف خامات للمخزن</div></div>`;
+        return;
+    }
+    container.innerHTML = filtered.map(item => {
+        let stockStatus = 'كافي', badgeClass = 'badge-instock', cardClass = '';
+        if (item.quantity <= 0) { stockStatus = 'نفد'; badgeClass = 'badge-out'; cardClass = 'out-of-stock'; lowCount++; }
+        else if (item.quantity <= item.minQuantity) { stockStatus = 'منخفض'; badgeClass = 'badge-low'; cardClass = 'low-stock'; lowCount++; }
+        const progressWidth = Math.min((item.quantity / Math.max(item.minQuantity * 3, 1)) * 100, 100);
+        return `<div class="material-card ${cardClass}">
+            <div class="material-header">
+                <div>
+                    <div class="material-name">${item.name}</div>
+                    <div class="text-[11px] text-slate-400 font-bold mt-0.5">سعر التكلفة: ${item.cost} ج.م / ${item.unit}</div>
+                </div>
+                <span class="material-badge ${badgeClass}">${stockStatus}</span>
+            </div>
+            <div class="material-progress-bg"><div class="material-progress-bar" style="width:${progressWidth}%"></div></div>
+            <div class="material-stats">
+                <div class="material-stat"><div class="material-stat-value">${item.quantity} ${item.unit}</div><div class="material-stat-label">المخزون المتاح</div></div>
+                <div class="material-stat"><div class="material-stat-value">${item.minQuantity} ${item.unit}</div><div class="material-stat-label">حد الأمان</div></div>
+                <div class="material-stat"><div class="material-stat-value">${fmt(item.quantity * item.cost)} ج.م</div><div class="material-stat-label">إجمالي القيمة</div></div>
+            </div>
+        </div>`;
+    }).join('');
+    const warn = document.getElementById('low-stock-warning');
+    if (warn) warn.style.display = lowCount > 0 ? 'block' : 'none';
+}
+
+// ==================== WHATSAPP ====================
+function sendWhatsApp(jobId) {
+    const job = appData.jobs.find(j => j.id === jobId);
+    if (!job) return;
+    const paid = job.payments.reduce((s,p) => s+p.amount, 0);
+    const remaining = job.agreedAmount - paid;
+    const cost = getJobCost(job);
+    const profit = job.agreedAmount - cost.total;
+    const msg = `
+*🔨 تقرير شغلانة النجارة - ${getWorkshopLabel(job.workshop)}*
+━━━━━━━━━━━━━
+*الشغلانة:* ${job.name}
+*النوع:* ${job.productType}
+*العميل:* ${job.client}
+━━━━━━━━━━━━━
+*المبلغ المتفق عليه:* ${fmt(job.agreedAmount)} ج.م
+*إجمالي المقبوض:* ${fmt(paid)} ج.م
+*المتبقي للتحصيل:* ${fmt(remaining)} ج.م
+━━━━━━━━━━━━━
+*تكلفة الخامات:* ${fmt(cost.materials)} ج.م
+*تكلفة المصنعيات:* ${fmt(cost.labor)} ج.م
+*إجمالي التكلفة:* ${fmt(cost.total)} ج.م
+*صافي الربح:* ${fmt(profit)} ج.م
+*تاريخ البدء:* ${job.createdAt}
+    `.trim();
+    window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
+}
+
+// ==================== NOTIFICATIONS ====================
+function openNotifications() {
+    const outOfStock = appData.warehouse.filter(i => i.quantity <= 0);
+    const lowStock = appData.warehouse.filter(i => i.quantity > 0 && i.quantity <= i.minQuantity);
+    const totalIncome = appData.treasury.income.reduce((s,i) => s+i.amount, 0);
+    const totalExpense = appData.treasury.expenses.reduce((s,e) => s+e.amount, 0);
+    let msg = '🔔 الإشعارات وتنبيهات النظام:\n\n';
+    msg += `💰 رصيد الخزنة الحالي: ${fmt(totalIncome - totalExpense)} ج.م\n\n`;
+    if (outOfStock.length > 0) msg += '❌ خامات نفدت:\n' + outOfStock.map(i => `- ${i.name}`).join('\n') + '\n\n';
+    if (lowStock.length > 0) msg += '⚠️ خامات منخفضة:\n' + lowStock.map(i => `- ${i.name} (${i.quantity} ${i.unit})`).join('\n') + '\n';
+    if (outOfStock.length === 0 && lowStock.length === 0) msg += '✅ جميع الخامات متوفرة بكميات كافية!';
+    alert(msg);
+}
+
+// ==================== ANIMATIONS ====================
+function createParticles() {
+    const container = document.getElementById('particles');
+    if (!container || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    for (let i = 0; i < 12; i++) {
+        const p = document.createElement('div');
+        p.className = 'particle';
+        p.style.left = Math.random() * 100 + '%';
+        p.style.animationDelay = Math.random() * 10 + 's';
+        p.style.animationDuration = (10 + Math.random() * 10) + 's';
+        container.appendChild(p);
+    }
+}
+
+function animateBars() {
+    setTimeout(() => {
+        document.querySelectorAll('.bar').forEach((bar, i) => {
+            const h = bar.style.height;
+            bar.style.height = '0%';
+            setTimeout(() => { bar.style.height = h; }, i * 60);
+        });
+    }, 300);
+}
+
+// Close modals on overlay click
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+    overlay.addEventListener('click', function(e) {
+        if (e.target === this) { this.classList.remove('active'); document.body.style.overflow = ''; }
+    });
+});
+
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        document.querySelectorAll('.modal-overlay.active').forEach(m => { m.classList.remove('active'); document.body.style.overflow = ''; });
+    }
+});
+</script>
+</body>
+</html>
