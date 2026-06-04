@@ -1503,6 +1503,7 @@ function openJobDetail(jobId) {
         <div class="grid grid-cols-2 gap-3" style="margin-top:16px">
             ${!isArchived ? `<button class="btn btn-primary" onclick="openEditJobModal(${job.id})">تعديل البيانات</button>` : ''}
             ${!isArchived ? `<button class="btn btn-warning" onclick="archiveJob(${job.id})">أرشفة الشغلانة</button>` : ''}
+            ${isArchived ? `<button class="btn btn-primary" style="grid-column:span 2" onclick="restoreJob(${job.id})">↩️ استعادة الشغلانة (إلغاء الأرشفة)</button>` : ''}
             <button class="btn btn-secondary" onclick="sendWhatsApp(${job.id})" style="grid-column:span 2">تقرير واتساب</button>
             ${!isArchived ? `<button class="btn btn-danger" style="grid-column: span 2" onclick="cancelJob(${job.id})">إلغاء وحذف الشغلانة</button>` : ''}
         </div>
@@ -2125,6 +2126,22 @@ function cancelJob(jobId) {
         saveData();
         switchView('jobs-view');
         renderJobs();
+        updateDashboard();
+    }
+}
+
+function restoreJob(jobId) {
+    if (!confirm('هل تريد استعادة هذه الشغلانة وإعادتها للشغلانات النشطة؟')) return;
+    const idx = appData.archivedJobs.findIndex(j => j.id === jobId);
+    if (idx !== -1) {
+        const job = appData.archivedJobs[idx];
+        job.status = 'active';
+        appData.jobs.unshift(job);
+        appData.archivedJobs.splice(idx, 1);
+        saveData();
+        switchView('jobs-view');
+        renderJobs();
+        renderArchive();
         updateDashboard();
     }
 }
