@@ -1,0 +1,1738 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>ورشتي ERP v4 — إدارة الأشخاص والشغلانات</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--bg-primary:#0a0f1a;--bg-secondary:#111827;--bg-card:#1a2235;--bg-card-hover:#222d42;--accent:#00d4aa;--accent-glow:rgba(0,212,170,.3);--text-primary:#f0f4f8;--text-secondary:#8892a4;--text-muted:#5a6478;--border:#2a3548;--success:#10b981;--warning:#f59e0b;--danger:#ef4444;--info:#3b82f6;--purple:#8b5cf6}
+body.light-mode{--bg-primary:#f0f4f0;--bg-secondary:#fff;--bg-card:#fff;--bg-card-hover:#e8f5f2;--accent:#008a6e;--accent-glow:rgba(0,138,110,.25);--text-primary:#0d1f1a;--text-secondary:#3d5a52;--text-muted:#7a9990;--border:#c5ddd8;--success:#059669;--warning:#b45309;--danger:#dc2626;--info:#1d4ed8;--purple:#7c3aed}
+body.light-mode .bg-blob{opacity:.06}body.light-mode .bottom-nav{background:rgba(255,255,255,.97);box-shadow:0 -2px 20px rgba(0,100,80,.1)}
+body.light-mode .nav-item.active,body.light-mode .tab.active,body.light-mode .workshop-btn.active,body.light-mode .period-btn.active{background:var(--accent);color:#fff}
+body.light-mode .form-input{background:#f8fdfb;border-color:#b0cdc7}body.light-mode .form-input:focus{background:#fff;border-color:var(--accent)}
+body.light-mode .modal{background:#fff}body.light-mode .balance-card{background:linear-gradient(135deg,rgba(0,138,110,.08),rgba(0,80,200,.06));border-color:var(--accent)}
+body.light-mode .theme-btn .sun{opacity:1;transform:translate(-50%,-50%)rotate(0)scale(1)}body.light-mode .theme-btn .moon{opacity:0;transform:translate(-50%,-50%)rotate(90deg)scale(.5)}
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Tajawal',sans-serif;background:var(--bg-primary);color:var(--text-primary);min-height:100vh;overflow-x:hidden}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:var(--bg-secondary)}::-webkit-scrollbar-thumb{background:var(--accent);border-radius:4px}
+.app-container{max-width:430px;margin:0 auto;min-height:100vh;position:relative;background:var(--bg-primary);overflow:hidden;display:flex;flex-direction:column}
+.bg-effects{position:fixed;top:0;left:0;right:0;bottom:0;pointer-events:none;z-index:0}
+.bg-blob{position:absolute;border-radius:50%;filter:blur(80px);opacity:.3;animation:float 20s ease-in-out infinite}
+.bg-blob-1{width:300px;height:300px;background:linear-gradient(135deg,#00d4aa,#06f);top:-100px;right:-100px}
+.bg-blob-2{width:200px;height:200px;background:linear-gradient(135deg,#ff9f43,#ff5252);bottom:200px;left:-80px;animation-delay:-10s}
+@keyframes float{0%,100%{transform:translate(0,0)scale(1)}33%{transform:translate(30px,-30px)scale(1.1)}66%{transform:translate(-20px,20px)scale(.9)}}
+.app-header{position:sticky;top:0;z-index:100;padding:12px 16px;background:linear-gradient(180deg,var(--bg-primary)0%,transparent 100%);backdrop-filter:blur(20px)}
+.header-content{display:flex;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:10px}.logo-icon{width:36px;height:36px;background:linear-gradient(135deg,#a0522d,var(--accent));border-radius:10px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(160,82,45,.4)}
+.logo-text{font-size:16px;font-weight:800;background:linear-gradient(135deg,var(--text-primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header-actions{display:flex;gap:8px}.icon-btn{width:36px;height:36px;border-radius:10px;background:var(--bg-card);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .3s;color:var(--text-secondary)}
+.icon-btn:hover{background:var(--bg-card-hover);color:var(--accent);border-color:var(--accent)}
+.theme-btn{position:relative;overflow:hidden}.theme-btn .sun,.theme-btn .moon{position:absolute;top:50%;left:50%;transition:all .35s cubic-bezier(.34,1.56,.64,1)}
+.theme-btn .sun{opacity:0;transform:translate(-50%,-50%)rotate(90deg)scale(.5)}.theme-btn .moon{opacity:1;transform:translate(-50%,-50%)rotate(0)scale(1)}
+.main-content{padding:0 16px 100px;position:relative;z-index:1;flex-grow:1}.view{display:none;animation:fadeIn .4s ease}.view.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:translateY(0)}}
+.stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:20px}
+.stat-card{background:var(--bg-card);border-radius:14px;padding:14px;border:1px solid var(--border);position:relative;overflow:hidden;transition:all .3s}
+.stat-card:hover{transform:translateY(-4px);border-color:var(--accent)}
+.stat-card::before{content:'';position:absolute;top:0;right:0;width:50px;height:50px;border-radius:50%;opacity:.1}
+.stat-card.accent::before{background:var(--accent)}.stat-card.success::before{background:var(--success)}.stat-card.warning::before{background:var(--warning)}.stat-card.info::before{background:var(--info)}.stat-card.danger::before{background:var(--danger)}.stat-card.purple::before{background:var(--purple)}
+.stat-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:8px}
+.stat-card.accent .stat-icon{background:rgba(0,212,170,.2);color:var(--accent)}.stat-card.success .stat-icon{background:rgba(16,185,129,.2);color:var(--success)}.stat-card.warning .stat-icon{background:rgba(245,158,11,.2);color:var(--warning)}.stat-card.info .stat-icon{background:rgba(59,130,246,.2);color:var(--info)}.stat-card.danger .stat-icon{background:rgba(239,68,68,.2);color:var(--danger)}.stat-card.purple .stat-icon{background:rgba(139,92,246,.2);color:#8b5cf6}
+.stat-value{font-size:16px;font-weight:800;margin-bottom:2px}.stat-label{font-size:10px;color:var(--text-secondary)}
+.section-title{font-size:14px;font-weight:700;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between}
+.section-title a{font-size:12px;color:var(--accent);text-decoration:none;font-weight:500}
+.balance-card{background:linear-gradient(135deg,rgba(0,212,170,.15),rgba(0,102,255,.1));border-radius:18px;padding:20px;border:1px solid var(--accent);margin-bottom:20px;text-align:center}
+.balance-amount{font-size:32px;font-weight:900;color:var(--accent);margin:6px 0}.balance-label{font-size:13px;color:var(--text-secondary)}
+.workshop-toggle{display:flex;background:var(--bg-card);border-radius:10px;padding:4px;border:1px solid var(--border);margin-bottom:16px;gap:4px}
+.workshop-btn{flex:1;padding:8px;text-align:center;font-size:11px;font-weight:700;border-radius:8px;cursor:pointer;transition:all .3s;color:var(--text-secondary)}
+.workshop-btn.active{background:var(--accent);color:var(--bg-primary)}
+.bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:rgba(17,24,39,.95);backdrop-filter:blur(20px);border-top:1px solid var(--border);padding:6px 4px;padding-bottom:calc(6px + env(safe-area-inset-bottom));z-index:200}
+.nav-items{display:flex;justify-content:space-around;align-items:center}
+.nav-item{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 8px;border-radius:10px;cursor:pointer;transition:all .3s;color:var(--text-muted)}
+.nav-item.active{color:var(--accent);background:rgba(0,212,170,.1)}.nav-icon{width:20px;height:20px}.nav-label{font-size:8px;font-weight:600}
+.fab{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,var(--accent),#00b894);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 30px var(--accent-glow);transition:all .3s;z-index:150}
+.fab:hover{transform:translateX(-50%)scale(1.1)}.fab svg{width:22px;height:22px;color:var(--bg-primary)}
+.modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.7);z-index:300;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px)}
+.modal-overlay.active{display:flex}
+.modal{background:var(--bg-secondary);border-radius:22px 22px 0 0;padding:20px;width:100%;max-width:430px;max-height:90vh;overflow-y:auto;border:1px solid var(--border);border-bottom:none}
+.modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}.modal-title{font-size:18px;font-weight:800}
+.modal-close{width:30px;height:30px;border-radius:50%;background:var(--bg-card);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-secondary);transition:all .3s}
+.modal-close:hover{background:var(--danger);color:#fff}
+.form-group{margin-bottom:16px}.form-label{display:block;font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:6px}
+.form-input{width:100%;padding:12px 14px;border-radius:10px;background:var(--bg-card);border:1px solid var(--border);color:var(--text-primary);font-size:14px;font-family:inherit;transition:all .3s}
+.form-input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-glow)}.form-input::placeholder{color:var(--text-muted)}
+select.form-input{cursor:pointer}textarea.form-input{min-height:70px;resize:vertical}.form-row{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.btn{width:100%;padding:14px;border-radius:10px;border:none;font-size:14px;font-weight:700;font-family:inherit;cursor:pointer;transition:all .3s;text-align:center;display:block}
+.btn-primary{background:linear-gradient(135deg,var(--accent),#00b894);color:var(--bg-primary)}.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 30px var(--accent-glow)}
+.btn-secondary{background:var(--bg-card);color:var(--text-primary);border:1px solid var(--border)}.btn-secondary:hover{background:var(--bg-card-hover);border-color:var(--accent)}
+.btn-danger{background:rgba(239,68,68,.2);color:var(--danger);border:1px solid rgba(239,68,68,.4)}.btn-danger:hover{background:var(--danger);color:#fff}
+.tabs{display:flex;gap:6px;margin-bottom:16px;overflow-x:auto;padding-bottom:4px}
+.tab{padding:8px 16px;border-radius:10px;background:var(--bg-card);border:1px solid var(--border);font-size:12px;font-weight:600;color:var(--text-secondary);cursor:pointer;white-space:nowrap;transition:all .3s}
+.tab.active{background:var(--accent);color:var(--bg-primary);border-color:var(--accent)}
+.search-box{position:relative;margin-bottom:16px}
+.search-input{width:100%;padding:12px 14px 12px 40px;border-radius:10px;background:var(--bg-card);border:1px solid var(--border);color:var(--text-primary);font-size:13px;font-family:inherit}
+.search-input:focus{outline:none;border-color:var(--accent)}.search-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--text-muted)}
+.empty-state{text-align:center;padding:50px 20px}.empty-icon{width:70px;height:70px;margin:0 auto 16px;background:var(--bg-card);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--text-muted)}
+.empty-title{font-size:16px;font-weight:700;margin-bottom:6px}.empty-text{font-size:13px;color:var(--text-secondary)}
+.card-list{display:flex;flex-direction:column;gap:10px}
+.person-card,.job-card{background:var(--bg-card);border-radius:14px;padding:14px;border:1px solid var(--border);cursor:pointer;transition:all .3s}
+.person-card:hover,.job-card:hover{transform:translateX(-4px);border-color:var(--accent)}
+.card-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px}.card-title{font-size:14px;font-weight:700}.card-sub{font-size:11px;color:var(--text-secondary)}
+.card-footer{display:flex;align-items:center;justify-content:space-between;margin-top:8px}.card-amount{font-size:14px;font-weight:800;color:var(--accent)}
+.badge{font-size:10px;padding:3px 8px;border-radius:12px;font-weight:600}.badge-active{background:rgba(16,185,129,.2);color:var(--success)}.badge-inactive{background:rgba(239,68,68,.12);color:var(--danger)}
+.badge-pending{background:rgba(245,158,11,.2);color:var(--warning)}.badge-completed{background:rgba(16,185,129,.2);color:var(--success)}
+.avatar{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;color:#fff;flex-shrink:0}
+.cell-flex{display:flex;align-items:center;gap:10px}
+.back-btn{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:8px;background:var(--bg-card);border:1px solid var(--border);color:var(--text-secondary);cursor:pointer;font-size:12px;font-weight:600;font-family:inherit;transition:all .3s;margin-bottom:16px}
+.back-btn:hover{border-color:var(--accent);color:var(--accent)}
+.detail-section{background:var(--bg-card);border-radius:14px;padding:16px;margin-bottom:14px;border:1px solid var(--border)}
+.detail-section-title{font-size:13px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between}
+.detail-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border)}.detail-row:last-child{border-bottom:none}
+.detail-label{font-size:12px;color:var(--text-secondary)}.detail-value{font-size:13px;font-weight:600}
+.summary-card{background:linear-gradient(135deg,rgba(0,212,170,.1),rgba(0,102,255,.1));border-radius:14px;padding:16px;border:1px solid var(--accent);margin-bottom:14px}
+.summary-row{display:flex;justify-content:space-between;margin-bottom:10px}.summary-row:last-child{margin-bottom:0;padding-top:10px;border-top:1px dashed var(--border)}
+.summary-label{font-size:12px;color:var(--text-secondary)}.summary-value{font-size:13px;font-weight:700}.summary-total{font-size:16px;color:var(--accent)}
+.treasury-card{background:var(--bg-card);border-radius:14px;padding:14px;border:1px solid var(--border);margin-bottom:10px;border-right:4px solid var(--border)}
+.treasury-card.income{border-right-color:var(--success)}.treasury-card.expense{border-right-color:var(--danger)}
+.treasury-card .t-amount{font-size:14px;font-weight:800}.treasury-card .t-amount.income{color:var(--success)}.treasury-card .t-amount.expense{color:var(--danger)}
+.finance-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
+.finance-mini-card{background:var(--bg-card);border-radius:10px;border:1px solid var(--border);padding:12px;text-align:center}
+.finance-mini-card .flabel{font-size:10px;color:var(--text-secondary)}.finance-mini-card .fvalue{font-size:16px;font-weight:800}
+.detail-tabs{display:flex;gap:6px;margin-bottom:14px}
+.detail-tab{flex:1;padding:10px;text-align:center;border-radius:10px;background:var(--bg-card);border:1px solid var(--border);font-size:13px;font-weight:700;color:var(--text-secondary);cursor:pointer;transition:all .3s}
+.detail-tab.active{background:var(--accent);color:var(--bg-primary);border-color:var(--accent)}
+.finance-card-large{background:var(--bg-card);border-radius:14px;padding:18px;border:1px solid var(--border);text-align:center;flex:1}
+.finance-card-large .flabel{font-size:11px;color:var(--text-secondary);font-weight:600}
+.finance-card-large .fvalue{font-size:26px;font-weight:900;margin-top:4px}
+.action-btns{display:flex;gap:8px;margin-bottom:16px}
+.person-bottom-bar{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;padding:8px 12px;padding-bottom:calc(8px + env(safe-area-inset-bottom));background:var(--bg-secondary);border-top:1px solid var(--border);z-index:50;display:none;gap:8px}
+.person-bottom-bar.show{display:flex}
+.person-bottom-bar .action-btn{padding:12px;border-radius:10px;border:none;font-size:14px;font-weight:800;font-family:inherit;cursor:pointer;flex:1;text-align:center;transition:all .3s}
+.action-btn{flex:1;padding:14px;border-radius:12px;border:none;font-size:15px;font-weight:800;font-family:inherit;cursor:pointer;transition:all .3s;text-align:center}
+.action-btn.green{background:rgba(16,185,129,.2);color:var(--success);border:1px solid rgba(16,185,129,.4)}
+.action-btn.green:hover{background:var(--success);color:#fff}
+.action-btn.red{background:rgba(239,68,68,.2);color:var(--danger);border:1px solid rgba(239,68,68,.4)}
+.action-btn.red:hover{background:var(--danger);color:#fff}
+.tx-item{background:var(--bg-card);border-radius:12px;padding:12px;border:1px solid var(--border);margin-bottom:8px;cursor:pointer;transition:all .2s}
+.tx-item:hover{border-color:var(--accent)}
+.tx-item .main-row{display:flex;align-items:flex-start;gap:12px}
+.tx-icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.tx-icon.take{background:rgba(16,185,129,.2);color:var(--success)}
+.tx-icon.give{background:rgba(239,68,68,.2);color:var(--danger)}
+.tx-info{flex:1;min-width:0}
+.tx-amount-main{font-size:16px;font-weight:800}
+.tx-date-label{font-size:11px;color:var(--text-secondary);margin-top:2px}
+.tx-before-label{font-size:11px;color:var(--text-muted)}
+.tx-note-label{font-size:11px;color:var(--text-secondary);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tx-tag{text-align:center;flex-shrink:0}
+.tx-tag-amount{font-size:20px;font-weight:900}
+.tx-tag-label{font-size:10px;font-weight:700;margin-top:2px}
+.report-summary{display:flex;gap:12px;margin-bottom:16px}
+.report-card{flex:1;background:var(--bg-card);border-radius:12px;padding:14px;text-align:center;border:1px solid var(--border)}
+.report-card .rc-label{font-size:11px;color:var(--text-secondary)}
+.report-card .rc-value{font-size:20px;font-weight:800;margin-top:4px}
+.login-screen{position:fixed;top:0;left:0;width:100%;height:100%;background:var(--bg-primary);z-index:9998;display:flex;align-items:center;justify-content:center;padding:20px}.login-screen.hidden{display:none}
+.login-box{max-width:360px;width:100%;text-align:center}.login-logo{margin-bottom:24px}
+.login-title{font-size:28px;font-weight:900;background:linear-gradient(135deg,var(--text-primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.login-input{width:100%;padding:14px 16px;border-radius:12px;background:var(--bg-card);border:2px solid var(--border);color:var(--text-primary);font-size:16px;font-family:inherit;transition:all .3s;text-align:center;letter-spacing:2px}
+.login-input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-glow)}
+.login-error{color:var(--danger);font-size:13px;margin-top:8px;display:none}
+.login-btn{width:100%;padding:16px;border-radius:12px;border:none;font-size:16px;font-weight:700;font-family:inherit;cursor:pointer;background:linear-gradient(135deg,var(--accent),#00b894);color:var(--bg-primary);margin-top:16px;transition:all .3s}
+.login-btn:hover{box-shadow:0 8px 30px var(--accent-glow);transform:translateY(-2px)}
+.login-locked{color:var(--warning);font-size:13px;margin-top:8px;display:none}
+.category-chip{display:inline-block;padding:3px 8px;border-radius:16px;font-size:10px;font-weight:700;margin:2px;background:var(--bg-secondary);border:1px solid var(--border);color:var(--text-secondary);cursor:pointer;transition:all .2s}
+.category-chip.active{background:var(--accent);color:var(--bg-primary);border-color:var(--accent)}
+.period-filter{display:flex;gap:4px;margin-bottom:16px;overflow-x:auto;padding-bottom:4px}
+.period-btn{padding:6px 12px;border-radius:8px;background:var(--bg-card);border:1px solid var(--border);font-size:11px;font-weight:600;color:var(--text-secondary);cursor:pointer;white-space:nowrap;transition:all .3s;font-family:inherit}
+.period-btn.active{background:var(--accent);color:var(--bg-primary);border-color:var(--accent)}
+.pl-section{background:var(--bg-card);border-radius:14px;padding:16px;margin-bottom:14px;border:1px solid var(--border)}
+.pl-section-title{font-size:14px;font-weight:800;margin-bottom:10px;padding-bottom:8px;border-bottom:1px dashed var(--border)}
+.pl-row{display:flex;justify-content:space-between;padding:6px 0;font-size:12px;border-bottom:1px solid rgba(42,53,72,.5)}
+.pl-total-row{display:flex;justify-content:space-between;padding:12px 14px;border-radius:10px;font-weight:800;font-size:14px;margin-top:8px}
+.pl-total-row.profit{background:rgba(16,185,129,.15);color:var(--success)}.pl-total-row.loss{background:rgba(239,68,68,.15);color:var(--danger)}
+@media(min-width:768px){.app-container{border-radius:24px;margin:20px auto;box-shadow:0 20px 60px rgba(0,0,0,.5)}.bottom-nav{border-radius:0 0 24px 24px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<!-- Login Screen -->
+<div class="login-screen" id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">
+      <h1 class="login-title">🔐 ورشتي ERP</h1>
+      <p style="color:var(--text-secondary);font-size:14px;margin-top:8px">نظام إدارة الأشخاص والشغلانات</p>
+    </div>
+    <div id="login-setup" style="display:none">
+      <p style="color:var(--text-secondary);font-size:13px;margin-bottom:16px">تعيين كلمة سر لأول مرة</p>
+      <input type="password" class="login-input" id="setup-pass" placeholder="كلمة السر الجديدة" style="margin-bottom:10px">
+      <input type="password" class="login-input" id="setup-pass-confirm" placeholder="تأكيد كلمة السر">
+      <div class="login-error" id="setup-error"></div>
+      <button class="login-btn" onclick="setupPassword()">تعيين كلمة السر</button>
+    </div>
+    <div id="login-form">
+      <p style="color:var(--text-secondary);font-size:13px;margin-bottom:16px">أدخل كلمة السر للدخول</p>
+      <input type="password" class="login-input" id="login-pass" placeholder="●●●●●●●●" onkeydown="if(event.key==='Enter')login()">
+      <div class="login-error" id="login-error"></div>
+      <div class="login-locked" id="login-locked"></div>
+      <button class="login-btn" onclick="login()">دخول</button>
+    </div>
+  </div>
+</div>
+
+<div class="app-container">
+<div class="bg-effects"><div class="bg-blob bg-blob-1"></div><div class="bg-blob bg-blob-2"></div></div>
+
+<header class="app-header">
+  <div class="header-content">
+    <div class="logo">
+      <div class="logo-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+      <span class="logo-text">ورشتي v4</span>
+    </div>
+    <div class="header-actions">
+      <button class="icon-btn theme-btn" id="themeToggle" onclick="toggleTheme()">
+        <svg class="moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg class="sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      </button>
+      <button class="icon-btn" onclick="switchView('categories-view')" title="التصنيفات"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg></button>
+      <button class="icon-btn" onclick="logout()" title="تسجيل خروج"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></button>
+    </div>
+  </div>
+</header>
+
+<main class="main-content">
+<!-- ===== DASHBOARD ===== -->
+<div class="view active" id="dashboard-view">
+  <div class="balance-card">
+    <div class="balance-label">💰 رصيد الخزنة الحالي</div>
+    <div class="balance-amount" id="dash-balance">0 ج.م</div>
+    <div class="flex justify-center gap-4 mt-2 text-sm">
+      <span class="text-green-400 font-bold">↑ وارد: <span id="dash-income">0</span></span>
+      <span class="text-red-400 font-bold">↓ صادر: <span id="dash-expense">0</span></span>
+    </div>
+  </div>
+  <div class="stats-grid">
+    <div class="stat-card accent"><div class="stat-icon">👥</div><div class="stat-value" id="dash-persons">0</div><div class="stat-label">جهات اتصال</div></div>
+    <div class="stat-card success"><div class="stat-icon">📋</div><div class="stat-value" id="dash-active-jobs">0</div><div class="stat-label">شغلانات نشطة</div></div>
+    <div class="stat-card info"><div class="stat-icon">✅</div><div class="stat-value" id="dash-completed">0</div><div class="stat-label">مكتملة</div></div>
+    <div class="stat-card warning"><div class="stat-icon">💰</div><div class="stat-value" id="dash-pending">0</div><div class="stat-label">مستحق التحصيل</div></div>
+  </div>
+  <div class="section-title"><span>آخر الشغلانات</span><a href="#" onclick="switchView('jobs-view')">عرض الكل</a></div>
+  <div class="card-list" id="dash-recent-jobs"></div>
+  <div class="section-title" style="margin-top:16px"><span>أحدث الأشخاص</span><a href="#" onclick="switchView('persons-view')">عرض الكل</a></div>
+  <div class="card-list" id="dash-recent-persons"></div>
+</div>
+
+<!-- ===== PERSONS VIEW ===== -->
+<div class="view" id="persons-view">
+  <div class="search-box">
+    <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input type="text" class="search-input" id="persons-search" placeholder="بحث..." oninput="renderPersons()">
+  </div>
+  <div id="persons-filter" style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:12px"></div>
+  <div class="card-list" id="persons-list"></div>
+</div>
+
+<!-- ===== PERSON DETAIL ===== -->
+<div class="view" id="person-detail-view">
+  <button class="back-btn" onclick="switchView('persons-view')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>العودة للأشخاص</button>
+  <div id="person-detail-content" style="padding-bottom:70px"></div>
+  <div class="person-bottom-bar" id="person-bottom-bar">
+    <button class="action-btn" style="background:rgba(16,185,129,.2);color:var(--success);border:1px solid rgba(16,185,129,.4)" onclick="openPersonTx(document.getElementById('person-detail-content').dataset.pid,'\u0623\u062E\u0630\u062A')">\u2795 \u0623\u062E\u0630\u062A</button>
+    <button class="action-btn" style="background:rgba(239,68,68,.2);color:var(--danger);border:1px solid rgba(239,68,68,.4)" onclick="openPersonTx(document.getElementById('person-detail-content').dataset.pid,'\u0639\u0637\u064A\u062A')">\u2796 \u0639\u0637\u064A\u062A</button>
+  </div>
+</div>
+
+<!-- ===== JOBS VIEW ===== -->
+<div class="view" id="jobs-view">
+  <div class="workshop-toggle" id="ws-filter">
+    <div class="workshop-btn active" data-ws="all" onclick="setWorkshop('all')">كل الورش</div>
+    <div class="workshop-btn" data-ws="sila" onclick="setWorkshop('sila')">سيلا</div>
+    <div class="workshop-btn" data-ws="fayoum" onclick="setWorkshop('fayoum')">الفيوم</div>
+  </div>
+  <div class="search-box">
+    <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input type="text" class="search-input" id="jobs-search" placeholder="بحث..." oninput="renderJobs()">
+  </div>
+  <div class="tabs">
+    <div class="tab active" data-jf="active" onclick="setJobFilter('active')">قيد التصنيع</div>
+    <div class="tab" data-jf="completed" onclick="setJobFilter('completed')">مكتملة</div>
+    <div class="tab" data-jf="pending" onclick="setJobFilter('pending')">باقي تحصيل</div>
+  </div>
+  <div class="card-list" id="jobs-list"></div>
+</div>
+
+<!-- ===== JOB DETAIL ===== -->
+<div class="view" id="job-detail-view">
+  <button class="back-btn" onclick="switchView('jobs-view')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>العودة للشغلانات</button>
+  <div id="job-detail-content"></div>
+</div>
+
+<!-- ===== TREASURY VIEW ===== -->
+<div class="view" id="treasury-view">
+  <div class="balance-card">
+    <div class="balance-label">💰 رصيد الخزنة</div>
+    <div class="balance-amount" id="treasury-balance">0 ج.م</div>
+    <div class="flex justify-center gap-6 mt-2" style="font-size:13px;font-weight:700">
+      <span style="color:var(--success)">↑ وارد: <span id="treasury-income">0</span></span>
+      <span style="color:var(--danger)">↓ مصروف: <span id="treasury-expense">0</span></span>
+    </div>
+  </div>
+  <div class="grid grid-cols-2 gap-3 mb-4">
+    <button class="btn btn-primary" onclick="openModal('income-modal')">+ وارد</button>
+    <button class="btn btn-danger" onclick="openModal('expense-modal')">− مصروف</button>
+  </div>
+  <div id="treasury-list"></div>
+</div>
+
+<!-- ===== REPORTS VIEW ===== -->
+<div class="view" id="reports-view">
+  <div class="tabs">
+    <div class="tab active" data-rt="pl" onclick="setReportTab('pl')">أرباح/خسائر</div>
+    <div class="tab" data-rt="persons" onclick="setReportTab('persons')">الأشخاص</div>
+    <div class="tab" data-rt="jobs" onclick="setReportTab('jobs')">الشغلانات</div>
+  </div>
+  <div class="period-filter">
+    <button class="period-btn active" data-p="all" onclick="setPeriod('all')">الكل</button>
+    <button class="period-btn" data-p="month" onclick="setPeriod('month')">شهر</button>
+    <button class="period-btn" data-p="year" onclick="setPeriod('year')">سنة</button>
+  </div>
+  <div id="reports-content"></div>
+</div>
+
+<!-- ===== CATEGORIES VIEW ===== -->
+<div class="view" id="categories-view">
+  <button class="back-btn" onclick="switchView('dashboard-view')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>العودة</button>
+  <div class="section-title">التصنيفات</div>
+  <div class="tabs">
+    <div class="tab active" data-ct="expense" onclick="setCatTab('expense')">مصروفات</div>
+    <div class="tab" data-ct="income" onclick="setCatTab('income')">واردات</div>
+    <div class="tab" data-ct="labor" onclick="setCatTab('labor')">مصنعيات</div>
+  </div>
+  <div id="categories-list"></div>
+  <button class="btn btn-secondary mt-3" onclick="addCategory()">+ إضافة تصنيف</button>
+</div>
+</main>
+
+<!-- Bottom Nav -->
+<nav class="bottom-nav">
+  <div class="nav-items">
+    <div class="nav-item active" data-nav="dashboard" onclick="switchView('dashboard-view')">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      <span class="nav-label">الرئيسية</span>
+    </div>
+    <div class="nav-item" data-nav="persons" onclick="switchView('persons-view')">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      <span class="nav-label">الأشخاص</span>
+    </div>
+    <div class="nav-item" data-nav="jobs" onclick="switchView('jobs-view')">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+      <span class="nav-label">الشغلانات</span>
+    </div>
+    <div class="nav-item" data-nav="treasury" onclick="switchView('treasury-view')">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v12M8 10h6a2 2 0 0 1 2 2v0a2 2 0 0 1-2 2H8"/></svg>
+      <span class="nav-label">الخزنة</span>
+    </div>
+    <div class="nav-item" data-nav="reports" onclick="switchView('reports-view')">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+      <span class="nav-label">التقارير</span>
+    </div>
+  </div>
+</nav>
+
+<!-- FAB -->
+<button class="fab" id="main-fab" onclick="fabAction()">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+</button>
+</div>
+<!-- ===== MODALS ===== -->
+
+<!-- Person Modal -->
+<div class="modal-overlay" id="person-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 class="modal-title" id="person-modal-title">إضافة شخص</h2>
+      <button class="modal-close" onclick="closeModal('person-modal')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <form id="person-form" onsubmit="savePerson(event)">
+      <input type="hidden" name="editId" id="person-edit-id">
+      <div class="form-group">
+        <label class="form-label">الاسم *</label>
+        <input type="text" class="form-input" name="name" required placeholder="الاسم الكامل">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">رقم الهاتف *</label>
+          <input type="tel" class="form-input" name="phone" required placeholder="01xxxxxxxxx">
+        </div>
+        <div class="form-group">
+          <label class="form-label">التصنيف</label>
+          <select class="form-input" name="category">
+            <option value="عميل">عميل</option>
+            <option value="مورد">مورد</option>
+            <option value="صنايعي">صنايعي</option>
+            <option value="موظف">موظف</option>
+            <option value="شركة">شركة</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">ملاحظات</label>
+        <textarea class="form-input" name="notes" placeholder="ملاحظات..."></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary">حفظ</button>
+    </form>
+  </div>
+</div>
+
+<!-- Job Modal -->
+<div class="modal-overlay" id="job-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 class="modal-title" id="job-modal-title">إضافة شغلانة</h2>
+      <button class="modal-close" onclick="closeModal('job-modal')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <form id="job-form" onsubmit="saveJob(event)">
+      <input type="hidden" name="editId" id="job-edit-id">
+      <div class="form-group">
+        <label class="form-label">اسم الشغلانة *</label>
+        <input type="text" class="form-input" name="name" required placeholder="مثال: غرفة نوم كاملة">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">العميل *</label>
+          <select class="form-input" name="customerId" id="job-customer" required></select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">الورشة</label>
+          <select class="form-input" name="workshop"><option value="سيـلا">سيـلا</option><option value="الفيوم">الفيوم</option></select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">نوع المنتج</label>
+          <input type="text" class="form-input" name="productType" placeholder="نوع المنتج">
+        </div>
+        <div class="form-group">
+          <label class="form-label">المبلغ المتفق عليه *</label>
+          <input type="number" class="form-input" name="agreedAmount" required placeholder="0" min="0">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">المبلغ المدفوع</label>
+          <input type="number" class="form-input" name="paidAmount" placeholder="0" min="0">
+        </div>
+        <div class="form-group">
+          <label class="form-label">تاريخ البدء</label>
+          <input type="date" class="form-input" name="startDate" id="job-start-date">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">ملاحظات</label>
+        <textarea class="form-input" name="notes" placeholder="ملاحظات..."></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary">حفظ</button>
+    </form>
+  </div>
+</div>
+
+<!-- Treasury Income Modal -->
+<div class="modal-overlay" id="income-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 class="modal-title">إضافة وارد</h2>
+      <button class="modal-close" onclick="closeModal('income-modal')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <form onsubmit="addTreasuryEntry('income',event)">
+      <div class="form-group">
+        <label class="form-label">المبلغ *</label>
+        <input type="number" class="form-input" name="amount" required placeholder="0" min="0.01" step="0.01">
+      </div>
+      <div class="form-group">
+        <label class="form-label">الوصف *</label>
+        <input type="text" class="form-input" name="description" required placeholder="الوصف">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">التصنيف</label>
+          <select class="form-input" name="category" id="income-categories"></select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">التاريخ</label>
+          <input type="date" class="form-input" name="date" id="income-date">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">الورشة</label>
+        <select class="form-input" name="workshop"><option value="عام">عام</option><option value="سيـلا">سيـلا</option><option value="الفيوم">الفيوم</option></select>
+      </div>
+      <button type="submit" class="btn btn-primary">إضافة</button>
+    </form>
+  </div>
+</div>
+
+<!-- Treasury Expense Modal -->
+<div class="modal-overlay" id="expense-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 class="modal-title">إضافة مصروف</h2>
+      <button class="modal-close" onclick="closeModal('expense-modal')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <form onsubmit="addTreasuryEntry('expense',event)">
+      <div class="form-group">
+        <label class="form-label">المبلغ *</label>
+        <input type="number" class="form-input" name="amount" required placeholder="0" min="0.01" step="0.01">
+      </div>
+      <div class="form-group">
+        <label class="form-label">الوصف *</label>
+        <input type="text" class="form-input" name="description" required placeholder="الوصف">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">التصنيف</label>
+          <select class="form-input" name="category" id="expense-categories"></select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">التاريخ</label>
+          <input type="date" class="form-input" name="date" id="expense-date">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">الورشة</label>
+        <select class="form-input" name="workshop"><option value="عام">عام</option><option value="سيـلا">سيـلا</option><option value="الفيوم">الفيوم</option></select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">ربط بشغلانة (اختياري)</label>
+        <select class="form-input" name="linkedJobId" id="expense-job-link"><option value="">— بدون —</option></select>
+      </div>
+      <button type="submit" class="btn btn-danger">إضافة</button>
+    </form>
+  </div>
+</div>
+
+<!-- Payment Modal (inside job) -->
+<div class="modal-overlay" id="payment-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 class="modal-title">إضافة دفعة</h2>
+      <button class="modal-close" onclick="closeModal('payment-modal')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <form onsubmit="addPayment(event)">
+      <input type="hidden" id="payment-job-id">
+      <div class="form-group">
+        <label class="form-label">المبلغ *</label>
+        <input type="number" class="form-input" name="amount" id="payment-amount" required placeholder="0" min="0.01" step="0.01">
+      </div>
+      <div class="form-group">
+        <label class="form-label">التاريخ</label>
+        <input type="date" class="form-input" name="date" id="payment-date">
+      </div>
+      <button type="submit" class="btn btn-primary">تسجيل الدفعة</button>
+    </form>
+  </div>
+</div>
+
+<!-- Material Modal (inside job) -->
+<div class="modal-overlay" id="material-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 class="modal-title">إضافة خامة</h2>
+      <button class="modal-close" onclick="closeModal('material-modal')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <form onsubmit="addJobItem('material',event, true)">
+      <input type="hidden" id="material-job-id">
+      <div class="form-group">
+        <label class="form-label">الوصف *</label>
+        <input type="text" class="form-input" name="description" required placeholder="مثال: خشب زان">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">الكمية</label>
+          <input type="number" class="form-input" name="quantity" required placeholder="1" min="0.01" step="0.01">
+        </div>
+        <div class="form-group">
+          <label class="form-label">سعر الوحدة</label>
+          <input type="number" class="form-input" name="unitCost" required placeholder="0" min="0.01" step="0.01">
+        </div>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button type="submit" class="btn btn-primary" style="flex:1">+ إضافة</button>
+        <button type="button" class="btn btn-secondary" onclick="closeModal('material-modal');openJobDetail(document.getElementById('material-job-id').value)" style="flex:1">تم</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Edit Transaction Modal -->
+<div class="modal-overlay" id="edit-tx-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 class="modal-title">تعديل المعاملة</h2>
+      <button class="modal-close" onclick="closeModal('edit-tx-modal')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <form onsubmit="saveEditedTx(event)">
+      <input type="hidden" id="edit-tx-person-id">
+      <input type="hidden" id="edit-tx-id">
+      <div class="form-group">
+        <label class="form-label">المبلغ *</label>
+        <input type="number" class="form-input" id="edit-tx-amount" required placeholder="0" min="0.01" step="0.01">
+      </div>
+      <div class="form-group">
+        <label class="form-label">نوع الحركة</label>
+        <select class="form-input" id="edit-tx-type">
+          <option value="أخذت">🔴 أخذت (ليّ دين)</option>
+          <option value="عطيت">🟢 عطيت (عليّ دين)</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">التاريخ</label>
+          <input type="date" class="form-input" id="edit-tx-date">
+        </div>
+        <div class="form-group">
+          <label class="form-label">البيان</label>
+          <input type="text" class="form-input" id="edit-tx-description" placeholder="البيان">
+        </div>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button type="submit" class="btn btn-primary" style="flex:1">حفظ التعديل</button>
+        <button type="button" class="btn btn-danger" id="edit-tx-delete-btn" style="flex:1">حذف</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Person Report Modal -->
+<div class="modal-overlay" id="report-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 class="modal-title">تقرير المعاملات</h2>
+      <button class="modal-close" onclick="closeModal('report-modal')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div id="report-content"></div>
+  </div>
+</div>
+
+<!-- Labor Modal -->
+<div class="modal-overlay" id="labor-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 class="modal-title">إضافة مصنعية</h2>
+      <button class="modal-close" onclick="closeModal('labor-modal')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <form onsubmit="addJobItem('labor',event)">
+      <input type="hidden" id="labor-job-id">
+      <div class="form-group">
+        <label class="form-label">الوصف *</label>
+        <input type="text" class="form-input" name="description" required placeholder="مثال: أجرة نجار">
+      </div>
+      <div class="form-group">
+        <label class="form-label">التكلفة *</label>
+        <input type="number" class="form-input" name="cost" required placeholder="0" min="0.01" step="0.01">
+      </div>
+      <button type="submit" class="btn btn-primary">إضافة</button>
+    </form>
+  </div>
+</div>
+
+<!-- Other Cost Modal -->
+<div class="modal-overlay" id="othercost-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 class="modal-title">إضافة تكلفة أخرى</h2>
+      <button class="modal-close" onclick="closeModal('othercost-modal')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <form onsubmit="addJobItem('othercost',event)">
+      <input type="hidden" id="othercost-job-id">
+      <div class="form-group">
+        <label class="form-label">الوصف *</label>
+        <input type="text" class="form-input" name="description" required placeholder="مثال: نقل">
+      </div>
+      <div class="form-group">
+        <label class="form-label">التكلفة *</label>
+        <input type="number" class="form-input" name="cost" required placeholder="0" min="0.01" step="0.01">
+      </div>
+      <button type="submit" class="btn btn-primary">إضافة</button>
+    </form>
+  </div>
+</div>
+
+<!-- Transaction Modal (person debt/credit) -->
+<div class="modal-overlay" id="tx-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 class="modal-title" id="tx-modal-title">تسجيل حركة مالية</h2>
+      <button class="modal-close" onclick="closeModal('tx-modal')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <form onsubmit="savePersonTx(event)">
+      <input type="hidden" id="tx-person-id">
+      <input type="hidden" id="tx-type-input">
+      <div class="form-group">
+        <label class="form-label">المبلغ *</label>
+        <input type="number" class="form-input" name="amount" id="tx-amount" required placeholder="0" min="0.01" step="0.01">
+      </div>
+      <div class="form-group">
+        <label class="form-label">نوع الحركة</label>
+        <select class="form-input" id="tx-type-select" onchange="document.getElementById('tx-type-input').value=this.value">
+          <option value="أخذت">🔴 أخذت (ليّ دين)</option>
+          <option value="عطيت">🟢 عطيت (عليّ دين)</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">التاريخ</label>
+          <input type="date" class="form-input" name="date" id="tx-date">
+        </div>
+        <div class="form-group">
+          <label class="form-label">البيان</label>
+          <input type="text" class="form-input" name="description" id="tx-description" placeholder="البيان">
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary">تسجيل</button>
+    </form>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// ÙˆØ±Ø´ØªÙŠ ERP v4 â€” Ledger-Based Unified System
+// ============================================================
+
+const APP_KEY = 'warshty_erp_v4';
+let data = null;
+let state = { view:'dashboard', personFilter:'all', personTab:'personal', jobFilter:'active', workshop:'all', treasuryTab:'income', reportTab:'pl', period:'all', catTab:'expense', periodStart:'', periodEnd:'' };
+
+function defaultData() {
+  return {
+    settings:{passwordHash:'',isSetup:false,loginAttempts:0,lockedUntil:null,rememberToken:null,lastLogin:null},
+    persons:[],
+    jobs:[],
+    archivedJobs:[],
+    treasury:{income:[],expenses:[]},
+    categories:[
+      {id:'c1',name:'\u0643\u0647\u0631\u0628\u0627\u0621',type:'expense'},{id:'c2',name:'\u0645\u064A\u0627\u0647',type:'expense'},{id:'c3',name:'\u0625\u064A\u062C\u0627\u0631',type:'expense'},{id:'c4',name:'\u0631\u0648\u0627\u062A\u0628',type:'expense'},
+      {id:'c5',name:'\u0646\u0642\u0644',type:'expense'},{id:'c6',name:'\u0635\u064A\u0627\u0646\u0629',type:'expense'},{id:'c7',name:'\u062E\u0627\u0645\u0627\u062A',type:'expense'},
+      {id:'c8',name:'\u062F\u0641\u0639\u0629 \u0639\u0645\u064A\u0644',type:'income'},{id:'c9',name:'\u0639\u0631\u0628\u0648\u0646',type:'income'},{id:'c10',name:'\u0625\u064A\u0631\u0627\u062F \u0645\u062A\u0646\u0648\u0639',type:'income'},
+      {id:'c11',name:'\u0623\u062C\u0631\u0629 \u0646\u062C\u0627\u0631',type:'labor'},{id:'c12',name:'\u0623\u062C\u0631\u0629 \u062F\u0647\u0627\u0646',type:'labor'},{id:'c13',name:'\u0623\u062C\u0631\u0629 \u062A\u0631\u0643\u064A\u0628',type:'labor'},{id:'c14',name:'\u0623\u062C\u0631\u0629 \u0639\u0627\u0645\u0644',type:'labor'}
+    ],
+    ledgerTransactions:[]
+  };
+}
+
+async function sha256(msg) {
+  const buf = new TextEncoder().encode(msg);
+  const hash = await crypto.subtle.digest('SHA-256', buf);
+  return Array.from(new Uint8Array(hash)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+
+function loadData() {
+  const raw = localStorage.getItem(APP_KEY);
+  if(raw) { try { data = JSON.parse(raw); } catch(e) { data = defaultData(); } }
+  else { data = defaultData(); seedSample(); }
+  if(!data.ledgerTransactions) data.ledgerTransactions = [];
+  if(!data.settings) data.settings = defaultData().settings;
+}
+function saveData() { localStorage.setItem(APP_KEY, JSON.stringify(data)); }
+
+let loggedIn = false;
+document.addEventListener('DOMContentLoaded', async () => {
+  loadTheme();
+  loadData();
+  checkLogin();
+});
+
+function checkLogin() {
+  if(data.settings.isSetup) {
+    document.getElementById('login-setup').style.display = 'none';
+    document.getElementById('login-form').style.display = 'block';
+    if(data.settings.lockedUntil) {
+      const lock = new Date(data.settings.lockedUntil);
+      if(lock > new Date()) {
+        document.getElementById('login-error').style.display = 'none';
+        document.getElementById('login-locked').style.display = 'block';
+        document.getElementById('login-locked').textContent = '\u{1F512} \u062A\u0645 \u0642\u0641\u0644 \u0627\u0644\u062F\u062E\u0648\u0644. \u062D\u0627\u0648\u0644 \u0628\u0639\u062F ' + Math.ceil((lock-new Date())/1000) + ' \u062B\u0627\u0646\u064A\u0629';
+        document.querySelector('.login-btn').disabled = true;
+        setTimeout(()=>{ document.querySelector('.login-btn').disabled = false; checkLogin(); }, 1000);
+        return;
+      } else {
+        data.settings.lockedUntil = null;
+        saveData();
+      }
+    }
+  } else {
+    document.getElementById('login-setup').style.display = 'block';
+    document.getElementById('login-form').style.display = 'none';
+  }
+}
+
+async function setupPassword() {
+  const p1 = document.getElementById('setup-pass').value;
+  const p2 = document.getElementById('setup-pass-confirm').value;
+  if(!p1 || p1.length < 4) { showError('setup-error','\u0643\u0644\u0645\u0629 \u0627\u0644\u0633\u0631 \u0642\u0635\u064A\u0631\u0629 (4 \u0623\u062D\u0631\u0641 \u0639\u0644\u0649 \u0627\u0644\u0623\u0642\u0644)'); return; }
+  if(p1 !== p2) { showError('setup-error','\u0643\u0644\u0645\u0629 \u0627\u0644\u0633\u0631 \u063A\u064A\u0631 \u0645\u062A\u0637\u0627\u0628\u0642\u0629'); return; }
+  data.settings.passwordHash = await sha256(p1);
+  data.settings.isSetup = true;
+  data.settings.loginAttempts = 0;
+  data.settings.lastLogin = new Date().toISOString();
+  saveData();
+  loggedIn = true;
+  document.getElementById('login-screen').classList.add('hidden');
+  initApp();
+}
+
+async function login() {
+  const pass = document.getElementById('login-pass').value;
+  if(!pass) { showError('login-error','\u0623\u062F\u062E\u0644 \u0643\u0644\u0645\u0629 \u0627\u0644\u0633\u0631'); return; }
+  const hash = await sha256(pass);
+  if(hash === data.settings.passwordHash) {
+    data.settings.loginAttempts = 0;
+    data.settings.lastLogin = new Date().toISOString();
+    saveData();
+    loggedIn = true;
+    document.getElementById('login-screen').classList.add('hidden');
+    initApp();
+  } else {
+    data.settings.loginAttempts = (data.settings.loginAttempts||0) + 1;
+    if(data.settings.loginAttempts >= 5) {
+      data.settings.lockedUntil = new Date(Date.now() + 30000).toISOString();
+      saveData();
+      checkLogin();
+      return;
+    }
+    saveData();
+    showError('login-error','\u0643\u0644\u0645\u0629 \u0633\u0631 \u062E\u0637\u0623. \u0627\u0644\u0645\u062D\u0627\u0648\u0644\u0627\u062A: ' + data.settings.loginAttempts + '/5');
+  }
+}
+
+function logout() {
+  loggedIn = false;
+  document.getElementById('login-screen').classList.remove('hidden');
+  document.getElementById('login-pass').value = '';
+  document.getElementById('login-error').style.display = 'none';
+}
+
+function showError(id, msg) {
+  const el = document.getElementById(id);
+  el.textContent = msg; el.style.display = 'block';
+}
+
+function toggleTheme() {
+  document.body.classList.toggle('light-mode');
+  localStorage.setItem('warshty_v4_theme', document.body.classList.contains('light-mode') ? 'light' : 'dark');
+}
+function loadTheme() { if(localStorage.getItem('warshty_v4_theme') === 'light') document.body.classList.add('light-mode'); }
+
+function switchView(viewId) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  const el = document.getElementById(viewId);
+  if(el) el.classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.toggle('active', n.dataset.nav === viewId.replace('-view','')));
+  window.scrollTo(0,0);
+  if(viewId === 'dashboard-view') renderDashboard();
+  else if(viewId === 'persons-view') renderPersons();
+  else if(viewId === 'jobs-view') renderJobs();
+  else if(viewId === 'treasury-view') renderTreasury();
+  else if(viewId === 'reports-view') renderReports();
+  else if(viewId === 'categories-view') renderCategories();
+  document.getElementById('main-fab').style.display = (viewId === 'dashboard-view' || viewId === 'persons-view' || viewId === 'jobs-view') ? 'flex' : 'none';
+  // Show أخذت/عطيت bottom bar when on person detail, hide main bottom nav
+  const personBar = document.getElementById('person-bottom-bar');
+  if(personBar) personBar.classList.toggle('show', viewId === 'person-detail-view');
+  const bottomNav = document.querySelector('.bottom-nav');
+  if(bottomNav) bottomNav.style.display = (viewId === 'person-detail-view') ? 'none' : '';
+}
+function fabAction() {
+  const v = document.querySelector('.view.active').id;
+  if(v === 'dashboard-view' || v === 'persons-view') openPersonModal();
+  else if(v === 'jobs-view') openJobModal();
+}
+
+function openModal(id) { document.getElementById(id).classList.add('active'); document.body.style.overflow = 'hidden'; }
+function closeModal(id) { document.getElementById(id).classList.remove('active'); document.body.style.overflow = ''; }
+
+document.querySelectorAll('.modal-overlay').forEach(m => {
+  m.addEventListener('click', function(e) { if(e.target === this) { this.classList.remove('active'); document.body.style.overflow = ''; } });
+});
+
+function fmt(n) { return (n||0).toLocaleString('ar-EG') + ' \u062C.\u0645'; }
+function fmtNum(n) { return (n||0).toLocaleString('ar-EG'); }
+function today() { return new Date().toISOString().split('T')[0]; }
+function now() { return new Date().toISOString(); }
+function uid() { return Date.now().toString(36) + Math.random().toString(36).substr(2,5); }
+function getCats(type) { return data.categories.filter(c => c.type === type); }
+
+function getPerson(id) { return data.persons.find(p => p.id === id); }
+function getJob(id) { return data.jobs.find(j => j.id === id); }
+function getPersonBalance(p) {
+  const txs = p.transactions||[];
+  const اخذت = txs.filter(t => t.type === '\u0623\u062E\u0630\u062A').reduce((s,t) => s + t.amount, 0);
+  const عطيت = txs.filter(t => t.type === '\u0639\u0637\u064A\u062A').reduce((s,t) => s + t.amount, 0);
+  return اخذت - عطيت;
+}
+function getPersonJobs(pId) { return data.jobs.filter(j => j.customerId === pId); }
+
+function getJobTotals(j) {
+  const mat = (j.materials||[]).reduce((s,m) => s + (m.totalCost||0), 0);
+  const lab = (j.laborItems||[]).reduce((s,l) => s + (l.cost||0), 0);
+  const oth = (j.otherCosts||[]).reduce((s,o) => s + (o.cost||0), 0);
+  const pay = (j.payments||[]).reduce((s,p) => s + (p.amount||0), 0);
+  const costs = mat + lab + oth;
+  const profit = j.agreedAmount - costs;
+  const remaining = j.agreedAmount - pay;
+  return { materials:mat, labor:lab, other:oth, totalCosts:costs, payments:pay, profit, remaining };
+}
+
+function getTreasuryBalance() {
+  const inc = data.treasury.income.reduce((s,i) => s + i.amount, 0);
+  const exp = data.treasury.expenses.reduce((s,e) => s + e.amount, 0);
+  return { income:inc, expense:exp, balance:inc - exp };
+}
+
+function inPeriod(dateStr, period) {
+  if(period === 'all') return true;
+  const d = new Date(dateStr);
+  const n = new Date();
+  if(period === 'month') return d.getMonth() === n.getMonth() && d.getFullYear() === n.getFullYear();
+  if(period === 'year') return d.getFullYear() === n.getFullYear();
+  return true;
+}
+
+function getAvatarColor(name) {
+  const colors = ['#00d4aa','#3b82f6','#8b5cf6','#f59e0b','#ef4444','#10b981','#ec4899','#14b8a6','#f97316','#6366f1'];
+  let hash = 0;
+  for(let i=0; i<name.length; i++) hash = name.charCodeAt(i) + ((hash<<5)-hash);
+  return colors[Math.abs(hash)%colors.length];
+}
+function getInitials(name) {
+  return name.split(' ').slice(0,2).map(w=>w[0]).join('');
+}
+
+// ====== INIT ======
+function initApp() {
+  seedSample();
+  setDefaults();
+  renderDashboard();
+}
+
+function seedSample() {
+  if(data.persons.length > 0) return;
+  const persons = [
+    { name:'\u0623\u062D\u0645\u062F \u0645\u062D\u0645\u062F \u0627\u0644\u0633\u064A\u062F', phone:'01001234567', category:'\u0639\u0645\u064A\u0644' },
+    { name:'\u0645\u062D\u0645\u0648\u062F \u0639\u0644\u064A \u062D\u0633\u0646', phone:'01102345678', category:'\u0639\u0645\u064A\u0644' },
+    { name:'\u062E\u0627\u0644\u062F \u0625\u0628\u0631\u0627\u0647\u064A\u0645', phone:'01203456789', category:'\u0645\u0648\u0631\u062F' },
+    { name:'\u0634\u0631\u0643\u0629 \u0627\u0644\u0623\u0645\u0644', phone:'01005678901', category:'\u0634\u0631\u0643\u0629' },
+    { name:'\u0639\u0644\u064A \u062D\u0633\u0646 \u0645\u062D\u0645\u0648\u062F', phone:'01009876543', category:'\u0635\u0646\u0627\u064A\u0639\u064A' },
+  ];
+  persons.forEach(p => {
+    const person = { id:uid(), name:p.name, phone:p.phone, category:p.category, notes:'', dateAdded:subDays(Math.floor(Math.random()*30)), status:'active', transactions:[] };
+    data.persons.push(person);
+  });
+  const jobData = [
+    { name:'\u063A\u0631\u0641\u0629 \u0646\u0648\u0645 \u0643\u0627\u0645\u0644\u0629', customerIdx:0, ws:'\u0633\u064A\u0640\u0644\u0627', amount:15000, paid:5000, product:'\u0646\u0648\u0645 \u0643\u0644\u0627\u0633\u064A\u0643', mat:[{desc:'\u062E\u0634\u0628 \u0632\u0627\u0646',qty:10,uc:450},{desc:'\u062E\u0634\u0628 \u0633\u0648\u064A\u062F\u064A',qty:5,uc:200}], lab:[{desc:'\u0646\u062C\u0627\u0631',cost:2000},{desc:'\u062F\u0647\u0627\u0646',cost:800}], other:[{desc:'\u0646\u0642\u0644',cost:300}] },
+    { name:'\u0645\u0643\u062A\u0628 + \u0631\u0641\u0648\u0641', customerIdx:3, ws:'\u0627\u0644\u0641\u064A\u0648\u0645', amount:8000, paid:2000, product:'\u0645\u0643\u062A\u0628\u064A', mat:[{desc:'\u062E\u0634\u0628',qty:8,uc:350}], lab:[{desc:'\u0646\u062C\u0627\u0631',cost:1200}], other:[] },
+    { name:'\u062F\u0648\u0644\u0627\u0628 \u0645\u0637\u0628\u062E', customerIdx:0, ws:'\u0633\u064A\u0640\u0644\u0627', amount:22000, paid:10000, product:'\u0645\u0637\u0627\u0628\u062E', mat:[{desc:'\u0625\u0645 \u062F\u064A \u0625\u0641',qty:20,uc:280},{desc:'\u0645\u0641\u0635\u0644\u0627\u062A',qty:15,uc:45}], lab:[{desc:'\u0646\u062C\u0627\u0631',cost:3000},{desc:'\u062A\u0631\u0643\u064A\u0628',cost:1500}], other:[{desc:'\u0646\u0642\u0644',cost:500}] },
+    { name:'\u0633\u0631\u0631 \u0623\u0637\u0641\u0627\u0644', customerIdx:1, ws:'\u0627\u0644\u0641\u064A\u0648\u0645', amount:5000, paid:1000, product:'\u0623\u0637\u0641\u0627\u0644', mat:[{desc:'\u062E\u0634\u0628',qty:6,uc:300}], lab:[{desc:'\u0646\u062C\u0627\u0631',cost:900}], other:[] },
+    { name:'\u0643\u0646\u0628\u0629 + \u0637\u0631\u0628\u064A\u0632\u0629', customerIdx:2, ws:'\u0633\u064A\u0640\u0644\u0627', amount:3000, paid:3000, product:'\u062C\u0644\u0648\u0633', mat:[{desc:'\u062E\u0634\u0628',qty:4,uc:250}], lab:[{desc:'\u0646\u062C\u0627\u0631',cost:600}], other:[] },
+    { name:'\u0628\u064A\u0631\u062C\u0648\u0644\u0627 \u062D\u062F\u064A\u0642\u0629', customerIdx:4, ws:'\u0627\u0644\u0641\u064A\u0648\u0645', amount:12000, paid:0, product:'\u062D\u062F\u0627\u0626\u0642', mat:[{desc:'\u062E\u0634\u0628 \u0645\u0639\u0627\u0644\u062C',qty:15,uc:320}], lab:[{desc:'\u0646\u062C\u0627\u0631',cost:2500},{desc:'\u062F\u0647\u0627\u0646',cost:600}], other:[{desc:'\u0645\u0633\u0627\u0645\u064A\u0631 \u0648\u0634\u062F\u0629',cost:200}] },
+  ];
+  jobData.forEach((jd, i) => {
+    const j = {
+      id:uid(), name:jd.name, customerId:data.persons[jd.customerIdx].id, workshop:jd.ws,
+      productType:jd.product, agreedAmount:jd.amount, paidAmount:jd.paid, notes:'',
+      status:i < 3 ? 'in_progress' : 'completed', startDate:subDays(i*5+2),
+      materials:jd.mat.map(m=>({id:uid(),desc:m.desc,qty:m.qty,unitCost:m.uc,totalCost:m.qty*m.uc})),
+      laborItems:jd.lab.map(l=>({id:uid(),desc:l.desc,cost:l.cost})),
+      otherCosts:jd.other.map(o=>({id:uid(),desc:o.desc,cost:o.cost})),
+      payments:jd.paid > 0 ? [{id:uid(),date:subDays(i*5+1),amount:jd.paid}] : [],
+      createdAt:now(), updatedAt:now()
+    };
+    data.jobs.push(j);
+  });
+  let incAmt = [25000, 8000, 15000, 5000, 3000, 12000];
+  let expAmt = [5000, 3000, 2000, 1200, 4500, 1500, 800, 2200];
+  for(let i=0; i<6; i++) {
+    data.treasury.income.push({ id:uid(), date:subDays(i*3), amount:incAmt[i], description:'\u062F\u0641\u0639\u0629 \u0639\u0645\u064A\u0644', category:'\u062F\u0641\u0639\u0629 \u0639\u0645\u064A\u0644', workshop:i%2===0?'\u0633\u064A\u0640\u0644\u0627':'\u0627\u0644\u0641\u064A\u0648\u0645', linkedJobId:null });
+  }
+  for(let i=0; i<8; i++) {
+    data.treasury.expenses.push({ id:uid(), date:subDays(i*2), amount:expAmt[i], description:['\u0643\u0647\u0631\u0628\u0627\u0621','\u0645\u064A\u0627\u0647','\u0625\u064A\u062C\u0627\u0631','\u0631\u0648\u0627\u062A\u0628','\u0646\u0642\u0644','\u0635\u064A\u0627\u0646\u0629','\u062E\u0627\u0645\u0627\u062A','\u0631\u0648\u0627\u062A\u0628'][i], category:['\u0643\u0647\u0631\u0628\u0627\u0621','\u0645\u064A\u0627\u0647','\u0625\u064A\u062C\u0627\u0631','\u0631\u0648\u0627\u062A\u0628','\u0646\u0642\u0644','\u0635\u064A\u0627\u0646\u0629','\u062E\u0627\u0645\u0627\u062A','\u0631\u0648\u0627\u062A\u0628'][i], workshop:'\u0639\u0627\u0645', linkedJobId:null });
+  }
+  saveData();
+}
+
+function subDays(d) { const dt = new Date(); dt.setDate(dt.getDate()-d); return dt.toISOString().split('T')[0]; }
+function setDefaults() {
+  document.querySelectorAll('input[type="date"]').forEach(i => { if(!i.value) i.value = today(); });
+}
+
+// ============================================================
+// DASHBOARD
+// ============================================================
+function renderDashboard() {
+  const tr = getTreasuryBalance();
+  document.getElementById('dash-balance').textContent = fmt(tr.balance);
+  document.getElementById('dash-income').textContent = fmtNum(tr.income);
+  document.getElementById('dash-expense').textContent = fmtNum(tr.expense);
+  const activeJ = data.jobs.filter(j => j.status === 'in_progress').length;
+  const completedJ = data.jobs.filter(j => j.status === 'completed').length;
+  const pending = data.jobs.reduce((s,j) => s + Math.max(0, j.agreedAmount - (j.payments||[]).reduce((p,pm) => p+pm.amount,0)), 0);
+  document.getElementById('dash-persons').textContent = data.persons.length;
+  document.getElementById('dash-active-jobs').textContent = activeJ;
+  document.getElementById('dash-completed').textContent = completedJ;
+  document.getElementById('dash-pending').textContent = fmtNum(pending);
+
+  const recentJ = [...data.jobs].reverse().slice(0, 3);
+  document.getElementById('dash-recent-jobs').innerHTML = recentJ.length
+    ? recentJ.map(j => {
+        const c = getPerson(j.customerId);
+        const p = getJobTotals(j);
+        return '<div class="job-card" onclick="openJobDetail(\'' + j.id + '\')">' +
+          '<div class="card-header"><div><div class="card-title">' + j.name + '</div><div class="card-sub">' + (c?c.name:'\u2014') + ' \u00B7 ' + (j.productType||'') + '</div></div>' +
+          '<span class="badge ' + (j.status==='in_progress'?'badge-pending':'badge-completed') + '">' + (j.status==='in_progress'?'\u0642\u064A\u062F \u0627\u0644\u062A\u0635\u0646\u064A\u0639':'\u0645\u0643\u062A\u0645\u0644\u0629') + '</span></div>' +
+          '<div class="card-footer"><span class="card-amount">' + fmt(j.agreedAmount) + '</span><span style="font-size:11px;color:var(--text-muted)">' + j.workshop + '</span></div></div>';
+      }).join('')
+    : '<div class="empty-state"><div class="empty-title">\u0644\u0627 \u062A\u0648\u062C\u062F \u0634\u063A\u0644\u0627\u0646\u0627\u062A</div></div>';
+
+  const recentP = [...data.persons].reverse().slice(0, 3);
+  document.getElementById('dash-recent-persons').innerHTML = recentP.length
+    ? recentP.map(p => {
+        const bal = getPersonBalance(p);
+        return '<div class="person-card" onclick="openPersonDetail(\'' + p.id + '\')">' +
+          '<div class="card-header"><div class="cell-flex">' +
+          '<div class="avatar" style="background:' + getAvatarColor(p.name) + '">' + getInitials(p.name) + '</div>' +
+          '<div><div class="card-title">' + p.name + '</div><div class="card-sub" style="font-size:11px">' + p.category + '</div></div></div>' +
+          '<div style="text-align:left"><div style="font-size:18px;font-weight:800;color:' + (bal>0?'var(--success)':bal<0?'var(--danger)':'var(--text-muted)') + '">' + fmt(bal) + '</div><div style="font-size:10px;color:var(--text-muted)">\u062F\u064A\u0648\u0646</div></div></div></div>';
+      }).join('')
+    : '<div class="empty-state"><div class="empty-title">\u0644\u0627 \u062A\u0648\u062C\u062F \u062C\u0647\u0627\u062A \u0627\u062A\u0635\u0627\u0644</div></div>';
+}
+
+
+// ============================================================
+// PERSONS
+// ============================================================
+function renderPersons() {
+  const q = document.getElementById('persons-search').value.toLowerCase().trim();
+  let list = data.persons;
+  if(q) list = list.filter(p => p.name.includes(q) || p.phone.includes(q) || p.category.includes(q));
+  if(state.personFilter !== 'all') list = list.filter(p => p.category === state.personFilter);
+
+  const counts = {}; data.persons.forEach(p => { counts[p.category] = (counts[p.category]||0)+1; });
+  let chips = '<span class="category-chip' + (state.personFilter==='all'?' active':'') + '" data-cat="all" onclick="setPersonFilter(\'all\')">\u0627\u0644\u0643\u0644 (' + data.persons.length + ')</span>';
+  Object.keys(counts).forEach(cat => {
+    chips += '<span class="category-chip' + (state.personFilter===cat?' active':'') + '" data-cat="' + cat + '" onclick="setPersonFilter(\'' + cat + '\')">' + cat + ' (' + counts[cat] + ')</span>';
+  });
+  document.getElementById('persons-filter').innerHTML = chips;
+
+  document.getElementById('persons-list').innerHTML = list.length
+    ? list.map(p => {
+        const bal = getPersonBalance(p);
+        return '<div class="person-card" onclick="openPersonDetail(\'' + p.id + '\')">' +
+          '<div class="card-header"><div class="cell-flex">' +
+          '<div class="avatar" style="background:' + getAvatarColor(p.name) + '">' + getInitials(p.name) + '</div>' +
+          '<div><div class="card-title">' + p.name + '</div><div class="card-sub" style="font-size:11px">' + p.category + '</div></div></div>' +
+          '<div style="text-align:left"><div style="font-size:18px;font-weight:800;color:' + (bal>0?'var(--success)':bal<0?'var(--danger)':'var(--text-muted)') + '">' + fmt(bal) + '</div><div style="font-size:10px;color:var(--text-muted)">\u062F\u064A\u0648\u0646</div></div></div></div>';
+      }).join('')
+    : '<div class="empty-state"><div class="empty-icon">\uD83D\uDCED</div><div class="empty-title">\u0644\u0627 \u062A\u0648\u062C\u062F \u0646\u062A\u0627\u0626\u062C</div></div>';
+}
+
+function setPersonFilter(cat) {
+  state.personFilter = cat;
+  document.querySelectorAll('#persons-filter .category-chip').forEach(c => c.classList.toggle('active', c.dataset.cat === cat));
+  renderPersons();
+}
+
+function openPersonModal(person) {
+  document.getElementById('person-modal-title').textContent = person ? '\u062A\u0639\u062F\u064A\u0644 \u0634\u062E\u0635' : '\u0625\u0636\u0627\u0641\u0629 \u0634\u062E\u0635';
+  document.getElementById('person-edit-id').value = person ? person.id : '';
+  document.getElementById('person-form').querySelector('[name=name]').value = person ? person.name : '';
+  document.getElementById('person-form').querySelector('[name=phone]').value = person ? person.phone : '';
+  document.getElementById('person-form').querySelector('[name=category]').value = person ? person.category : '\u0639\u0645\u064A\u0644';
+  document.getElementById('person-form').querySelector('[name=notes]').value = person ? person.notes : '';
+  openModal('person-modal');
+}
+
+function savePerson(e) {
+  e.preventDefault();
+  const f = e.target;
+  const editId = f.querySelector('[name=editId]').value;
+  const person = {
+    name: f.querySelector('[name=name]').value,
+    phone: f.querySelector('[name=phone]').value,
+    category: f.querySelector('[name=category]').value,
+    notes: f.querySelector('[name=notes]').value
+  };
+  if(editId) {
+    const p = getPerson(editId);
+    if(p) Object.assign(p, person);
+  } else {
+    person.id = uid();
+    person.dateAdded = today();
+    person.status = 'active';
+    person.transactions = [];
+    data.persons.push(person);
+  }
+  saveData();
+  closeModal('person-modal');
+  renderPersons();
+  renderDashboard();
+}
+
+function openPersonDetail(id) {
+  const p = getPerson(id);
+  if(!p) return;
+  state.personDetailId = id;
+  const bal = getPersonBalance(p);
+  const jobs = getPersonJobs(id);
+  const jobRemaining = jobs.reduce((s,j) => s + Math.max(0, j.agreedAmount - (j.payments||[]).reduce((p,pm) => p+pm.amount,0)), 0);
+  const jobPaid = jobs.reduce((s,j) => s + (j.payments||[]).reduce((p,pm) => p+pm.amount,0), 0);
+
+  let content = '<div class="detail-section" style="text-align:center;padding-bottom:20px">' +
+    '<div class="avatar" style="width:56px;height:56px;margin:0 auto 12px;font-size:22px;background:' + getAvatarColor(p.name) + '">' + getInitials(p.name) + '</div>' +
+    '<div style="font-size:18px;font-weight:800">' + p.name + '</div>' +
+    '<div style="font-size:12px;color:var(--text-secondary);margin:2px 0">' + p.category + ' \u00B7 ' + p.phone + '</div>' +
+    '<div style="margin-top:6px">' +
+    '<button class="icon-btn" onclick="openPersonModal(getPerson(\'' + p.id + '\'))" style="display:inline-flex;width:auto;padding:6px 14px;gap:6px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>\u062A\u0639\u062F\u064A\u0644</button>' +
+    '<button class="icon-btn" onclick="openPersonReport(\'' + p.id + '\')" style="display:inline-flex;width:auto;padding:6px 14px;gap:6px;margin-right:8px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>\u062A\u0642\u0631\u064A\u0631</button></div></div>';
+
+  // Big finance cards
+  content += '<div style="display:flex;gap:10px;margin-bottom:14px">' +
+    '<div class="finance-card-large" style="border-color:' + (bal>0?'var(--success)':bal<0?'var(--danger)':'var(--border)') + '"><div class="flabel">\u0627\u0644\u062F\u064A\u0648\u0646</div><div class="fvalue" style="color:' + (bal>0?'var(--success)':bal<0?'var(--danger)':'var(--text-secondary)') + '">' + fmt(bal) + '</div></div>' +
+    '<div class="finance-card-large" style="border-color:' + (jobRemaining>0?'var(--warning)':'var(--border)') + '"><div class="flabel">\u0627\u0644\u0634\u063A\u0644\u0627\u0646\u0627\u062A</div><div class="fvalue" style="color:' + (jobRemaining>0?'var(--warning)':'var(--text-secondary)') + '">' + fmt(jobRemaining) + '</div></div></div>';
+
+  // Tabs
+  const persTab = state.personTab || 'personal';
+  content += '<div class="detail-tabs">' +
+    '<div class="detail-tab' + (persTab==='personal'?' active':'') + '" onclick="switchPersonTab(\'personal\')">\u062D\u0633\u0627\u0628 \u0634\u062E\u0635\u064A</div>' +
+    '<div class="detail-tab' + (persTab==='jobs'?' active':'') + '" onclick="switchPersonTab(\'jobs\')">\u0627\u0644\u0634\u063A\u0644\u0627\u0646\u0627\u062A</div></div>';
+
+  // Tab content
+  if(persTab === 'jobs') {
+    // Jobs tab
+    content += '<div class="detail-section"><div class="detail-section-title">\u0645\u0644\u062E\u0635 \u0627\u0644\u0634\u063A\u0644\u0627\u0646\u0627\u062A</div>' +
+      '<div class="summary-row"><span class="summary-label">\u0625\u062C\u0645\u0627\u0644\u064A \u0627\u0644\u0645\u062A\u0641\u0642 \u0639\u0644\u064A\u0647</span><span class="summary-value">' + fmt(jobs.reduce((s,j) => s + j.agreedAmount, 0)) + '</span></div>' +
+      '<div class="summary-row"><span class="summary-label" style="color:var(--success)">\u0625\u062C\u0645\u0627\u0644\u064A \u0627\u0644\u0645\u062F\u0641\u0648\u0639</span><span class="summary-value" style="color:var(--success)">' + fmt(jobPaid) + '</span></div>' +
+      '<div class="summary-row"><span class="summary-label" style="color:var(--warning)">\u0627\u0644\u0645\u062A\u0628\u0642\u064A</span><span class="summary-value" style="color:var(--warning);font-weight:800;font-size:15px">' + fmt(jobRemaining) + '</span></div></div>';
+    if(jobs.length) {
+      content += jobs.map(j => {
+        const tot = getJobTotals(j);
+        return '<div class="job-card" onclick="openJobDetail(\'' + j.id + '\')" style="border-right:3px solid ' + (tot.remaining>0?'var(--warning)':'var(--success)') + '">' +
+          '<div class="card-header"><div><div class="card-title">' + j.name + '</div><div class="card-sub">' + j.workshop + ' \u00B7 ' + (j.productType||'') + '</div></div>' +
+          '<span class="badge ' + (j.status==='in_progress'?'badge-pending':'badge-completed') + '">' + (j.status==='in_progress'?'\u0642\u064A\u062F \u0627\u0644\u062A\u0635\u0646\u064A\u0639':'\u0645\u0643\u062A\u0645\u0644\u0629') + '</span></div>' +
+          '<div style="display:flex;gap:12px;font-size:12px;margin-top:6px">' +
+          '<span style="color:var(--text-secondary)">\u0645\u062A\u0641\u0642: ' + fmt(j.agreedAmount) + '</span>' +
+          '<span style="color:var(--success)">\u0645\u062F\u0641\u0648\u0639: ' + fmt(tot.payments) + '</span>' +
+          '<span style="color:' + (tot.remaining>0?'var(--warning)':'var(--text-muted)') + ';font-weight:700">\u0645\u062A\u0628\u0642\u064A: ' + fmt(tot.remaining) + '</span></div></div>';
+      }).join('');
+    } else {
+      content += '<div class="empty-text" style="padding:20px;text-align:center">\u0644\u0627 \u062A\u0648\u062C\u062F \u0634\u063A\u0644\u0627\u0646\u0627\u062A \u0644\u0647\u0630\u0627 \u0627\u0644\u0634\u062E\u0635</div>';
+    }
+  } else {
+    // Personal account tab
+    const txs = p.transactions||[];
+    content += '<div class="detail-section"><div class="detail-section-title">\u0627\u0644\u0645\u0639\u0627\u0645\u0644\u0627\u062A (' + txs.length + ')</div>';
+    if(txs.length) {
+      // Get chronological order for running balance
+      const chrono = [...txs].sort((a,b) => new Date(a.date||'2000')-new Date(b.date||'2000') || a.id.localeCompare(b.id));
+      const balMap = {};
+      let cb = 0;
+      chrono.forEach(t => {
+        balMap[t.id] = cb;
+        cb += t.type === '\u0623\u062E\u0630\u062A' ? t.amount : -t.amount;
+      });
+
+      content += [...txs].reverse().map(t => {
+        const isTake = t.type === '\u0623\u062E\u0630\u062A';
+        const color = isTake ? 'var(--success)' : 'var(--danger)';
+        const iconClass = isTake ? 'take' : 'give';
+        const label = isTake ? '\u0623\u062E\u0630\u062A' : '\u0639\u0637\u064A\u062A';
+        const before = fmt(balMap[t.id]||0);
+        return '<div class="tx-item" onclick="editPersonTx(\'' + p.id + '\',\'' + t.id + '\')">' +
+          '<div class="main-row">' +
+          '<div class="tx-icon ' + iconClass + '">' + (isTake ? '\u2191' : '\u2193') + '</div>' +
+          '<div class="tx-info">' +
+          '<div class="tx-amount-main" style="color:' + color + '">' + fmt(t.amount) + '</div>' +
+          '<div class="tx-date-label">' + (t.date||'') + '</div>' +
+          '<div class="tx-before-label">\u0627\u0644\u0631\u0635\u064A\u062F \u0642\u0628\u0644: ' + before + '</div>' +
+          (t.description ? '<div class="tx-note-label">' + t.description + '</div>' : '') +
+          '</div>' +
+          '<div class="tx-tag">' +
+          '<div class="tx-tag-amount" style="color:' + color + '">' + fmt(t.amount) + '</div>' +
+          '<div class="tx-tag-label" style="color:' + color + '">' + label + '</div>' +
+          '</div></div></div>';
+      }).join('');
+    } else {
+      content += '<div class="empty-text" style="padding:20px;text-align:center">\u0644\u0627 \u062A\u0648\u062C\u062F \u0645\u0639\u0627\u0645\u0644\u0627\u062A</div>';
+    }
+    content += '</div>';
+  }
+
+  document.getElementById('person-detail-content').innerHTML = content;
+  document.getElementById('person-detail-content').dataset.pid = id;
+  switchView('person-detail-view');
+}
+
+function switchPersonTab(tab) {
+  state.personTab = tab;
+  openPersonDetail(state.personDetailId);
+}
+
+function openPersonTx(personId, presetType) {
+  document.getElementById('tx-person-id').value = personId;
+  document.getElementById('tx-type-input').value = presetType;
+  document.getElementById('tx-type-select').value = presetType;
+  document.getElementById('tx-modal-title').textContent = presetType === '\u0639\u0637\u064A\u062A' ? '\u062A\u0633\u062C\u064A\u0644 \u0639\u0637\u064A\u062A' : '\u062A\u0633\u062C\u064A\u0644 \u0623\u062E\u0630\u062A';
+  document.getElementById('tx-amount').value = '';
+  document.getElementById('tx-description').value = '';
+  document.getElementById('tx-date').value = today();
+  openModal('tx-modal');
+}
+
+function savePersonTx(e) {
+  e.preventDefault();
+  const pId = document.getElementById('tx-person-id').value;
+  const type = document.getElementById('tx-type-input').value;
+  const p = getPerson(pId);
+  if(!p) return;
+  const tx = { id:uid(), type, amount:parseFloat(document.getElementById('tx-amount').value)||0, date:document.getElementById('tx-date').value||today(), description:document.getElementById('tx-description').value||'' };
+  if(!p.transactions) p.transactions = [];
+  p.transactions.push(tx);
+  saveData();
+  closeModal('tx-modal');
+  openPersonDetail(pId);
+}
+
+function editPersonTx(personId, txId) {
+  const p = getPerson(personId);
+  if(!p) return;
+  const tx = (p.transactions||[]).find(t => t.id === txId);
+  if(!tx) return;
+  document.getElementById('edit-tx-person-id').value = personId;
+  document.getElementById('edit-tx-id').value = txId;
+  document.getElementById('edit-tx-amount').value = tx.amount;
+  document.getElementById('edit-tx-type').value = tx.type;
+  document.getElementById('edit-tx-date').value = tx.date||'';
+  document.getElementById('edit-tx-description').value = tx.description||'';
+  document.getElementById('edit-tx-delete-btn').onclick = function() {
+    if(confirm('\u062D\u0630\u0641 \u0627\u0644\u0645\u0639\u0627\u0645\u0644\u0629?')) {
+      p.transactions = p.transactions.filter(x => x.id !== txId);
+      saveData();
+      closeModal('edit-tx-modal');
+      openPersonDetail(personId);
+    }
+  };
+  openModal('edit-tx-modal');
+}
+
+function saveEditedTx(e) {
+  e.preventDefault();
+  const personId = document.getElementById('edit-tx-person-id').value;
+  const txId = document.getElementById('edit-tx-id').value;
+  const p = getPerson(personId);
+  if(!p) return;
+  const tx = (p.transactions||[]).find(t => t.id === txId);
+  if(!tx) return;
+  tx.amount = parseFloat(document.getElementById('edit-tx-amount').value)||0;
+  tx.type = document.getElementById('edit-tx-type').value;
+  tx.date = document.getElementById('edit-tx-date').value||today();
+  tx.description = document.getElementById('edit-tx-description').value||'';
+  saveData();
+  closeModal('edit-tx-modal');
+  openPersonDetail(personId);
+}
+
+function openPersonReport(personId) {
+  const p = getPerson(personId);
+  if(!p) return;
+  const txs = p.transactions||[];
+  const totalTake = txs.filter(t => t.type === '\u0623\u062E\u0630\u062A').reduce((s,t) => s + t.amount, 0);
+  const totalGive = txs.filter(t => t.type === '\u0639\u0637\u064A\u062A').reduce((s,t) => s + t.amount, 0);
+  const balance = totalTake - totalGive;
+  let content = '<div class="report-summary">' +
+    '<div class="report-card"><div class="rc-label" style="color:var(--success)">\u0625\u062C\u0645\u0627\u0644\u064A \u0627\u0644\u0623\u062E\u0630</div><div class="rc-value" style="color:var(--success)">' + fmt(totalTake) + '</div></div>' +
+    '<div class="report-card"><div class="rc-label" style="color:var(--danger)">\u0625\u062C\u0645\u0627\u0644\u064A \u0627\u0644\u0639\u0637\u0627</div><div class="rc-value" style="color:var(--danger)">' + fmt(totalGive) + '</div></div>' +
+    '<div class="report-card"><div class="rc-label">\u0627\u0644\u0631\u0635\u064A\u062F</div><div class="rc-value" style="color:' + (balance>0?'var(--success)':balance<0?'var(--danger)':'var(--text-secondary)') + '">' + fmt(balance) + '</div></div></div>';
+
+  // Date filter
+  content += '<div class="form-row" style="margin-bottom:14px">' +
+    '<div class="form-group"><label class="form-label">\u0645\u0646</label><input type="date" class="form-input" id="rep-from" onchange="filterPersonReport(\'' + personId + '\')"></div>' +
+    '<div class="form-group"><label class="form-label">\u0625\u0644\u0649</label><input type="date" class="form-input" id="rep-to" onchange="filterPersonReport(\'' + personId + '\')"></div></div>';
+
+  content += '<div class="search-box" style="margin-bottom:12px">' +
+    '<input type="text" class="search-input" id="rep-search" placeholder="\u0628\u062D\u062B \u0639\u0646 \u0645\u0639\u0627\u0645\u0644\u0629..." oninput="filterPersonReport(\'' + personId + '\')" style="padding:10px 12px;font-size:12px"></div>';
+
+  content += '<div id="rep-tx-list" style="max-height:300px;overflow-y:auto">';
+  if(txs.length) {
+    content += [...txs].reverse().map(t => {
+      const isTake = t.type === '\u0623\u062E\u0630\u062A';
+      const color = isTake ? 'var(--success)' : 'var(--danger)';
+      const label = isTake ? '\u0623\u062E\u0630\u062A' : '\u0639\u0637\u064A\u062A';
+      return '<div class="detail-row rep-tx-row" data-amount="' + t.amount + '" data-type="' + t.type + '" data-date="' + (t.date||'') + '" data-desc="' + (t.description||'') + '">' +
+        '<span class="detail-label" style="color:' + color + ';font-weight:700">' + label + '</span>' +
+        '<span class="detail-label">' + (t.date||'') + '</span>' +
+        '<span class="detail-label" style="color:var(--text-muted);font-size:11px">' + (t.description||'') + '</span>' +
+        '<span class="detail-value" style="color:' + color + '">' + fmt(t.amount) + '</span></div>';
+    }).join('');
+  } else {
+    content += '<div class="empty-text">\u0644\u0627 \u062A\u0648\u062C\u062F \u0645\u0639\u0627\u0645\u0644\u0627\u062A</div>';
+  }
+  content += '</div>';
+
+  document.getElementById('report-content').innerHTML = content;
+  openModal('report-modal');
+}
+
+function filterPersonReport(personId) {
+  const p = getPerson(personId);
+  if(!p) return;
+  const from = document.getElementById('rep-from').value;
+  const to = document.getElementById('rep-to').value;
+  const q = document.getElementById('rep-search').value.toLowerCase().trim();
+  const rows = document.querySelectorAll('.rep-tx-row');
+  rows.forEach(row => {
+    const date = row.dataset.date;
+    const desc = row.dataset.desc.toLowerCase();
+    const type = row.dataset.type;
+    let show = true;
+    if(from && date < from) show = false;
+    if(to && date > to) show = false;
+    if(q && !desc.includes(q) && !type.includes(q)) show = false;
+    row.style.display = show ? '' : 'none';
+  });
+}
+
+
+// ============================================================
+// JOBS
+// ============================================================
+function renderJobs() {
+  const q = document.getElementById('jobs-search').value.toLowerCase().trim();
+  let list = data.jobs.filter(j => {
+    if(state.workshop !== 'all' && j.workshop !== state.workshop) return false;
+    if(state.jobFilter === 'active') return j.status === 'in_progress';
+    if(state.jobFilter === 'completed') return j.status === 'completed';
+    if(state.jobFilter === 'pending') return (j.payments||[]).reduce((s,p) => s+p.amount,0) < j.agreedAmount;
+    return true;
+  });
+  if(q) list = list.filter(j => j.name.includes(q) || (getPerson(j.customerId)||{}).name.includes(q));
+
+  document.getElementById('jobs-list').innerHTML = list.length
+    ? list.map(j => {
+        const c = getPerson(j.customerId);
+        const tot = getJobTotals(j);
+        return '<div class="job-card" onclick="openJobDetail(\'' + j.id + '\')">' +
+          '<div class="card-header"><div><div class="card-title">' + j.name + '</div><div class="card-sub">' + (c?c.name:'\u2014') + ' \u00B7 ' + j.workshop + ' \u00B7 ' + (j.productType||'') + '</div></div>' +
+          '<span class="badge ' + (j.status==='in_progress'?'badge-pending':'badge-completed') + '">' + (j.status==='in_progress'?'\u0642\u064A\u062F \u0627\u0644\u062A\u0635\u0646\u064A\u0639':'\u0645\u0643\u062A\u0645\u0644\u0629') + '</span></div>' +
+          '<div class="card-footer"><span class="card-amount">' + fmt(j.agreedAmount) + '</span><span style="font-size:11px;color:var(--text-muted)">\u0645\u062A\u0628\u0642\u064A: ' + fmt(tot.remaining) + '</span></div></div>';
+      }).join('')
+    : '<div class="empty-state"><div class="empty-icon">\uD83D\uDCCB</div><div class="empty-title">\u0644\u0627 \u062A\u0648\u062C\u062F \u0646\u062A\u0627\u0626\u062C</div></div>';
+}
+
+function setWorkshop(ws) {
+  state.workshop = ws;
+  document.querySelectorAll('#ws-filter .workshop-btn').forEach(b => b.classList.toggle('active', b.dataset.ws === ws));
+  renderJobs();
+}
+
+function setJobFilter(f) {
+  state.jobFilter = f;
+  document.querySelectorAll('.tabs [data-jf]').forEach(t => t.classList.toggle('active', t.dataset.jf === f));
+  renderJobs();
+}
+
+function openJobModal(job) {
+  document.getElementById('job-modal-title').textContent = job ? '\u062A\u0639\u062F\u064A\u0644 \u0634\u063A\u0644\u0627\u0646\u0629' : '\u0625\u0636\u0627\u0641\u0629 \u0634\u063A\u0644\u0627\u0646\u0629';
+  document.getElementById('job-edit-id').value = job ? job.id : '';
+  document.getElementById('job-form').querySelector('[name=name]').value = job ? job.name : '';
+  document.getElementById('job-form').querySelector('[name=productType]').value = job ? job.productType : '';
+  document.getElementById('job-form').querySelector('[name=agreedAmount]').value = job ? job.agreedAmount : '';
+  document.getElementById('job-form').querySelector('[name=paidAmount]').value = job ? (job.payments||[]).reduce((s,p)=>s+p.amount,0) : '';
+  document.getElementById('job-form').querySelector('[name=notes]').value = job ? job.notes : '';
+  document.getElementById('job-form').querySelector('[name=workshop]').value = job ? job.workshop : '\u0633\u064A\u0640\u0644\u0627';
+  if(job) document.getElementById('job-form').querySelector('[name=startDate]').value = job.startDate || today();
+  else document.getElementById('job-start-date').value = today();
+
+  // Populate customer dropdown
+  const sel = document.getElementById('job-customer');
+  sel.innerHTML = '<option value="">\u2014 \u0627\u062E\u062A\u0631 \u0627\u0644\u0639\u0645\u064A\u0644 \u2014</option>' +
+    data.persons.map(p => '<option value="' + p.id + '"' + (job && job.customerId === p.id ? ' selected' : '') + '>' + p.name + ' (' + p.phone + ')</option>').join('');
+  openModal('job-modal');
+}
+
+function saveJob(e) {
+  e.preventDefault();
+  const f = e.target;
+  const editId = f.querySelector('[name=editId]').value;
+  const agreedAmount = parseFloat(f.querySelector('[name=agreedAmount]').value)||0;
+  const paidAmount = parseFloat(f.querySelector('[name=paidAmount]').value)||0;
+  const jobData = {
+    name: f.querySelector('[name=name]').value,
+    customerId: f.querySelector('[name=customerId]').value,
+    workshop: f.querySelector('[name=workshop]').value,
+    productType: f.querySelector('[name=productType]').value,
+    agreedAmount: agreedAmount,
+    notes: f.querySelector('[name=notes]').value,
+    startDate: f.querySelector('[name=startDate]').value || today()
+  };
+  if(editId) {
+    const j = getJob(editId);
+    if(j) {
+      Object.assign(j, jobData);
+      j.updatedAt = now();
+    }
+  } else {
+    jobData.id = uid();
+    jobData.status = 'in_progress';
+    jobData.materials = [];
+    jobData.laborItems = [];
+    jobData.otherCosts = [];
+    jobData.payments = paidAmount > 0 ? [{id:uid(), date:today(), amount:paidAmount}] : [];
+    jobData.createdAt = now();
+    jobData.updatedAt = now();
+    data.jobs.push(jobData);
+    // Create ledger transaction for payment
+    if(paidAmount > 0) {
+      data.ledgerTransactions.push({ id:uid(), date:today(), amount:paidAmount, type:'\u0644\u0647', personId:jobData.customerId, jobId:jobData.id, category:'\u062F\u0641\u0639\u0629 \u0634\u063A\u0644\u0627\u0646\u0629', description:'\u062F\u0641\u0639\u0629 \u0645\u0628\u062F\u0626\u064A\u0629 - ' + jobData.name, source:'job_payment' });
+      data.treasury.income.push({ id:uid(), date:today(), amount:paidAmount, description:'\u062F\u0641\u0639\u0629 ' + jobData.name, category:'\u062F\u0641\u0639\u0629 \u0639\u0645\u064A\u0644', workshop:jobData.workshop, linkedJobId:jobData.id });
+    }
+  }
+  saveData();
+  closeModal('job-modal');
+  renderJobs();
+  renderDashboard();
+}
+
+function openJobDetail(id) {
+  const j = getJob(id);
+  if(!j) return;
+  const c = getPerson(j.customerId);
+  const tot = getJobTotals(j);
+  let content = '<div class="detail-section">' +
+    '<div class="detail-section-title">' + j.name + ' <span class="badge ' + (j.status==='in_progress'?'badge-pending':'badge-completed') + '">' + (j.status==='in_progress'?'\u0642\u064A\u062F \u0627\u0644\u062A\u0635\u0646\u064A\u0639':'\u0645\u0643\u062A\u0645\u0644\u0629') + '</span></div>' +
+    '<div class="detail-row"><span class="detail-label">\u0627\u0644\u0639\u0645\u064A\u0644</span><span class="detail-value" style="cursor:pointer;color:var(--accent)" onclick="openPersonDetail(\'' + (c?c.id:'') + '\')">' + (c?c.name:'\u2014') + '</span></div>' +
+    '<div class="detail-row"><span class="detail-label">\u0627\u0644\u0648\u0631\u0634\u0629</span><span class="detail-value">' + j.workshop + '</span></div>' +
+    '<div class="detail-row"><span class="detail-label">\u0646\u0648\u0639 \u0627\u0644\u0645\u0646\u062A\u062C</span><span class="detail-value">' + (j.productType||'\u2014') + '</span></div>' +
+    '<div class="detail-row"><span class="detail-label">\u0627\u0644\u0645\u0628\u0644\u063A \u0627\u0644\u0645\u062A\u0641\u0642 \u0639\u0644\u064A\u0647</span><span class="detail-value">' + fmt(j.agreedAmount) + '</span></div>' +
+    '<div class="detail-row"><span class="detail-label">\u062A\u0627\u0631\u064A\u062E \u0627\u0644\u0628\u062F\u0621</span><span class="detail-value">' + (j.startDate||'\u2014') + '</span></div>' +
+    '<div class="detail-row"><span class="detail-label">\u0645\u0644\u0627\u062D\u0638\u0627\u062A</span><span class="detail-value">' + (j.notes||'\u2014') + '</span></div></div>';
+
+  // Summary
+  content += '<div class="summary-card">' +
+    '<div class="summary-row"><span class="summary-label">\u0625\u062C\u0645\u0627\u0644\u064A \u0627\u0644\u062E\u0627\u0645\u0627\u062A</span><span class="summary-value" style="color:var(--danger)">' + fmt(tot.materials) + '</span></div>' +
+    '<div class="summary-row"><span class="summary-label">\u0625\u062C\u0645\u0627\u0644\u064A \u0627\u0644\u0645\u0635\u0646\u0639\u064A\u0627\u062A</span><span class="summary-value" style="color:var(--danger)">' + fmt(tot.labor) + '</span></div>' +
+    '<div class="summary-row"><span class="summary-label">\u062A\u0643\u0627\u0644\u064A\u0641 \u0623\u062E\u0631\u0649</span><span class="summary-value" style="color:var(--danger)">' + fmt(tot.other) + '</span></div>' +
+    '<div class="summary-row"><span class="summary-label">\u0625\u062C\u0645\u0627\u0644\u064A \u0627\u0644\u062A\u0643\u0627\u0644\u064A\u0641</span><span class="summary-value" style="color:var(--danger);font-weight:800">' + fmt(tot.totalCosts) + '</span></div>' +
+    '<div class="summary-row" style="border-top:1px dashed var(--border);padding-top:10px;margin-top:6px"><span class="summary-label">\u0627\u0644\u0631\u0628\u062D</span><span class="summary-value" style="color:' + (tot.profit>=0?'var(--success)':'var(--danger)') + ';font-size:16px;font-weight:800">' + fmt(tot.profit) + '</span></div>' +
+    '<div class="summary-row"><span class="summary-label">\u0627\u0644\u0645\u062F\u0641\u0648\u0639</span><span class="summary-value" style="color:var(--success)">' + fmt(tot.payments) + '</span></div>' +
+    '<div class="summary-row"><span class="summary-label">\u0627\u0644\u0645\u062A\u0628\u0642\u064A</span><span class="summary-value" style="color:' + (tot.remaining>0?'var(--warning)':'var(--text-muted)') + ';font-weight:800">' + fmt(tot.remaining) + '</span></div></div>';
+
+  // Materials
+  content += '<div class="detail-section"><div class="detail-section-title">\u0627\u0644\u062E\u0627\u0645\u0627\u062A <button class="btn btn-secondary btn-sm" onclick="openModal(\'material-modal\');document.getElementById(\'material-job-id\').value=\'' + j.id + '\'" style="padding:4px 10px;font-size:11px;width:auto">+</button></div>';
+  if((j.materials||[]).length) {
+    content += j.materials.map(m => '<div class="detail-row"><span class="detail-label">' + m.desc + ' (' + m.qty + ' \u00D7 ' + fmt(m.unitCost) + ')</span><span class="detail-value" style="color:var(--danger)">' + fmt(m.totalCost) + ' <span style="color:var(--text-muted);cursor:pointer" onclick="if(confirm(\'\u062D\u0630\u0641?\')){var idx=data.jobs.findIndex(j=>j.id==\'' + j.id + '\');if(idx>=0){data.jobs[idx].materials=data.jobs[idx].materials.filter(x=>x.id!=\'' + m.id + '\');saveData();openJobDetail(\'' + j.id + '\');}}">\u2716</span></span></div>').join('');
+  } else {
+    content += '<div class="empty-text">\u0644\u0627 \u062A\u0648\u062C\u062F \u062E\u0627\u0645\u0627\u062A</div>';
+  }
+  content += '</div>';
+
+  // Labor
+  content += '<div class="detail-section"><div class="detail-section-title">\u0627\u0644\u0645\u0635\u0646\u0639\u064A\u0627\u062A <button class="btn btn-secondary btn-sm" onclick="openModal(\'labor-modal\');document.getElementById(\'labor-job-id\').value=\'' + j.id + '\'" style="padding:4px 10px;font-size:11px;width:auto">+</button></div>';
+  if((j.laborItems||[]).length) {
+    content += j.laborItems.map(l => '<div class="detail-row"><span class="detail-label">' + l.desc + '</span><span class="detail-value" style="color:var(--danger)">' + fmt(l.cost) + ' <span style="color:var(--text-muted);cursor:pointer" onclick="if(confirm(\'\u062D\u0630\u0641?\')){var idx=data.jobs.findIndex(j=>j.id==\'' + j.id + '\');if(idx>=0){data.jobs[idx].laborItems=data.jobs[idx].laborItems.filter(x=>x.id!=\'' + l.id + '\');saveData();openJobDetail(\'' + j.id + '\');}}">\u2716</span></span></div>').join('');
+  } else {
+    content += '<div class="empty-text">\u0644\u0627 \u062A\u0648\u062C\u062F \u0645\u0635\u0646\u0639\u064A\u0627\u062A</div>';
+  }
+  content += '</div>';
+
+  // Other costs
+  content += '<div class="detail-section"><div class="detail-section-title">\u062A\u0643\u0627\u0644\u064A\u0641 \u0623\u062E\u0631\u0649 <button class="btn btn-secondary btn-sm" onclick="openModal(\'othercost-modal\');document.getElementById(\'othercost-job-id\').value=\'' + j.id + '\'" style="padding:4px 10px;font-size:11px;width:auto">+</button></div>';
+  if((j.otherCosts||[]).length) {
+    content += j.otherCosts.map(o => '<div class="detail-row"><span class="detail-label" style="color:var(--danger)">' + o.desc + '</span><span class="detail-value" style="color:var(--danger)">' + fmt(o.cost) + ' <span style="color:var(--text-muted);cursor:pointer" onclick="if(confirm(\'\u062D\u0630\u0641?\')){var idx=data.jobs.findIndex(j=>j.id==\'' + j.id + '\');if(idx>=0){data.jobs[idx].otherCosts=data.jobs[idx].otherCosts.filter(x=>x.id!=\'' + o.id + '\');saveData();openJobDetail(\'' + j.id + '\');}}">\u2716</span></span></div>').join('');
+  } else {
+    content += '<div class="empty-text">\u0644\u0627 \u062A\u0648\u062C\u062F \u062A\u0643\u0627\u0644\u064A\u0641 \u0623\u062E\u0631\u0649</div>';
+  }
+  content += '</div>';
+
+  // Payments
+  content += '<div class="detail-section"><div class="detail-section-title">\u0627\u0644\u062F\u0641\u0639\u0627\u062A (' + (j.payments||[]).length + ') <button class="btn btn-primary btn-sm" onclick="openModal(\'payment-modal\');document.getElementById(\'payment-job-id\').value=\'' + j.id + '\';document.getElementById(\'payment-amount\').value=\'\';document.getElementById(\'payment-date\').value=today();" style="padding:4px 10px;font-size:11px;width:auto">+ \u062F\u0641\u0639\u0629</button></div>';
+  if((j.payments||[]).length) {
+    content += j.payments.map(p => '<div class="detail-row"><span class="detail-label">' + (p.date||'') + '</span><span class="detail-value" style="color:var(--success)">' + fmt(p.amount) + '</span></div>').join('');
+  } else {
+    content += '<div class="empty-text">\u0644\u0645 \u062A\u0633\u062C\u0644 \u0623\u064A \u062F\u0641\u0639\u0627\u062A</div>';
+  }
+  content += '</div>';
+
+  // Actions
+  content += '<div style="display:flex;gap:10px">' +
+    '<button class="btn btn-secondary" onclick="openJobModal(getJob(\'' + j.id + '\'))" style="flex:1">\u062A\u0639\u062F\u064A\u0644</button>' +
+    '<button class="btn ' + (j.status==='in_progress'?'btn-primary':'btn-secondary') + '" onclick="toggleJobStatus(\'' + j.id + '\')" style="flex:1">' + (j.status==='in_progress'?'\u062A\u0627\u0645\u064A\u0632 \u0645\u0643\u062A\u0645\u0644\u0629':'\u0625\u0639\u0627\u062F\u0629 \u0644\u0644\u062A\u0635\u0646\u064A\u0639') + '</button></div>';
+
+  document.getElementById('job-detail-content').innerHTML = content;
+  switchView('job-detail-view');
+}
+
+function toggleJobStatus(id) {
+  const j = getJob(id);
+  if(!j) return;
+  j.status = j.status === 'in_progress' ? 'completed' : 'in_progress';
+  j.updatedAt = now();
+  saveData();
+  openJobDetail(id);
+  renderJobs();
+  renderDashboard();
+}
+
+function addJobItem(type, e, stayOpen) {
+  e.preventDefault();
+  const f = e.target;
+  const jId = f.querySelector('[type=hidden]').value;
+  const j = getJob(jId);
+  if(!j) return;
+  const item = { id:uid(), desc: f.querySelector('[name=description]').value };
+  if(type === 'material') {
+    const qty = parseFloat(f.querySelector('[name=quantity]').value)||0;
+    const uc = parseFloat(f.querySelector('[name=unitCost]').value)||0;
+    item.qty = qty; item.unitCost = uc; item.totalCost = qty * uc;
+    if(!j.materials) j.materials = [];
+    j.materials.push(item);
+  } else if(type === 'labor') {
+    item.cost = parseFloat(f.querySelector('[name=cost]').value)||0;
+    if(!j.laborItems) j.laborItems = [];
+    j.laborItems.push(item);
+  } else if(type === 'othercost') {
+    item.cost = parseFloat(f.querySelector('[name=cost]').value)||0;
+    if(!j.otherCosts) j.otherCosts = [];
+    j.otherCosts.push(item);
+  }
+  j.updatedAt = now();
+  saveData();
+  if(stayOpen && type === 'material') {
+    f.querySelector('[name=description]').value = '';
+    f.querySelector('[name=quantity]').value = '';
+    f.querySelector('[name=unitCost]').value = '';
+    f.querySelector('[name=description]').focus();
+    openJobDetail(jId);
+  } else {
+    closeModal(type + '-modal');
+    openJobDetail(jId);
+  }
+}
+
+function addPayment(e) {
+  e.preventDefault();
+  const jId = document.getElementById('payment-job-id').value;
+  const j = getJob(jId);
+  if(!j) return;
+  const amount = parseFloat(document.getElementById('payment-amount').value)||0;
+  const date = document.getElementById('payment-date').value || today();
+  if(amount <= 0) return;
+  if(!j.payments) j.payments = [];
+  j.payments.push({ id:uid(), date, amount });
+  // Auto-ledger: add to treasury income + ledger transaction
+  const personId = j.customerId;
+  data.ledgerTransactions.push({ id:uid(), date, amount, type:'\u0644\u0647', personId, jobId:jId, category:'\u062F\u0641\u0639\u0629 \u0634\u063A\u0644\u0627\u0646\u0629', description:'\u062F\u0641\u0639\u0629 - ' + j.name, source:'job_payment' });
+  data.treasury.income.push({ id:uid(), date, amount, description:'\u062F\u0641\u0639\u0629 ' + j.name, category:'\u062F\u0641\u0639\u0629 \u0639\u0645\u064A\u0644', workshop:j.workshop, linkedJobId:jId });
+  j.updatedAt = now();
+  saveData();
+  closeModal('payment-modal');
+  openJobDetail(jId);
+  renderJobs();
+  renderDashboard();
+}
+
+
+// ============================================================
+// TREASURY
+// ============================================================
+function renderTreasury() {
+  const tr = getTreasuryBalance();
+  document.getElementById('treasury-balance').textContent = fmt(tr.balance);
+  document.getElementById('treasury-income').textContent = fmtNum(tr.income);
+  document.getElementById('treasury-expense').textContent = fmtNum(tr.expense);
+
+  // Merge income and expense into one mixed list
+  const income = data.treasury.income.map(i => ({ ...i, _type:'income' }));
+  const expenses = data.treasury.expenses.map(e => ({ ...e, _type:'expense' }));
+  const all = [...income, ...expenses].sort((a,b) => {
+    const da = new Date(a.date||'2000'), db = new Date(b.date||'2000');
+    return db - da || 0;
+  });
+
+  if(all.length) {
+    document.getElementById('treasury-list').innerHTML = all.map(item => {
+      const isInc = item._type === 'income';
+      return '<div class="treasury-card ' + item._type + '">' +
+        '<div class="detail-row"><span class="detail-label">' + (item.date||'') + '</span><span class="t-amount ' + item._type + '">' + fmt(item.amount) + '</span></div>' +
+        '<div class="detail-row" style="border:none;padding:4px 0"><span class="detail-label">' + (isInc?'\u2705 ':'\u274C ') + item.description + '</span><span style="font-size:11px;color:var(--text-muted)">' + (item.category||'') + ' \u00B7 ' + (isInc?'\u0648\u0627\u0631\u062F':'\u0645\u0635\u0631\u0648\u0641') + '</span></div></div>';
+    }).join('');
+  } else {
+    document.getElementById('treasury-list').innerHTML = '<div class="empty-state"><div class="empty-icon">\uD83D\uDCB0</div><div class="empty-title">\u0644\u0627 \u062A\u0648\u062C\u062F \u0639\u0645\u0644\u064A\u0627\u062A</div></div>';
+  }
+
+  // Update income categories dropdown
+  const incSel = document.getElementById('income-categories');
+  if(incSel) {
+    incSel.innerHTML = getCats('income').map(c => '<option value="' + c.name + '">' + c.name + '</option>').join('');
+  }
+  const expSel = document.getElementById('expense-categories');
+  if(expSel) {
+    expSel.innerHTML = getCats('expense').map(c => '<option value="' + c.name + '">' + c.name + '</option>').join('');
+  }
+  // Populate expense job links
+  const jobLinkSel = document.getElementById('expense-job-link');
+  if(jobLinkSel) {
+    jobLinkSel.innerHTML = '<option value="">\u2014 \u0628\u062F\u0648\u0646 \u2014</option>' +
+      data.jobs.map(j => '<option value="' + j.id + '">' + j.name + '</option>').join('');
+  }
+  // Default dates
+  const id = document.getElementById('income-date');
+  if(id) id.value = today();
+  const ed = document.getElementById('expense-date');
+  if(ed) ed.value = today();
+}
+
+function setTreasuryTab(tab) {
+  state.treasuryTab = tab;
+  document.querySelectorAll('#treasury-view .tabs .tab').forEach(t => t.classList.toggle('active', t.dataset.tt === tab));
+  renderTreasury();
+}
+
+function addTreasuryEntry(type, e) {
+  e.preventDefault();
+  const f = e.target;
+  const amount = parseFloat(f.querySelector('[name=amount]').value)||0;
+  if(amount <= 0) return;
+  const entry = {
+    id:uid(),
+    date: f.querySelector('[name=date]').value || today(),
+    amount: amount,
+    description: f.querySelector('[name=description]').value,
+    category: (f.querySelector('[name=category]')||{}).value || '',
+    workshop: (f.querySelector('[name=workshop]')||{}).value || '\u0639\u0627\u0645',
+    linkedJobId: (f.querySelector('[name=linkedJobId]')||{}).value || null
+  };
+  if(type === 'income') {
+    data.treasury.income.push(entry);
+    data.ledgerTransactions.push({ id:uid(), date:entry.date, amount:entry.amount, type:'\u0644\u0647', personId:null, jobId:entry.linkedJobId, category:entry.category, description:entry.description, source:'treasury' });
+  } else {
+    data.treasury.expenses.push(entry);
+    data.ledgerTransactions.push({ id:uid(), date:entry.date, amount:entry.amount, type:'\u0639\u0644\u064A\u0647', personId:null, jobId:entry.linkedJobId, category:entry.category, description:entry.description, source:'treasury' });
+  }
+  saveData();
+  closeModal(type === 'income' ? 'income-modal' : 'expense-modal');
+  renderTreasury();
+  renderDashboard();
+}
+
+// ============================================================
+// REPORTS
+// ============================================================
+function renderReports() {
+  if(state.reportTab === 'pl') renderPLReport();
+  else if(state.reportTab === 'persons') renderPersonsReport();
+  else if(state.reportTab === 'jobs') renderJobsReport();
+}
+
+function setReportTab(tab) {
+  state.reportTab = tab;
+  document.querySelectorAll('#reports-view .tabs .tab').forEach(t => t.classList.toggle('active', t.dataset.rt === tab));
+  renderReports();
+}
+
+function setPeriod(p) {
+  state.period = p;
+  document.querySelectorAll('.period-btn').forEach(b => b.classList.toggle('active', b.dataset.p === p));
+  renderReports();
+}
+
+function renderPLReport() {
+  const p = state.period;
+  // Treasury income/expense in period
+  const inc = data.treasury.income.filter(i => inPeriod(i.date, p)).reduce((s,i) => s + i.amount, 0);
+  const exp = data.treasury.expenses.filter(e => inPeriod(e.date, p)).reduce((s,e) => s + e.amount, 0);
+  // Job profits in period (by startDate)
+  const jobs = data.jobs.filter(j => inPeriod(j.startDate, p));
+  const totalRevenue = jobs.reduce((s,j) => s + j.agreedAmount, 0);
+  const totalCost = jobs.reduce((s,j) => {
+    const mat = (j.materials||[]).reduce((m,mm) => m + (mm.totalCost||0), 0);
+    const lab = (j.laborItems||[]).reduce((m,ll) => m + (ll.cost||0), 0);
+    const oth = (j.otherCosts||[]).reduce((m,oo) => m + (oo.cost||0), 0);
+    return s + mat + lab + oth;
+  }, 0);
+  const totalProfit = totalRevenue - totalCost;
+  const netResult = inc - exp;
+
+  let content = '<div class="pl-section">' +
+    '<div class="pl-section-title">\u0627\u0644\u0625\u064A\u0631\u0627\u062F\u0627\u062A</div>' +
+    '<div class="pl-row"><span>\u0625\u064A\u0631\u0627\u062F\u0627\u062A \u0627\u0644\u062E\u0632\u0646\u0629</span><span>' + fmt(inc) + '</span></div>' +
+    '<div class="pl-row"><span>\u0625\u064A\u0631\u0627\u062F\u0627\u062A \u0627\u0644\u0634\u063A\u0644\u0627\u0646\u0627\u062A</span><span>' + fmt(totalRevenue) + '</span></div>' +
+    '<div class="pl-total-row" style="background:rgba(16,185,129,.1)"><span>\u0625\u062C\u0645\u0627\u0644\u064A \u0627\u0644\u0625\u064A\u0631\u0627\u062F\u0627\u062A</span><span>' + fmt(inc + totalRevenue) + '</span></div></div>';
+
+  content += '<div class="pl-section">' +
+    '<div class="pl-section-title">\u0627\u0644\u0645\u0635\u0631\u0648\u0641\u0627\u062A</div>' +
+    '<div class="pl-row"><span>\u0645\u0635\u0631\u0648\u0641\u0627\u062A \u0627\u0644\u062E\u0632\u0646\u0629</span><span>' + fmt(exp) + '</span></div>' +
+    '<div class="pl-row"><span>\u062A\u0643\u0627\u0644\u064A\u0641 \u0627\u0644\u0634\u063A\u0644\u0627\u0646\u0627\u062A</span><span>' + fmt(totalCost) + '</span></div>' +
+    '<div class="pl-total-row" style="background:rgba(239,68,68,.1)"><span>\u0625\u062C\u0645\u0627\u0644\u064A \u0627\u0644\u0645\u0635\u0631\u0648\u0641\u0627\u062A</span><span>' + fmt(exp + totalCost) + '</span></div></div>';
+
+  const grandNet = (inc + totalRevenue) - (exp + totalCost);
+  content += '<div class="pl-total-row ' + (grandNet >= 0 ? 'profit' : 'loss') + '">' +
+    '<span>\u0635\u0627\u0641\u064A \u0627\u0644\u0631\u0628\u062D / \u0627\u0644\u062E\u0633\u0627\u0631\u0629</span><span>' + fmt(grandNet) + '</span></div>';
+
+  document.getElementById('reports-content').innerHTML = content;
+}
+
+function renderPersonsReport() {
+  const p = state.period;
+  const list = data.persons.filter(person => inPeriod(person.dateAdded, p)).map(person => {
+    const bal = getPersonBalance(person);
+    const jobCount = getPersonJobs(person.id).length;
+    return '<div class="detail-row"><span class="detail-label">' + person.name + ' (' + person.category + ')</span><span style="font-size:12px;color:var(--text-muted)">' + jobCount + ' \u0634\u063A\u0644\u0627\u0646\u0629</span><span class="' + (bal>0?'card-balance-pos':bal<0?'card-balance-neg':'') + '">' + fmt(bal) + '</span></div>';
+  }).join('');
+
+  document.getElementById('reports-content').innerHTML = '<div class="pl-section"><div class="pl-section-title">\u062A\u0642\u0631\u064A\u0631 \u0627\u0644\u0623\u0634\u062E\u0627\u0635 (' + data.persons.length + ')</div>' +
+    (list || '<div class="empty-text">\u0644\u0627 \u062A\u0648\u062C\u062F \u0646\u062A\u0627\u0626\u062C</div>') + '</div>';
+}
+
+function renderJobsReport() {
+  const p = state.period;
+  const list = data.jobs.filter(j => inPeriod(j.startDate, p));
+  let totalA = 0, totalC = 0, totalP = 0;
+  const rows = list.map(j => {
+    const tot = getJobTotals(j);
+    totalA += j.agreedAmount; totalC += tot.totalCosts; totalP += tot.payments;
+    return '<div class="detail-row"><span class="detail-label">' + j.name + '</span><span style="font-size:11px;color:var(--text-muted)">' + j.workshop + '</span><span style="font-size:12px;font-weight:600">' + fmt(tot.profit) + '</span></div>';
+  }).join('');
+
+  document.getElementById('reports-content').innerHTML = '<div class="pl-section"><div class="pl-section-title">\u062A\u0642\u0631\u064A\u0631 \u0627\u0644\u0634\u063A\u0644\u0627\u0646\u0627\u062A (' + list.length + ')</div>' +
+    (rows || '<div class="empty-text">\u0644\u0627 \u062A\u0648\u062C\u062F \u0646\u062A\u0627\u0626\u062C</div>') +
+    '<div style="margin-top:12px;padding-top:12px;border-top:1px dashed var(--border)">' +
+    '<div class="detail-row"><span class="detail-label">\u0625\u062C\u0645\u0627\u0644\u064A \u0627\u0644\u0625\u064A\u0631\u0627\u062F</span><span class="detail-value">' + fmt(totalA) + '</span></div>' +
+    '<div class="detail-row"><span class="detail-label">\u0625\u062C\u0645\u0627\u0644\u064A \u0627\u0644\u062A\u0643\u0627\u0644\u064A\u0641</span><span class="detail-value">' + fmt(totalC) + '</span></div>' +
+    '<div class="detail-row"><span class="detail-label">\u0625\u062C\u0645\u0627\u0644\u064A \u0627\u0644\u0631\u0628\u062D</span><span class="detail-value" style="color:var(--success)">' + fmt(totalA - totalC) + '</span></div>' +
+    '<div class="detail-row"><span class="detail-label">\u0625\u062C\u0645\u0627\u0644\u064A \u0627\u0644\u0645\u062D\u0635\u0644</span><span class="detail-value">' + fmt(totalP) + '</span></div></div></div>';
+}
+
+// ============================================================
+// CATEGORIES
+// ============================================================
+function renderCategories() {
+  const cats = getCats(state.catTab);
+  document.getElementById('categories-list').innerHTML = cats.length
+    ? cats.map(c => '<div class="detail-row"><span class="detail-label">' + c.name + '</span><span style="color:var(--text-muted);font-size:11px">' + c.type + '</span></div>').join('')
+    : '<div class="empty-text">\u0644\u0627 \u062A\u0648\u062C\u062F \u062A\u0635\u0646\u064A\u0641\u0627\u062A</div>';
+}
+function setCatTab(tab) {
+  state.catTab = tab;
+  document.querySelectorAll('#categories-view .tabs .tab').forEach(t => t.classList.toggle('active', t.dataset.ct === tab));
+  renderCategories();
+}
+function addCategory() {
+  const name = prompt('\u0627\u0633\u0645 \u0627\u0644\u062A\u0635\u0646\u064A\u0641 \u0627\u0644\u062C\u062F\u064A\u062F:');
+  if(!name || !name.trim()) return;
+  data.categories.push({ id:uid(), name:name.trim(), type:state.catTab });
+  saveData();
+  renderCategories();
+}
+</script>
+</html>
+
+
