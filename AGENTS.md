@@ -281,3 +281,124 @@ core/database/
 - RTL: كل الـ UI يدعم اتجاه عربي
 - اسم التطبيق: "ورشتي"
 - اسم الـ DB: "warshty.db"
+
+---
+
+## 🚫 قواعد من أخطاء سابقة — ممنوع مخالفتها
+
+### 1. Enum for domain strings
+**ممنوع:** `tx.type == 'أخذت'` أو أي string comparison لقيم منطقية.
+**الحل:** كل Domain value له Enum (مثل `TransactionType`) مع `.dbValue` و `fromDb()`.
+
+### 2. Model over Map
+**ممنوع:** `j['name']` أو `(j['amount'] as num?)?.toDouble() ?? 0`.
+**الحل:** أي بيانات من DB تعدي على Model مع `fromMap()` — Type Safety كامل.
+
+### 3. Business logic خارج build()
+**ممنوع:** Loops, sums, sorts, aggregations جوه `build()` أو أي Widget.
+**الحل:** كل الحسابات تتحسب في Cubit/State مرة واحدة وتخزن كـ final fields.
+
+### 4. Always check shared widgets first
+**قبل كتابة أي Widget، افتح `core/presentation/widgets/` وشوف موجود إيه.**
+لو موجود استخدمه — لو محتاج تعديل زود parameter مش تعمل inline copy-paste.
+
+### 5. Keys on list items
+**كل `list.map()` لـ Widgets محتاج `ValueKey(item.id)` — ممنوع map من غير Key.**
+
+### 6. formatNumber for bare numbers
+**ممنوع:** `.split(' ج')[0]` أو أي string parsing للـ formatted currency.
+**استخدم:** `AppFormatters.formatNumber()` للرقم فقط، و `AppFormatters.currency()` للرقم + العملة.
+
+### 7. Null safety — no force unwrap without guard
+**ممنوع:** `person.id!` من غير null check قبله.
+**الحل:** `if (person.id != null) ...` أو `??` مع default.
+
+### 8. File size limit
+**أي Widget file > 300 سطر، قسمه لملفات منفصلة** (Widget واحد لكل ملف).
+
+### 9. قوائم > 20 عنصر تستخدم builder
+**ممنوع:** `...list.map()` لقوائم > 20 عنصر جوه Column.
+**استخدم:** `ListView.builder()` أو `SliverList` في `CustomScrollView`.
+
+### 10. Ask before assuming
+**لو مش متأكد من requirement أو فيه trade-off، اسأل المطور — متفترضش.**
+
+### 11. Const كل ما تقدر
+**`SizedBox(height: 8)` → `const SizedBox(height: 8)`** — Flutter بيكافئك على const.
+
+### 12. InkWell over GestureDetector
+استخدم `InkWell` (للـ ripple effect) بدل `GestureDetector` في كل الأماكن الممكنة، خاصة في الكروت والقوائم.
+
+### 13. SnackBar — feedback بعد كل عملية
+**أي عملية بيانات (إضافة/تعديل/حذف) لازم تظهر SnackBar نجاح/خطأ.**
+- الـ `Cubit` يـ `rethrow` الأخطاء من mutation methods (لا يـ emit error states عشان مايفقدش الـ UI القديم).
+- الـ `Screen` تستخدم `try/catch` حول استدعاء الـ Cubit وتظهر SnackBar مناسبة.
+- `BlocConsumer` في الـ Screen عشان تسمع error states من `load()` / `loadDetail()`.
+```dart
+// Cubit — mutation لا تمسك الأخطاء
+Future<void> update(PersonModel person) async {
+  if (_processing) return;
+  _processing = true;
+  try {
+    await _repository.update(person);
+    await _reloadCurrent();
+  } catch (e) {
+    rethrow; // Screen هتتعامل معاه
+  } finally {
+    _processing = false;
+  }
+}
+
+// Screen — الـ caller يتعامل مع النجاح/الخطأ
+onSubmit: (updated) async {
+  try {
+    await cubit.update(updated);
+    Navigator.pop(context);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('تم التعديل بنجاح'), backgroundColor: AppColors.success),
+    );
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('خطأ: $e'), backgroundColor: AppColors.danger),
+    );
+  }
+}
+```
+
+### 14. Loading guard — منع التكرار
+**كل Cubit عنده `bool _processing` مع early return guard.**
+- قبل أي mutation: `if (_processing) return;`
+- `_processing = true` → await → `finally { _processing = false; }`
+- الـ Forms تضيف `bool _submitting` وتعطل الزر + تظهر spinner خلال `await widget.onSubmit()`.
+```dart
+// Form button
+ElevatedButton(
+  onPressed: _submitting ? null : _submit,
+  child: _submitting
+    ? SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
+    : Text('حفظ'),
+)
+
+Future<void> _submit() async {
+  setState(() => _submitting = true);
+  try {
+    await widget.onSubmit(...);
+  } finally {
+    if (mounted) setState(() => _submitting = false);
+  }
+}
+```
+
+### 15. reloadCurrent pattern
+**بعد أي mutation، الـ Cubit يعمل reload حسب السياق الحالي — مش دايماً `load()`.**
+```dart
+Future<void> _reloadCurrent() async {
+  final current = state;
+  if (current is PersonDetailLoaded) {
+    await loadDetail(current.person.id!); // نفضل في التفاصيل
+  } else {
+    await load(); // رجوع للقائمة
+  }
+}
+```
+بدون كده، لو كنت في Detail و `update()` كلت `load()`، الـ Screen هتستقبل `Loading`/`Loaded` (List states) وتظهر `SizedBox.shrink()` — شاشة فاضية.
