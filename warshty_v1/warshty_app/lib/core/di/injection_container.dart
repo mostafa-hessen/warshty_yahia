@@ -8,6 +8,11 @@ import '../../features/category/data/datasources/category_local_datasource.dart'
 import '../../features/category/data/repositories/category_repository_impl.dart';
 import '../../features/category/domain/repositories/category_repository.dart';
 import '../../features/category/presentation/cubits/category_cubit.dart';
+import '../../features/treasury/data/datasources/treasury_local_datasource.dart';
+import '../../features/treasury/data/repositories/treasury_repository_impl.dart';
+import '../../features/treasury/domain/repositories/treasury_repository.dart';
+import '../../features/treasury/presentation/cubits/treasury_cubit.dart';
+import '../../features/workshop/data/datasources/workshop_local_datasource.dart';
 import '../../features/jobs/data/datasources/job_local_datasource.dart';
 import '../../features/jobs/data/repositories/job_repository_impl.dart';
 import '../../features/jobs/domain/repositories/job_repository.dart';
@@ -28,6 +33,18 @@ Future<void> init() async {
   sl.registerLazySingleton(() => DatabaseHelper.instance);
 
   sl.registerLazySingleton(() => ThemeCubit(sl()));
+
+  // ==========================================================
+  //  Treasury Feature
+  // ==========================================================
+  sl.registerLazySingleton(() => TreasuryLocalDataSource(sl()));
+  sl.registerLazySingleton<TreasuryRepository>(() => TreasuryRepositoryImpl(sl()));
+  sl.registerFactory(() => TreasuryCubit(sl()));
+
+  // ==========================================================
+  //  Workshop Feature (read-only seed data)
+  // ==========================================================
+  sl.registerLazySingleton(() => WorkshopLocalDataSource(sl()));
 
   // ==========================================================
   //  Category Feature

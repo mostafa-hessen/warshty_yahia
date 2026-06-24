@@ -4,6 +4,19 @@ import 'database_constants.dart';
 
 /// بيانات أولية للـ Database
 abstract final class DatabaseSeed {
+  /// زرع بيانات الـ Workshops
+  static Future<void> seedWorkshops(Database db) async {
+    final workshops = [
+      {'name': 'سيلا', 'is_active': 1},
+      {'name': 'الفيوك', 'is_active': 1},
+    ];
+    final batch = db.batch();
+    for (final w in workshops) {
+      batch.insert(DatabaseConstants.workshopTable, w);
+    }
+    await batch.commit(noResult: true);
+  }
+
   /// زرع بيانات الـ Categories
   static Future<void> seedCategories(Database db) async {
     final categories = [

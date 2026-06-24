@@ -53,6 +53,7 @@ class DatabaseHelper {
   Future<void> _onCreate(Database db, int version) async {
     await DatabaseTables.createAll(db);
     await DatabaseSeed.seedCategories(db);
+    await DatabaseSeed.seedWorkshops(db);
   }
 
   // ── Helper: nextPartialId ──────────────────────────────────
