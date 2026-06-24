@@ -2,6 +2,7 @@ abstract final class RoutePaths {
   static const home = '/home';
   static const persons = '/persons';
   static const jobs = '/jobs';
+  static const categories = '/categories';
   static const treasury = '/treasury';
   static const reports = '/reports';
 

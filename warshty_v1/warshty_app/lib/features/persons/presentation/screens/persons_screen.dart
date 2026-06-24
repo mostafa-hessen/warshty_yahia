@@ -4,12 +4,12 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/di/injection_container.dart';
 import '../../../../core/presentation/widgets/empty_state.dart';
+import '../../../../core/presentation/widgets/app_filter_chip.dart';
 import '../../../../core/presentation/widgets/loading_state.dart';
 import '../../../../core/presentation/widgets/app_modal.dart';
 import '../../../../core/presentation/widgets/search_bar.dart';
 import '../../../../core/constants/app_constants.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/theme/app_text_styles.dart';
 import '../cubits/person_cubit.dart';
 import '../cubits/person_state.dart';
 import '../../data/models/person_model.dart';
@@ -49,8 +49,11 @@ class _PersonsScreenState extends State<PersonsScreen> {
     return result;
   }
 
-  Set<String> _getTypes(List<PersonModel> persons) {
-    return persons.map((p) => p.type).toSet();
+  static const _presetTypes = ['عميل', 'مورد', 'شركة', 'صنايعي', 'مقاول'];
+
+  Set<String> _getAllTypes(List<PersonModel> persons) {
+    final custom = persons.map((p) => p.type).toSet();
+    return {..._presetTypes, ...custom};
   }
 
   @override
@@ -77,7 +80,7 @@ class _PersonsScreenState extends State<PersonsScreen> {
               if (state is PersonError) return Center(child: Text(state.message));
               if (state is PersonLoaded) {
                 final filtered = _filter(state.persons);
-                final types = _getTypes(state.persons);
+                final types = _getAllTypes(state.persons);
 
                 return Column(
                   children: [
@@ -94,26 +97,24 @@ class _PersonsScreenState extends State<PersonsScreen> {
                         onChanged: (v) => setState(() => _searchQuery = v),
                       ),
                     ),
-                    if (types.length > 1)
-                      SizedBox(
-                        height: 40,
-                        child: ListView(
-                          scrollDirection: Axis.horizontal,
-                          padding: EdgeInsets.symmetric(
-                            horizontal: AppConstants.spacing16,
-                            vertical: AppConstants.spacing6,
-                          ),
-                          children: [
-                            _filterChip(context, 'الكل', _typeFilter == null, () {
-                              setState(() => _typeFilter = null);
-                            }),
-                            ...types.map((type) => _filterChip(
-                              context, type, _typeFilter == type,
-                              () => setState(() => _typeFilter = type),
-                            )),
-                          ],
+                    SizedBox(
+                      height: 40,
+                      child: ListView(
+                        scrollDirection: Axis.horizontal,
+                        padding: EdgeInsets.symmetric(
+                          horizontal: AppConstants.spacing16,
+                          vertical: AppConstants.spacing6,
                         ),
+                        children: [
+                          AppFilterChip(label: 'الكل', isActive: _typeFilter == null, onTap: () => setState(() => _typeFilter = null)),
+                          ...types.map((type) => AppFilterChip(
+                            label: type,
+                            isActive: _typeFilter == type,
+                            onTap: () => setState(() => _typeFilter = type),
+                          )),
+                        ],
                       ),
+                    ),
                     if (filtered.isEmpty)
                       Expanded(
                         child: EmptyState(
@@ -161,27 +162,30 @@ class _PersonsScreenState extends State<PersonsScreen> {
     );
   }
 
-  Widget _filterChip(BuildContext context, String label, bool isActive, VoidCallback onTap) {
-    return Padding(
-      padding: EdgeInsets.only(left: AppConstants.spacing6),
-      child: GestureDetector(
-        onTap: onTap,
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-          decoration: BoxDecoration(
-            color: isActive ? AppColors.darkAccent.withValues(alpha: 0.15) : AppColors.darkBgCard,
-            borderRadius: BorderRadius.circular(AppConstants.radiusChip),
-            border: Border.all(color: isActive ? AppColors.darkAccent : AppColors.darkBorder),
+  Future<void> _submitWithFeedback(BuildContext context, Future<void> Function() action) async {
+    try {
+      await action();
+      if (context.mounted) Navigator.pop(context);
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('تمت العملية بنجاح'),
+            backgroundColor: AppColors.success,
+            behavior: SnackBarBehavior.floating,
           ),
-          child: Text(
-            label,
-            style: AppTextStyles.categoryChip(context).copyWith(
-              color: isActive ? AppColors.darkAccent : AppColors.darkTextSecondary,
-            ),
+        );
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('خطأ: $e'),
+            backgroundColor: AppColors.danger,
+            behavior: SnackBarBehavior.floating,
           ),
-        ),
-      ),
-    );
+        );
+      }
+    }
   }
 
   void _showAddModal(BuildContext context) {
@@ -190,37 +194,18 @@ class _PersonsScreenState extends State<PersonsScreen> {
       AppModal(
         title: 'إضافة شخص جديد',
         child: AddPersonForm(
-          onSubmit: (person) async {
-            try {
-              await context.read<PersonCubit>().add(person);
-              if (context.mounted) Navigator.pop(context);
-              if (context.mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('تمت الإضافة بنجاح'),
-                    backgroundColor: AppColors.success,
-                    behavior: SnackBarBehavior.floating,
-                  ),
-                );
-              }
-            } catch (e) {
-              if (context.mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('خطأ: $e'),
-                    backgroundColor: AppColors.danger,
-                    behavior: SnackBarBehavior.floating,
-                  ),
-                );
-              }
-            }
-          },
+          onSubmit: (person) => _submitWithFeedback(context, () async {
+            await context.read<PersonCubit>().add(person);
+          }),
         ),
       ),
     );
   }
 
-  void _openDetail(BuildContext context, int id) {
-    context.push('/person/$id');
+  Future<void> _openDetail(BuildContext context, int id) async {
+    await context.push('/person/$id');
+    if (context.mounted) {
+      context.read<PersonCubit>().load();
+    }
   }
 }

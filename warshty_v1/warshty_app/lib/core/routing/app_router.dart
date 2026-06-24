@@ -1,5 +1,6 @@
 import 'package:go_router/go_router.dart';
 
+import '../../features/category/presentation/screens/categories_screen.dart';
 import '../../features/home/presentation/screens/home_screen.dart';
 import '../../features/jobs/presentation/screens/jobs_screen.dart';
 import '../../features/jobs/presentation/screens/job_detail_screen.dart';
@@ -73,6 +74,10 @@ final router = GoRouter(
         final id = int.parse(state.pathParameters['id']!);
         return JobDetailScreen(jobId: id);
       },
+    ),
+    GoRoute(
+      path: RoutePaths.categories,
+      builder: (context, state) => const CategoriesScreen(),
     ),
   ],
 );

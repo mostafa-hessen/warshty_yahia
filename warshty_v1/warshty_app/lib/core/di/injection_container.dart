@@ -4,6 +4,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../database/database_helper.dart';
 import '../storage/app_prefs.dart';
 import '../theme/theme_cubit.dart';
+import '../../features/category/data/datasources/category_local_datasource.dart';
+import '../../features/category/data/repositories/category_repository_impl.dart';
+import '../../features/category/domain/repositories/category_repository.dart';
+import '../../features/category/presentation/cubits/category_cubit.dart';
 import '../../features/jobs/data/datasources/job_local_datasource.dart';
 import '../../features/jobs/data/repositories/job_repository_impl.dart';
 import '../../features/jobs/domain/repositories/job_repository.dart';
@@ -24,6 +28,13 @@ Future<void> init() async {
   sl.registerLazySingleton(() => DatabaseHelper.instance);
 
   sl.registerLazySingleton(() => ThemeCubit(sl()));
+
+  // ==========================================================
+  //  Category Feature
+  // ==========================================================
+  sl.registerLazySingleton(() => CategoryLocalDataSource(sl()));
+  sl.registerLazySingleton<CategoryRepository>(() => CategoryRepositoryImpl(sl()));
+  sl.registerFactory(() => CategoryCubit(sl()));
 
   // ==========================================================
   //  Person Feature
