@@ -58,6 +58,7 @@ class DatabaseHelper {
 
   // ── Helper: nextPartialId ──────────────────────────────────
   /// بيجيب الـ partial_id الجديد لأي Weak Entity
+  /// يستخدم MAX بدل COUNT عشان لو في rows اتحدفت، مايعيدش ID موجود فعلاً
   Future<int> nextPartialId(
     Database db,
     String table,
@@ -65,10 +66,29 @@ class DatabaseHelper {
     int ownerId,
   ) async {
     final result = await db.rawQuery(
-      'SELECT COUNT(*) as count FROM $table WHERE $ownerColumn = ?',
+      'SELECT COALESCE(MAX(partial_id), 0) + 1 as next FROM $table WHERE $ownerColumn = ?',
       [ownerId],
     );
-    return (result.first['count'] as int) + 1;
+    return (result.first['next'] as int);
+  }
+
+  // ── Ensure Seed Data ──────────────────────────────────────
+  /// بيتأكد إن بيانات الـ seed موجودة — لو مش موجودة بيعملها
+  /// (لازم نستدعيها بعد فتح الـ Database عشان الـ onCreate مش بيشتغل غير مرة واحدة)
+  Future<void> ensureSeedData() async {
+    final db = await database;
+
+    final workshopCount = (await db.rawQuery('SELECT COUNT(*) as c FROM workshop')).first['c'] as int;
+    if (workshopCount == 0) {
+      await DatabaseSeed.seedWorkshops(db);
+    } else {
+      await db.update('workshop', {'name': 'الفيوم'}, where: 'name = ?', whereArgs: ['الفيوك']);
+    }
+
+    final categoryCount = (await db.rawQuery('SELECT COUNT(*) as c FROM category')).first['c'] as int;
+    if (categoryCount == 0) {
+      await DatabaseSeed.seedCategories(db);
+    }
   }
 
   // ── Close (للـ Testing بس) ────────────────────────────────

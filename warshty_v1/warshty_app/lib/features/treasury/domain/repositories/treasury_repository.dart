@@ -9,7 +9,7 @@ abstract class TreasuryRepository {
     String? dateTo,
   });
   Future<Map<String, double>> getSummary();
-  Future<void> insert(TreasuryTransactionModel tx);
+  Future<int> insert(TreasuryTransactionModel tx);
   Future<void> update(TreasuryTransactionModel tx);
   Future<void> delete(int partialId);
 }

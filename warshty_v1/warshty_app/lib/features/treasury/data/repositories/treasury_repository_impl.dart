@@ -22,7 +22,7 @@ class TreasuryRepositoryImpl implements TreasuryRepository {
   Future<Map<String, double>> getSummary() => _dataSource.getSummary();
 
   @override
-  Future<void> insert(TreasuryTransactionModel tx) => _dataSource.insert(tx);
+  Future<int> insert(TreasuryTransactionModel tx) => _dataSource.insert(tx);
 
   @override
   Future<void> update(TreasuryTransactionModel tx) => _dataSource.update(tx);

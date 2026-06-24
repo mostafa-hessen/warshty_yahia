@@ -111,7 +111,12 @@ class TreasuryTxItem extends StatelessWidget {
         SizedBox(height: AppConstants.spacing2),
         Row(
           children: [
-            Text(AppFormatters.formatDate(transaction.date), style: AppTextStyles.txDateLabel(context)),
+            Text(
+              transaction.date.contains('T')
+                  ? AppFormatters.formatDateTime(transaction.date)
+                  : AppFormatters.formatDate(transaction.date),
+              style: AppTextStyles.txDateLabel(context),
+            ),
             if (transaction.source != null) ...[
               SizedBox(width: AppConstants.spacing6),
               Text('· ${transaction.source}', style: AppTextStyles.txNoteLabel(context)),

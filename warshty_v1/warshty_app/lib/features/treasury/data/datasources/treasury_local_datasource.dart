@@ -81,7 +81,7 @@ class TreasuryLocalDataSource {
     };
   }
 
-  Future<void> insert(TreasuryTransactionModel tx) async {
+  Future<int> insert(TreasuryTransactionModel tx) async {
     final db = await _db;
     final partialId = await _dbHelper.nextPartialId(
       db, DatabaseConstants.treasuryTransactionTable, 'treasury_id', tx.treasuryId,
@@ -98,6 +98,7 @@ class TreasuryLocalDataSource {
       'workshop_id': tx.workshopId,
       'job_id': tx.jobId,
     });
+    return partialId;
   }
 
   Future<void> update(TreasuryTransactionModel tx) async {

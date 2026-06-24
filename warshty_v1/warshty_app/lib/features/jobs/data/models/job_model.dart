@@ -50,6 +50,26 @@ class JobModel extends Equatable {
     );
   }
 
+  JobModel copyWith({
+    String? name,
+    String? productType,
+    double? agreedAmount,
+    String? status,
+    String? notes,
+  }) {
+    return JobModel(
+      id: id, workshopId: workshopId, personId: personId,
+      name: name ?? this.name,
+      productType: productType ?? this.productType,
+      agreedAmount: agreedAmount ?? this.agreedAmount,
+      status: status ?? this.status,
+      startDate: startDate,
+      notes: notes ?? this.notes,
+      workshopName: workshopName, personName: personName,
+      totalPayments: totalPayments,
+    );
+  }
+
   Map<String, dynamic> toMap() {
     return {
       'workshop_id': workshopId,

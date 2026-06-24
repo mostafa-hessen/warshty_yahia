@@ -30,7 +30,9 @@ Future<void> init() async {
 
   sl.registerLazySingleton(() => AppPrefs(sl()));
 
-  sl.registerLazySingleton(() => DatabaseHelper.instance);
+  final dbHelper = DatabaseHelper.instance;
+  sl.registerLazySingleton<DatabaseHelper>(() => dbHelper);
+  await dbHelper.ensureSeedData();
 
   sl.registerLazySingleton(() => ThemeCubit(sl()));
 
@@ -65,5 +67,5 @@ Future<void> init() async {
   // ==========================================================
   sl.registerLazySingleton(() => JobLocalDataSource(sl()));
   sl.registerLazySingleton<JobRepository>(() => JobRepositoryImpl(sl()));
-  sl.registerFactory(() => JobCubit(sl()));
+  sl.registerFactory(() => JobCubit(sl(), sl()));
 }
