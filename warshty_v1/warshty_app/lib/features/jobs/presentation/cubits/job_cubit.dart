@@ -105,7 +105,8 @@ class JobCubit extends Cubit<JobState> {
     _processing = true;
     try {
       await _repository.delete(id);
-      await _reloadCurrent();
+      emit(JobLoading());
+      await load();
     } catch (e) {
       rethrow;
     } finally {
@@ -312,9 +313,26 @@ class JobCubit extends Cubit<JobState> {
     try {
       await _repository.updatePayment(item);
 
-      if (item.ttxPartialId != null) {
+      // نجيب original ttx ids من الـ state مش من الـ form (الفورم مش بتحتفظ بيهم)
+      final current = state;
+      JobPaymentModel? origPayment;
+      if (current is JobDetailLoaded) {
+        origPayment = current.payments.where(
+          (p) => p.jobId == item.jobId && p.partialId == item.partialId,
+        ).firstOrNull;
+      }
+      if (origPayment?.ttxPartialId == null) {
+        // لو مش في الـ state، نجيب من الداتابيز
+        final dbItem = await _repository.getPayments(item.jobId);
+        origPayment = dbItem.where(
+          (p) => p.partialId == item.partialId,
+        ).firstOrNull;
+      }
+
+      final ttxTreasuryId = origPayment?.ttxTreasuryId;
+      final ttxPartialId = origPayment?.ttxPartialId;
+      if (ttxPartialId != null && ttxTreasuryId != null) {
         int? workshopId;
-        final current = state;
         if (current is JobDetailLoaded) {
           workshopId = current.job.workshopId;
         } else {
@@ -322,8 +340,8 @@ class JobCubit extends Cubit<JobState> {
           workshopId = job?.workshopId;
         }
         await _treasuryRepository.update(TreasuryTransactionModel(
-          treasuryId: item.ttxTreasuryId!,
-          partialId: item.ttxPartialId!,
+          treasuryId: ttxTreasuryId,
+          partialId: ttxPartialId,
           type: TreasuryTxType.income,
           amount: item.amount,
           description: item.description != null && item.description!.isNotEmpty

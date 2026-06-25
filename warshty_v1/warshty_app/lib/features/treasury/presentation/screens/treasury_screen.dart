@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/constants/app_constants.dart';
-import '../../../../core/di/injection_container.dart';
 import '../../../../core/enums/treasury_tx_type.dart';
 import '../../../../core/presentation/widgets/app_modal.dart';
 import '../../../../core/presentation/widgets/app_filter_chip.dart';
@@ -26,10 +25,7 @@ class TreasuryScreen extends StatefulWidget {
 class _TreasuryScreenState extends State<TreasuryScreen> {
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => sl<TreasuryCubit>()..load(),
-      child: Builder(
-        builder: (context) => Scaffold(
+    return Scaffold(
           appBar: AppBar(title: const Text('الخزينة')),
           body: BlocConsumer<TreasuryCubit, TreasuryState>(
             listener: (ctx, state) {
@@ -127,7 +123,7 @@ class _TreasuryScreenState extends State<TreasuryScreen> {
                             ],
                           ),
                         ),
-                      ),
+                    ),
                   ],
                 );
               }
@@ -143,9 +139,7 @@ class _TreasuryScreenState extends State<TreasuryScreen> {
             backgroundColor: AppColors.darkAccent,
             child: const Icon(Icons.add, color: Colors.black),
           ),
-        ),
-      ),
-    );
+        );
   }
 
   Future<void> _submitWithFeedback(
@@ -194,6 +188,16 @@ class _TreasuryScreenState extends State<TreasuryScreen> {
   }
 
   void _showEditModal(BuildContext context, TreasuryTransactionModel tx) {
+    if (tx.source == 'شغلانة') {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('هذه المعاملة مرتبطة بدفعة شغلانة — يمكن تعديلها فقط من داخل الشغلانة'),
+          backgroundColor: AppColors.danger ,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      return;
+    }
     AppModal.show(
       context,
       AppModal(
@@ -214,6 +218,16 @@ class _TreasuryScreenState extends State<TreasuryScreen> {
   }
 
   void _confirmDelete(BuildContext context, TreasuryTransactionModel tx) {
+    if (tx.source == 'شغلانة') {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('هذه المعاملة مرتبطة بدفعة شغلانة — يمكن حذفها فقط من داخل الشغلانة'),
+          backgroundColor: AppColors.warning,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      return;
+    }
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(

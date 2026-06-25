@@ -41,7 +41,7 @@ Future<void> init() async {
   // ==========================================================
   sl.registerLazySingleton(() => TreasuryLocalDataSource(sl()));
   sl.registerLazySingleton<TreasuryRepository>(() => TreasuryRepositoryImpl(sl()));
-  sl.registerFactory(() => TreasuryCubit(sl()));
+  sl.registerLazySingleton(() => TreasuryCubit(sl()));
 
   // ==========================================================
   //  Workshop Feature (read-only seed data)

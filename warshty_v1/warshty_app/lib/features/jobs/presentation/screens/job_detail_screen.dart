@@ -193,6 +193,12 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
             children: [
               Expanded(child: _smallCard(context, 'التكاليف', AppFormatters.currency(state.totalCosts), AppColors.warning)),
               SizedBox(width: AppConstants.spacing10),
+              Expanded(child: _smallCard(context, 'المدفوعات', AppFormatters.currency(state.totalPayments), AppColors.info)),
+            ],
+          ),
+          SizedBox(height: AppConstants.spacing8),
+          Row(
+            children: [
               Expanded(child: _smallCard(context, state.isProfitable ? 'الربح' : 'الخسارة',
                   AppFormatters.currency(state.profit.abs()), state.isProfitable ? AppColors.success : AppColors.danger)),
             ],

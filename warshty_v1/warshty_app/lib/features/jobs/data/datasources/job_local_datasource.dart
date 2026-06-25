@@ -88,11 +88,24 @@ class JobLocalDataSource {
 
   Future<void> delete(int id) async {
     final db = await _db;
+
+    // 1. حذف sub-entities اللي معندهاش FK للـ treasury_transaction
+    await db.delete(DatabaseConstants.jobMaterialTable, where: 'job_id = ?', whereArgs: [id]);
+    await db.delete(DatabaseConstants.jobLaborTable, where: 'job_id = ?', whereArgs: [id]);
+    await db.delete(DatabaseConstants.jobOtherCostTable, where: 'job_id = ?', whereArgs: [id]);
+
+    // 2. حذف الـ payments عشان تفك FK الـ ttx
+    await db.delete(DatabaseConstants.jobPaymentTable, where: 'job_id = ?', whereArgs: [id]);
+
+    // 3. حذف treasury_transactions المرتبطة (بقى الـ FK مفكوك)
     await db.delete(
-      DatabaseConstants.jobTable,
-      where: 'id = ?',
+      DatabaseConstants.treasuryTransactionTable,
+      where: 'job_id = ?',
       whereArgs: [id],
     );
+
+    // 4. حذف الـ Job نفسه
+    await db.delete(DatabaseConstants.jobTable, where: 'id = ?', whereArgs: [id]);
   }
 
   // ── Materials ────────────────────────────────────────────────────

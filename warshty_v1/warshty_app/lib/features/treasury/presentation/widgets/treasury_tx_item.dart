@@ -114,6 +114,17 @@ class TreasuryTxItem extends StatelessWidget {
                 ),
               ),
             ],
+            if (transaction.jobName != null) ...[
+              SizedBox(width: AppConstants.spacing4),
+              Flexible(
+                child: Text(
+                  '· ${transaction.jobName}',
+                  style: AppTextStyles.txNoteLabel(context).copyWith(color: AppColors.purple),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
           ],
         ),
         SizedBox(height: AppConstants.spacing2),

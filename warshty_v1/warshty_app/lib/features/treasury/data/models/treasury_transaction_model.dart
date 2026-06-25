@@ -15,6 +15,7 @@ class TreasuryTransactionModel extends Equatable {
   final int? workshopId;
   final String? workshopName;
   final int? jobId;
+  final String? jobName;
   final double balanceBefore;
 
   const TreasuryTransactionModel({
@@ -30,6 +31,7 @@ class TreasuryTransactionModel extends Equatable {
     this.workshopId,
     this.workshopName,
     this.jobId,
+    this.jobName,
     this.balanceBefore = 0,
   });
 
@@ -51,6 +53,7 @@ class TreasuryTransactionModel extends Equatable {
       workshopId: map['workshop_id'] as int?,
       workshopName: map['workshop_name'] as String?,
       jobId: map['job_id'] as int?,
+      jobName: map['job_name'] as String?,
     );
   }
 
@@ -79,6 +82,7 @@ class TreasuryTransactionModel extends Equatable {
       workshopId: workshopId ?? this.workshopId,
       workshopName: workshopName ?? this.workshopName,
       jobId: jobId,
+      jobName: jobName,
       balanceBefore: balanceBefore ?? this.balanceBefore,
     );
   }
@@ -117,6 +121,6 @@ class TreasuryTransactionModel extends Equatable {
   @override
   List<Object?> get props => [
     treasuryId, partialId, type, amount, description,
-    date, source, categoryId, categoryName, workshopId, workshopName, jobId,
+    date, source, categoryId, categoryName, workshopId, workshopName, jobId, jobName,
   ];
 }

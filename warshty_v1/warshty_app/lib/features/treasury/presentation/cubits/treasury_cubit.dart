@@ -48,6 +48,7 @@ class TreasuryCubit extends Cubit<TreasuryState> {
           workshopId: tx.workshopId,
           workshopName: tx.workshopName,
           jobId: tx.jobId,
+          jobName: tx.jobName,
           balanceBefore: running,
         ));
         running = tx.type.isIncome ? running + tx.amount : running - tx.amount;

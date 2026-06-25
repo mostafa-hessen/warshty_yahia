@@ -19,10 +19,12 @@ class TreasuryLocalDataSource {
       SELECT
         tt.*,
         c.name as category_name,
-        w.name as workshop_name
+        w.name as workshop_name,
+        j.name as job_name
       FROM treasury_transaction tt
       LEFT JOIN category c ON c.id = tt.category_id
       LEFT JOIN workshop w ON w.id = tt.workshop_id
+      LEFT JOIN job j ON j.id = tt.job_id
       WHERE tt.treasury_id = 1
       ORDER BY tt.date ASC, tt.partial_id ASC
     ''');
@@ -55,10 +57,12 @@ class TreasuryLocalDataSource {
       SELECT
         tt.*,
         c.name as category_name,
-        w.name as workshop_name
+        w.name as workshop_name,
+        j.name as job_name
       FROM treasury_transaction tt
       LEFT JOIN category c ON c.id = tt.category_id
       LEFT JOIN workshop w ON w.id = tt.workshop_id
+      LEFT JOIN job j ON j.id = tt.job_id
       WHERE ${conditions.join(' AND ')}
       ORDER BY tt.date ASC, tt.partial_id ASC
     ''', args);
@@ -115,6 +119,7 @@ class TreasuryLocalDataSource {
         'date': tx.date,
         'category_id': tx.categoryId,
         'workshop_id': tx.workshopId,
+        'job_id': tx.jobId,
       },
       where: 'treasury_id = ? AND partial_id = ?',
       whereArgs: [tx.treasuryId, tx.partialId],
