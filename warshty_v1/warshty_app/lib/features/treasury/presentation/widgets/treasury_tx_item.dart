@@ -77,7 +77,7 @@ class TreasuryTxItem extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (transaction.description != null && transaction.description!.isNotEmpty)
-          Text(transaction.description!, style: AppTextStyles.cardTitle(context)),
+          Text(transaction.description!, style: AppTextStyles.cardTitle(context), maxLines: 2, overflow: TextOverflow.ellipsis),
         SizedBox(height: AppConstants.spacing2),
         Row(
           children: [
@@ -94,16 +94,24 @@ class TreasuryTxItem extends StatelessWidget {
             ),
             if (transaction.categoryName != null) ...[
               SizedBox(width: AppConstants.spacing4),
-              Text(
-                transaction.categoryName!,
-                style: AppTextStyles.txNoteLabel(context),
+              Flexible(
+                child: Text(
+                  transaction.categoryName!,
+                  style: AppTextStyles.txNoteLabel(context),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
             ],
             if (transaction.workshopName != null) ...[
               SizedBox(width: AppConstants.spacing4),
-              Text(
-                '· ${transaction.workshopName}',
-                style: AppTextStyles.txNoteLabel(context).copyWith(color: AppColors.darkTextMuted),
+              Flexible(
+                child: Text(
+                  '· ${transaction.workshopName}',
+                  style: AppTextStyles.txNoteLabel(context).copyWith(color: AppColors.darkTextMuted),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
             ],
           ],

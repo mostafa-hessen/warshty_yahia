@@ -22,13 +22,13 @@ class DetailRow extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: Row(
         children: [
-          Text(label, style: AppTextStyles.detailLabel(context)),
+          Flexible(child: Text(label, style: AppTextStyles.detailLabel(context), overflow: TextOverflow.ellipsis)),
           const Spacer(),
           if (trailing != null) ...[
             trailing!,
             const SizedBox(width: 8),
           ],
-          Text(value, style: AppTextStyles.detailValue(context).copyWith(color: valueColor)),
+          Flexible(child: Text(value, style: AppTextStyles.detailValue(context).copyWith(color: valueColor), overflow: TextOverflow.ellipsis)),
         ],
       ),
     );

@@ -82,7 +82,7 @@ class TransactionItem extends StatelessWidget {
             style: AppTextStyles.txBeforeLabel(context),
           ),
         if (description != null && description!.isNotEmpty)
-          Text(description!, style: AppTextStyles.txNoteLabel(context)),
+          Text(description!, style: AppTextStyles.txNoteLabel(context), maxLines: 2, overflow: TextOverflow.ellipsis),
       ],
     );
   }

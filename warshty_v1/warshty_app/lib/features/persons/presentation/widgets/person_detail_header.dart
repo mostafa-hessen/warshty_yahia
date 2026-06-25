@@ -34,6 +34,8 @@ class PersonDetailHeader extends StatelessWidget {
           Text(
             person.name,
             style: AppTextStyles.detailValue(context).copyWith(fontSize: 18),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
           SizedBox(height: AppConstants.spacing4),
           Text(

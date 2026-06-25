@@ -157,7 +157,7 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
           ],
           if (j.notes != null && j.notes!.isNotEmpty) ...[
             SizedBox(height: AppConstants.spacing8),
-            Text(j.notes!, style: AppTextStyles.detailLabel(context)),
+            Text(j.notes!, style: AppTextStyles.detailLabel(context), maxLines: 3, overflow: TextOverflow.ellipsis),
           ],
         ],
       ),
@@ -255,7 +255,7 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
       emptyMessage: 'لا توجد خامات',
       items: state.materials.map((m) => _itemRow(
         context,
-        leading: Text(m.name, style: AppTextStyles.cardTitle(context)),
+        leading: Text(m.name, style: AppTextStyles.cardTitle(context), maxLines: 1, overflow: TextOverflow.ellipsis),
         amount: m.amount,
         desc: m.description,
         date: m.date,
@@ -274,7 +274,7 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
       emptyMessage: 'لا توجد مصنعيات',
       items: state.labors.map((l) => _itemRow(
         context,
-        leading: l.categoryName != null ? Text(l.categoryName!, style: AppTextStyles.cardTitle(context)) : null,
+        leading: l.categoryName != null ? Text(l.categoryName!, style: AppTextStyles.cardTitle(context), maxLines: 1, overflow: TextOverflow.ellipsis) : null,
         amount: l.amount,
         desc: l.description,
         date: l.date,
@@ -293,7 +293,7 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
       emptyMessage: 'لا توجد تكاليف أخرى',
       items: state.otherCosts.map((o) => _itemRow(
         context,
-        leading: o.categoryName != null ? Text(o.categoryName!, style: AppTextStyles.cardTitle(context)) : null,
+        leading: o.categoryName != null ? Text(o.categoryName!, style: AppTextStyles.cardTitle(context), maxLines: 1, overflow: TextOverflow.ellipsis) : null,
         amount: o.amount,
         desc: o.description,
         date: o.date,
@@ -390,7 +390,10 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
         ),
         child: Row(
           children: [
-            if (leading != null) ...[leading, SizedBox(width: AppConstants.spacing8)],
+            if (leading != null) ...[
+              Flexible(child: leading),
+              SizedBox(width: AppConstants.spacing8),
+            ],
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -531,6 +534,24 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
               }
             }
           },
+          onAddAnother: type == JobItemType.material && !isEdit
+              ? (item) async {
+                  try {
+                    await context.read<JobCubit>().addMaterial(item as JobMaterialModel);
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('تمت الإضافة'), backgroundColor: AppColors.success, behavior: SnackBarBehavior.floating, duration: Duration(seconds: 1)),
+                      );
+                    }
+                  } catch (e) {
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('خطأ: $e'), backgroundColor: AppColors.danger, behavior: SnackBarBehavior.floating),
+                      );
+                    }
+                  }
+                }
+              : null,
         ),
       ),
     );

@@ -21,6 +21,7 @@ class AddJobItemForm extends StatefulWidget {
   final JobItemType itemType;
   final dynamic existingItem;
   final Future<void> Function(dynamic item) onSubmit;
+  final Future<void> Function(dynamic item)? onAddAnother;
 
   const AddJobItemForm({
     super.key,
@@ -28,6 +29,7 @@ class AddJobItemForm extends StatefulWidget {
     required this.itemType,
     this.existingItem,
     required this.onSubmit,
+    this.onAddAnother,
   });
 
   @override
@@ -170,6 +172,24 @@ class _AddJobItemFormState extends State<AddJobItemForm> {
                   : Text(_isEdit ? 'حفظ التعديلات' : 'إضافة', style: AppTextStyles.button(context)),
             ),
           ),
+          if (widget.onAddAnother != null && !_isEdit && widget.itemType == JobItemType.material) ...[
+            SizedBox(height: AppConstants.spacing8),
+            SizedBox(
+              width: double.infinity,
+              child: OutlinedButton(
+                onPressed: _submitting ? null : _submitAndContinue,
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: AppColors.darkAccent,
+                  side: BorderSide(color: AppColors.darkAccent),
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(AppConstants.radiusMd),
+                  ),
+                ),
+                child: Text('إضافة وأخرى', style: AppTextStyles.button(context).copyWith(color: AppColors.darkAccent)),
+              ),
+            ),
+          ],
         ],
       ),
     );
@@ -266,6 +286,30 @@ class _AddJobItemFormState extends State<AddJobItemForm> {
           );
       }
       await widget.onSubmit(item);
+    } finally {
+      if (mounted) setState(() => _submitting = false);
+    }
+  }
+
+  Future<void> _submitAndContinue() async {
+    if (!_formKey.currentState!.validate()) return;
+    final amount = double.parse(_amountCtrl.text.trim());
+
+    setState(() => _submitting = true);
+    try {
+      final item = JobMaterialModel(
+        jobId: widget.jobId, partialId: 0,
+        name: _nameCtrl.text.trim(),
+        amount: amount,
+        description: _descCtrl.text.trim().isEmpty ? null : _descCtrl.text.trim(),
+        date: _date,
+      );
+      await widget.onAddAnother!(item);
+      if (mounted) {
+        _nameCtrl.clear();
+        _amountCtrl.clear();
+        _descCtrl.clear();
+      }
     } finally {
       if (mounted) setState(() => _submitting = false);
     }

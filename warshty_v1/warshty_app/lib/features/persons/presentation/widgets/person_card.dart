@@ -37,7 +37,7 @@ class PersonCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(person.name, style: AppTextStyles.cardTitle(context)),
+                Text(person.name, style: AppTextStyles.cardTitle(context), maxLines: 1, overflow: TextOverflow.ellipsis),
                 if (person.phone != null && person.phone!.isNotEmpty)
                   Text(person.phone!, style: AppTextStyles.cardSub(context)),
               ],

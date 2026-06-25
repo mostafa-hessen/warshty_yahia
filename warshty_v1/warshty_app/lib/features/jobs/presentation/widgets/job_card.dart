@@ -34,6 +34,8 @@ class JobCard extends StatelessWidget {
           Text(
             '${job.workshopName ?? ''} · ${job.personName ?? ''}',
             style: AppTextStyles.cardSub(context),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
           SizedBox(height: AppConstants.spacing8),
           Row(
