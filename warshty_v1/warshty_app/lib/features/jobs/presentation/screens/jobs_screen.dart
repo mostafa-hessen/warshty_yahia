@@ -9,6 +9,7 @@ import '../../../../core/presentation/widgets/empty_state.dart';
 import '../../../../core/presentation/widgets/loading_state.dart';
 import '../../../../core/presentation/widgets/search_bar.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/presentation/widgets/theme_toggle_button.dart';
 
 import '../../../../core/utils/formatters.dart';
 import '../../../workshop/data/datasources/workshop_local_datasource.dart';
@@ -85,7 +86,10 @@ class _JobsScreenState extends State<JobsScreen> {
       create: (_) => sl<JobCubit>()..load(),
       child: Builder(
         builder: (context) => Scaffold(
-          appBar: AppBar(title: const Text('الشغلانات')),
+          appBar: AppBar(
+            title: const Text('الشغلانات'),
+            actions: [const ThemeToggleButton()],
+          ),
           body: BlocConsumer<JobCubit, JobState>(
             listener: (ctx, state) {
               if (state is JobError) {

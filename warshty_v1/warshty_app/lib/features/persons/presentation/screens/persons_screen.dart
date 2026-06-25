@@ -10,6 +10,7 @@ import '../../../../core/presentation/widgets/app_modal.dart';
 import '../../../../core/presentation/widgets/search_bar.dart';
 import '../../../../core/constants/app_constants.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/presentation/widgets/theme_toggle_button.dart';
 import '../cubits/person_cubit.dart';
 import '../cubits/person_state.dart';
 import '../../data/models/person_model.dart';
@@ -62,7 +63,10 @@ class _PersonsScreenState extends State<PersonsScreen> {
       create: (_) => sl<PersonCubit>()..load(),
       child: Builder(
         builder: (context) => Scaffold(
-          appBar: AppBar(title: const Text('الأشخاص')),
+          appBar: AppBar(
+            title: const Text('الأشخاص'),
+            actions: [const ThemeToggleButton()],
+          ),
           body: BlocConsumer<PersonCubit, PersonState>(
             listener: (ctx, state) {
               if (state is PersonError) {

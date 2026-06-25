@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/di/injection_container.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
+import '../../../../core/presentation/widgets/theme_toggle_button.dart';
 import '../../../../core/constants/app_constants.dart';
 import '../../../../core/presentation/widgets/loading_state.dart';
 import '../../../../core/utils/formatters.dart';
@@ -25,7 +26,10 @@ class ReportsScreen extends StatelessWidget {
     return BlocProvider(
       create: (_) => sl<ReportsCubit>(),
       child: Scaffold(
-        appBar: AppBar(title: const Text('التقارير')),
+        appBar: AppBar(
+          title: const Text('التقارير'),
+          actions: [const ThemeToggleButton()],
+        ),
         body: BlocBuilder<ReportsCubit, ReportsState>(
           builder: (context, state) {
             if (state is ReportsInitial) {

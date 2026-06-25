@@ -8,6 +8,7 @@ import '../../../../core/presentation/widgets/app_filter_chip.dart';
 import '../../../../core/presentation/widgets/empty_state.dart';
 import '../../../../core/presentation/widgets/loading_state.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/presentation/widgets/theme_toggle_button.dart';
 import '../../data/models/treasury_transaction_model.dart';
 import '../cubits/treasury_cubit.dart';
 import '../cubits/treasury_state.dart';
@@ -26,7 +27,10 @@ class _TreasuryScreenState extends State<TreasuryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-          appBar: AppBar(title: const Text('الخزينة')),
+          appBar: AppBar(
+            title: const Text('الخزينة'),
+            actions: [const ThemeToggleButton()],
+          ),
           body: BlocConsumer<TreasuryCubit, TreasuryState>(
             listener: (ctx, state) {
               if (state is TreasuryError) {

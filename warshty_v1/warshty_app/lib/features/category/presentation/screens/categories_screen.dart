@@ -5,6 +5,7 @@ import '../../../../core/constants/app_constants.dart';
 import '../../../../core/di/injection_container.dart';
 import '../../../../core/enums/category_type.dart';
 import '../../../../core/presentation/widgets/app_modal.dart';
+import '../../../../core/presentation/widgets/theme_toggle_button.dart';
 import '../../../../core/presentation/widgets/empty_state.dart';
 import '../../../../core/presentation/widgets/app_filter_chip.dart';
 import '../../../../core/presentation/widgets/loading_state.dart';
@@ -29,7 +30,10 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
       create: (_) => sl<CategoryCubit>()..load(),
       child: Builder(
         builder: (context) => Scaffold(
-          appBar: AppBar(title: const Text('التصنيفات')),
+          appBar: AppBar(
+            title: const Text('التصنيفات'),
+            actions: [const ThemeToggleButton()],
+          ),
           body: BlocConsumer<CategoryCubit, CategoryState>(
             listener: (ctx, state) {
               if (state is CategoryError) {
