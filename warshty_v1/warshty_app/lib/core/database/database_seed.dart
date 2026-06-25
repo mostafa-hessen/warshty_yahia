@@ -7,8 +7,8 @@ abstract final class DatabaseSeed {
   /// زرع بيانات الـ Workshops
   static Future<void> seedWorkshops(Database db) async {
     final workshops = [
-      {'name': 'سيلا', 'is_active': 1},
-      {'name': 'الفيوم', 'is_active': 1},
+      {'name': 'ورشه البيت', 'is_active': 1},
+      {'name': 'الورشه الشرقيه', 'is_active': 1},
     ];
     final batch = db.batch();
     for (final w in workshops) {

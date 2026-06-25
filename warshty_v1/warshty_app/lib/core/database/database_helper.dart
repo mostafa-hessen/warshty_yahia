@@ -82,7 +82,9 @@ class DatabaseHelper {
     if (workshopCount == 0) {
       await DatabaseSeed.seedWorkshops(db);
     } else {
-      await db.update('workshop', {'name': 'الفيوم'}, where: 'name = ?', whereArgs: ['الفيوك']);
+      await db.update('workshop', {'name': 'ورشه البيت'}, where: 'name = ?', whereArgs: ['سيلا']);
+      await db.update('workshop', {'name': 'الورشه الشرقيه'}, where: 'name = ?', whereArgs: ['الفيوم']);
+      await db.update('workshop', {'name': 'الورشه الشرقيه'}, where: 'name = ?', whereArgs: ['الفيوك']);
     }
 
     final categoryCount = (await db.rawQuery('SELECT COUNT(*) as c FROM category')).first['c'] as int;
