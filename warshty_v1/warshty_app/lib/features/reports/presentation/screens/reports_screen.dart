@@ -120,59 +120,37 @@ class ReportsScreen extends StatelessWidget {
 
   String _fmt(DateTime d) => '${d.year.toString().padLeft(4, '0')}-${d.month.toString().padLeft(2, '0')}-${d.day.toString().padLeft(2, '0')}';
 
-  void _showCustomDateDialog(BuildContext context) {
-    final fromCtrl = TextEditingController();
-    final toCtrl = TextEditingController();
-    showDialog(
+  void _showCustomDateDialog(BuildContext context) async {
+    final now = DateTime.now();
+    final picked = await showDateRangePicker(
       context: context,
-      builder: (ctx) => AlertDialog(
-        backgroundColor: AppColors.darkBgSecondary,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppConstants.radiusXl)),
-        title: Text('تحديد تاريخ', style: AppTextStyles.modalTitle(context)),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              controller: fromCtrl,
-              decoration: InputDecoration(
-                labelText: 'من تاريخ',
-                hintText: 'YYYY-MM-DD',
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppConstants.radiusSm)),
-              ),
-              style: AppTextStyles.formInput(context),
-            ),
-            SizedBox(height: AppConstants.spacing10),
-            TextField(
-              controller: toCtrl,
-              decoration: InputDecoration(
-                labelText: 'إلى تاريخ',
-                hintText: 'YYYY-MM-DD',
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppConstants.radiusSm)),
-              ),
-              style: AppTextStyles.formInput(context),
-            ),
-          ],
+      firstDate: DateTime(2020),
+      lastDate: now,
+      locale: const Locale('ar'),
+      builder: (ctx, child) => Theme(
+        data: Theme.of(ctx).copyWith(
+          datePickerTheme: DatePickerThemeData(
+            backgroundColor: AppColors.darkBgSecondary,
+            surfaceTintColor: AppColors.darkBgSecondary,
+            dayForegroundColor: WidgetStateProperty.resolveWith((states) =>
+              states.contains(WidgetState.selected) ? Colors.black : AppColors.darkTextPrimary),
+            dayBackgroundColor: WidgetStateProperty.resolveWith((states) =>
+              states.contains(WidgetState.selected) ? AppColors.darkAccent : null),
+            headerForegroundColor: AppColors.darkTextPrimary,
+            todayForegroundColor: WidgetStateProperty.all(AppColors.darkAccent),
+            rangePickerBackgroundColor: AppColors.darkBgCard,
+            rangeSelectionBackgroundColor: AppColors.darkAccent.withValues(alpha: 0.3),
+          ),
         ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: const Text('إلغاء'),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(ctx);
-              final from = fromCtrl.text.trim();
-              final to = toCtrl.text.trim();
-              context.read<ReportsCubit>().setDateFilter(DateRange(
-                from: from.isNotEmpty ? from : null,
-                to: to.isNotEmpty ? to : null,
-              ));
-            },
-            child: const Text('تطبيق', style: TextStyle(color: AppColors.darkAccent)),
-          ),
-        ],
+        child: child!,
       ),
     );
+    if (picked == null || !context.mounted) return;
+
+    context.read<ReportsCubit>().setDateFilter(DateRange(
+      from: _fmt(picked.start),
+      to: _fmt(picked.end),
+    ));
   }
 
   Widget _buildBody(BuildContext context, ReportsState state) {
