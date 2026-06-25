@@ -24,26 +24,26 @@ class ReportsCubit extends Cubit<ReportsState> {
        _workshopDataSource = workshopDataSource,
        super(const ReportsInitial());
 
-  void selectSection(ReportSection section) {
+  Future<void> selectSection(ReportSection section) async {
     if (state.currentSection == section) return;
     emit(ReportsLoadInProgress(currentSection: section));
-    _loadSection(section);
+    await _loadSection(section);
   }
 
-  void setDateFilter(DateRange filter) {
+  Future<void> setDateFilter(DateRange filter) async {
     final section = state.currentSection;
     emit(ReportsLoadInProgress(currentSection: section, dateFilter: filter));
-    _loadSection(section, filter: filter);
+    await _loadSection(section, filter: filter);
   }
 
-  void _loadSection(ReportSection section, {DateRange? filter}) {
+  Future<void> _loadSection(ReportSection section, {DateRange? filter}) async {
     switch (section) {
-      case ReportSection.overview: _loadOverview();
-      case ReportSection.treasury: _loadTreasury(filter: filter ?? const DateRange());
-      case ReportSection.pnl: _loadPnl(filter: filter ?? const DateRange());
-      case ReportSection.jobs: _loadJobs();
-      case ReportSection.persons: _loadPersons();
-      case ReportSection.workshops: _loadWorkshops();
+      case ReportSection.overview: await _loadOverview();
+      case ReportSection.treasury: await _loadTreasury(filter: filter ?? const DateRange());
+      case ReportSection.pnl: await _loadPnl(filter: filter ?? const DateRange());
+      case ReportSection.jobs: await _loadJobs();
+      case ReportSection.persons: await _loadPersons();
+      case ReportSection.workshops: await _loadWorkshops();
     }
   }
 

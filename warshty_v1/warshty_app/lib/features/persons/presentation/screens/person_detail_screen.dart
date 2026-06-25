@@ -58,8 +58,11 @@ class PersonDetailScreen extends StatelessWidget {
                 return Column(
                   children: [
                     Expanded(
-                      child: SingleChildScrollView(
-                        padding: EdgeInsets.all(AppConstants.spacing16),
+                      child: RefreshIndicator(
+                        onRefresh: () => context.read<PersonCubit>().load(),
+                        child: SingleChildScrollView(
+                          physics: const AlwaysScrollableScrollPhysics(),
+                          padding: EdgeInsets.all(AppConstants.spacing16),
                         child: Column(
                           children: [
                             PersonDetailHeader(
@@ -92,7 +95,8 @@ class PersonDetailScreen extends StatelessWidget {
                           ],
                         ),
                       ),
-                    ),
+                      ),
+                      ),
                     PersonBottomBar(
                       onTake: cubit.isProcessing
                           ? null

@@ -127,19 +127,23 @@ class _PersonsScreenState extends State<PersonsScreen> {
                       )
                     else
                       Expanded(
-                        child: ListView.separated(
-                          padding: EdgeInsets.all(AppConstants.spacing16),
-                          itemCount: filtered.length,
-                          separatorBuilder: (_, __) => SizedBox(height: AppConstants.spacing10),
-                          itemBuilder: (_, i) {
-                            final p = filtered[i];
-                            return PersonCard(
-                              person: p,
-                              onTap: p.id != null
-                                  ? () => _openDetail(context, p.id!)
-                                  : null,
-                            );
-                          },
+                        child: RefreshIndicator(
+                          onRefresh: () => context.read<PersonCubit>().load(),
+                          child: ListView.separated(
+                            physics: const AlwaysScrollableScrollPhysics(),
+                            padding: EdgeInsets.all(AppConstants.spacing16),
+                            itemCount: filtered.length,
+                            separatorBuilder: (_, __) => SizedBox(height: AppConstants.spacing10),
+                            itemBuilder: (_, i) {
+                              final p = filtered[i];
+                              return PersonCard(
+                                person: p,
+                                onTap: p.id != null
+                                    ? () => _openDetail(context, p.id!)
+                                    : null,
+                              );
+                            },
+                          ),
                         ),
                       ),
                   ],

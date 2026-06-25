@@ -112,17 +112,21 @@ class _JobsScreenState extends State<JobsScreen> {
                       )
                     else
                       Expanded(
-                        child: ListView.separated(
-                          padding: EdgeInsets.all(AppConstants.spacing16),
-                          itemCount: filtered.length,
-                          separatorBuilder: (_, __) => SizedBox(height: AppConstants.spacing10),
-                          itemBuilder: (_, i) => JobCard(
-                            key: ValueKey(filtered[i].id),
-                            job: filtered[i],
-                            onTap: () async {
-                              await context.push('/job/${filtered[i].id}');
-                              if (context.mounted) context.read<JobCubit>().load();
-                            },
+                        child: RefreshIndicator(
+                          onRefresh: () => context.read<JobCubit>().load(),
+                          child: ListView.separated(
+                            physics: const AlwaysScrollableScrollPhysics(),
+                            padding: EdgeInsets.all(AppConstants.spacing16),
+                            itemCount: filtered.length,
+                            separatorBuilder: (_, __) => SizedBox(height: AppConstants.spacing10),
+                            itemBuilder: (_, i) => JobCard(
+                              key: ValueKey(filtered[i].id),
+                              job: filtered[i],
+                              onTap: () async {
+                                await context.push('/job/${filtered[i].id}');
+                                if (context.mounted) context.read<JobCubit>().load();
+                              },
+                            ),
                           ),
                         ),
                       ),

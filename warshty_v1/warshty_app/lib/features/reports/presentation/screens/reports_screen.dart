@@ -175,9 +175,12 @@ class ReportsScreen extends StatelessWidget {
 
     if (state is ReportsOverviewLoaded) {
       final r = state;
-      return SingleChildScrollView(
-        padding: EdgeInsets.all(AppConstants.spacing16),
-        child: Column(
+      return RefreshIndicator(
+        onRefresh: () => context.read<ReportsCubit>().selectSection(ReportSection.overview),
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          padding: EdgeInsets.all(AppConstants.spacing16),
+          child: Column(
           children: [
             TreasuryReportSection(income: r.treasuryIncome, expense: r.treasuryExpense, balance: r.treasuryBalance),
             SizedBox(height: AppConstants.spacing14),
@@ -189,6 +192,7 @@ class ReportsScreen extends StatelessWidget {
             SizedBox(height: AppConstants.spacing20),
           ],
         ),
+      ),
       );
     }
 
@@ -198,59 +202,79 @@ class ReportsScreen extends StatelessWidget {
       if (txs.isEmpty) {
         return Center(child: Text('لا توجد معاملات في هذا النطاق', style: TextStyle(color: AppColors.darkTextSecondary)));
       }
-      return SingleChildScrollView(
-        padding: EdgeInsets.all(AppConstants.spacing16),
-        child: Column(
-          children: [
-            ReportSectionCard(
-              icon: Icons.account_balance_rounded, title: 'كشف حساب الخزينة',
-              accentColor: AppColors.info,
-              children: [
-                _statRow(context, 'الوارد', r.income, AppColors.success),
-                _statRow(context, 'المصروفات', r.expense, AppColors.danger),
-                const Divider(height: 16, color: AppColors.darkBorder),
-                _statRow(context, 'الرصيد', r.balance, AppColors.darkAccent, bold: true),
-              ],
-            ),
-            SizedBox(height: AppConstants.spacing14),
-            ...txs.reversed.take(50).map((tx) => _txRow(context, tx)),
-          ],
+      return RefreshIndicator(
+        onRefresh: () => context.read<ReportsCubit>().selectSection(ReportSection.treasury),
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          padding: EdgeInsets.all(AppConstants.spacing16),
+          child: Column(
+            children: [
+              ReportSectionCard(
+                icon: Icons.account_balance_rounded, title: 'كشف حساب الخزينة',
+                accentColor: AppColors.info,
+                children: [
+                  _statRow(context, 'الوارد', r.income, AppColors.success),
+                  _statRow(context, 'المصروفات', r.expense, AppColors.danger),
+                  const Divider(height: 16, color: AppColors.darkBorder),
+                  _statRow(context, 'الرصيد', r.balance, AppColors.darkAccent, bold: true),
+                ],
+              ),
+              SizedBox(height: AppConstants.spacing14),
+              ...txs.reversed.take(50).map((tx) => _txRow(context, tx)),
+            ],
+          ),
         ),
       );
     }
 
     if (state is ReportsPnlLoaded) {
-      return SingleChildScrollView(
-        padding: EdgeInsets.all(AppConstants.spacing16),
-        child: PnlReportSection(data: state),
+      return RefreshIndicator(
+        onRefresh: () => context.read<ReportsCubit>().selectSection(ReportSection.pnl),
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          padding: EdgeInsets.all(AppConstants.spacing16),
+          child: PnlReportSection(data: state),
+        ),
       );
     }
 
     if (state is ReportsJobsLoaded) {
       final r = state;
-      return SingleChildScrollView(
-        padding: EdgeInsets.all(AppConstants.spacing16),
-        child: JobsReportSection(
-          inProgress: r.inProgress, completed: r.completed,
-          totalAgreed: r.totalAgreed, totalPaid: r.totalPaid,
+      return RefreshIndicator(
+        onRefresh: () => context.read<ReportsCubit>().selectSection(ReportSection.jobs),
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          padding: EdgeInsets.all(AppConstants.spacing16),
+          child: JobsReportSection(
+            inProgress: r.inProgress, completed: r.completed,
+            totalAgreed: r.totalAgreed, totalPaid: r.totalPaid,
+          ),
         ),
       );
     }
 
     if (state is ReportsPersonsLoaded) {
       final r = state;
-      return SingleChildScrollView(
-        padding: EdgeInsets.all(AppConstants.spacing16),
-        child: PersonsReportSection(
-          total: r.total, totalBalance: r.totalBalance, topPersons: r.topPersons,
+      return RefreshIndicator(
+        onRefresh: () => context.read<ReportsCubit>().selectSection(ReportSection.persons),
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          padding: EdgeInsets.all(AppConstants.spacing16),
+          child: PersonsReportSection(
+            total: r.total, totalBalance: r.totalBalance, topPersons: r.topPersons,
+          ),
         ),
       );
     }
 
     if (state is ReportsWorkshopsLoaded) {
-      return SingleChildScrollView(
-        padding: EdgeInsets.all(AppConstants.spacing16),
-        child: WorkshopReportSection(workshops: state.workshops),
+      return RefreshIndicator(
+        onRefresh: () => context.read<ReportsCubit>().selectSection(ReportSection.workshops),
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          padding: EdgeInsets.all(AppConstants.spacing16),
+          child: WorkshopReportSection(workshops: state.workshops),
+        ),
       );
     }
 

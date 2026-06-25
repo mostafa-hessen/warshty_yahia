@@ -77,10 +77,16 @@ class _TreasuryScreenState extends State<TreasuryScreen> {
                     ),
                     if (state.transactions.isEmpty)
                       Expanded(
-                        child: EmptyState(
-                          icon: Icons.account_balance_outlined,
-                          title: 'لا توجد معاملات',
-                          subtitle: 'سجل أول معاملة خزينة',
+                        child: RefreshIndicator(
+                          onRefresh: () => cubit.load(),
+                          child: SingleChildScrollView(
+                            physics: const AlwaysScrollableScrollPhysics(),
+                            child: EmptyState(
+                              icon: Icons.account_balance_outlined,
+                              title: 'لا توجد معاملات',
+                              subtitle: 'سجل أول معاملة خزينة',
+                            ),
+                          ),
                         ),
                       )
                     else
@@ -107,17 +113,21 @@ class _TreasuryScreenState extends State<TreasuryScreen> {
                                 ),
                               ),
                               Expanded(
-                                child: ListView.separated(
-                                  itemCount: state.displayList.length,
-                                  separatorBuilder: (_, __) => Divider(height: 1, color: AppColors.darkBorder),
-                                  itemBuilder: (_, i) {
-                                    final tx = state.displayList[i];
-                                    return TreasuryTxItem(
-                                      transaction: tx,
-                                      onTap: () => _showEditModal(context, tx),
-                                      onDelete: () => _confirmDelete(context, tx),
-                                    );
-                                  },
+                                child: RefreshIndicator(
+                                  onRefresh: () => cubit.load(),
+                                  child: ListView.separated(
+                                    physics: const AlwaysScrollableScrollPhysics(),
+                                    itemCount: state.displayList.length,
+                                    separatorBuilder: (_, __) => Divider(height: 1, color: AppColors.darkBorder),
+                                    itemBuilder: (_, i) {
+                                      final tx = state.displayList[i];
+                                      return TreasuryTxItem(
+                                        transaction: tx,
+                                        onTap: () => _showEditModal(context, tx),
+                                        onDelete: () => _confirmDelete(context, tx),
+                                      );
+                                    },
+                                  ),
                                 ),
                               ),
                             ],
