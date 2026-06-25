@@ -142,7 +142,7 @@ class _JobsScreenState extends State<JobsScreen> {
           ),
           floatingActionButton: FloatingActionButton(
             onPressed: () => _showAddModal(context),
-            backgroundColor: AppColors.darkAccent,
+            backgroundColor: context.accentColor,
             child: const Icon(Icons.add, color: Colors.black),
           ),
         ),
@@ -205,16 +205,16 @@ class _JobsScreenState extends State<JobsScreen> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.darkAccent.withValues(alpha: 0.15) : AppColors.darkBgCard,
+          color: isSelected ? context.accentColor.withValues(alpha: 0.15) : context.bgCard,
           borderRadius: BorderRadius.circular(AppConstants.radiusChip),
-          border: Border.all(color: isSelected ? AppColors.darkAccent : AppColors.darkBorder),
+          border: Border.all(color: isSelected ? context.accentColor : context.borderColor),
         ),
         child: Text(
           label,
           style: TextStyle(
             fontSize: 11,
             fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-            color: isSelected ? AppColors.darkAccent : AppColors.darkTextSecondary,
+            color: isSelected ? context.accentColor : context.textSecondary,
           ),
         ),
       ),

@@ -157,7 +157,7 @@ class _AddJobFormState extends State<AddJobForm> {
           AppFormField(
             initialValue: _date,
             labelText: 'التاريخ',
-            suffixIcon: Icon(Icons.calendar_today, size: AppConstants.iconMd, color: AppColors.darkTextMuted),
+            suffixIcon: Icon(Icons.calendar_today, size: AppConstants.iconMd, color: context.textMuted),
             onChanged: (v) => _date = v,
           ),
           SizedBox(height: AppConstants.spacing14),
@@ -173,7 +173,7 @@ class _AddJobFormState extends State<AddJobForm> {
             child: ElevatedButton(
               onPressed: _submitting ? null : _submit,
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.darkAccent,
+                backgroundColor: context.accentColor,
                 foregroundColor: Colors.black,
                 padding: const EdgeInsets.symmetric(vertical: 14),
                 shape: RoundedRectangleBorder(
@@ -205,7 +205,7 @@ class _AddJobFormState extends State<AddJobForm> {
             itemBuilder: (_, i) {
               if (i == 0) {
                 final isAll = _selectedWorkshopId == null;
-                return _chip(context, isAll ? 'اختر الورشة' : 'بدون', isAll, () => setState(() => _selectedWorkshopId = null), AppColors.darkTextMuted);
+                return _chip(context, isAll ? 'اختر الورشة' : 'بدون', isAll, () => setState(() => _selectedWorkshopId = null), context.textMuted);
               }
               final w = _workshops[i - 1];
               final isSelected = _selectedWorkshopId == w.id;
@@ -231,27 +231,27 @@ class _AddJobFormState extends State<AddJobForm> {
                 controller: _personSearchCtrl,
                 decoration: InputDecoration(
                   hintText: 'ابحث بالاسم أو رقم الهاتف...',
-                  hintStyle: TextStyle(color: AppColors.darkTextMuted, fontSize: 12),
+                  hintStyle: TextStyle(color: context.textMuted, fontSize: 12),
                   suffixIcon: _selectedPersonId != null
                       ? IconButton(
-                          icon: Icon(Icons.close, size: AppConstants.iconSm, color: AppColors.darkTextMuted),
+                          icon: Icon(Icons.close, size: AppConstants.iconSm, color: context.textMuted),
                           onPressed: _clearPerson,
                         )
-                      : Icon(Icons.search, size: AppConstants.iconMd, color: AppColors.darkTextMuted),
+                      : Icon(Icons.search, size: AppConstants.iconMd, color: context.textMuted),
                   contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
                   filled: true,
-                  fillColor: AppColors.darkBgCard,
+                  fillColor: context.bgCard,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(AppConstants.radiusMd),
-                    borderSide: BorderSide(color: AppColors.darkBorder),
+                    borderSide: BorderSide(color: context.borderColor),
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(AppConstants.radiusMd),
-                    borderSide: BorderSide(color: AppColors.darkBorder),
+                    borderSide: BorderSide(color: context.borderColor),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(AppConstants.radiusMd),
-                    borderSide: BorderSide(color: AppColors.darkAccent, width: 1.5),
+                    borderSide: BorderSide(color: context.accentColor, width: 1.5),
                   ),
                 ),
               ),
@@ -263,9 +263,9 @@ class _AddJobFormState extends State<AddJobForm> {
                   child: Container(
                     height: 120,
                     decoration: BoxDecoration(
-                      color: AppColors.darkBgCard,
+                      color: context.bgCard,
                       borderRadius: BorderRadius.circular(AppConstants.radiusMd),
-                      border: Border.all(color: AppColors.darkBorder),
+                      border: Border.all(color: context.borderColor),
                     ),
                     child: ListView(
                       children: _filteredPersons.map((p) => InkWell(
@@ -298,11 +298,11 @@ class _AddJobFormState extends State<AddJobForm> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.darkAccent.withValues(alpha: 0.15) : AppColors.darkBgCard,
+          color: isSelected ? context.accentColor.withValues(alpha: 0.15) : context.bgCard,
           borderRadius: BorderRadius.circular(AppConstants.radiusChip),
-          border: Border.all(color: isSelected ? AppColors.darkAccent : AppColors.darkBorder),
+          border: Border.all(color: isSelected ? context.accentColor : context.borderColor),
         ),
-        child: Text(label, style: TextStyle(fontSize: 12, color: isSelected ? AppColors.darkAccent : (inactiveColor ?? AppColors.darkTextSecondary))),
+        child: Text(label, style: TextStyle(fontSize: 12, color: isSelected ? context.accentColor : (inactiveColor ?? context.textSecondary))),
       ),
     );
   }

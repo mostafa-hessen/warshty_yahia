@@ -104,7 +104,7 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
           AppFormField(
             initialValue: _date,
             labelText: 'التاريخ',
-            suffixIcon: Icon(Icons.calendar_today, size: AppConstants.iconMd, color: AppColors.darkTextMuted),
+            suffixIcon: Icon(Icons.calendar_today, size: AppConstants.iconMd, color: context.textMuted),
             onChanged: (v) => _date = v,
           ),
           SizedBox(height: AppConstants.spacing24),

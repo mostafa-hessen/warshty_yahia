@@ -32,8 +32,8 @@ class TreasuryReportSection extends StatelessWidget {
       children: [
         _buildStatRow(context, 'إجمالي الوارد', income, AppColors.success),
         _buildStatRow(context, 'إجمالي المصروفات', expense, AppColors.danger),
-        const Divider(height: 16, color: AppColors.darkBorder),
-        _buildStatRow(context, 'الرصيد الحالي', balance, AppColors.darkAccent, bold: true),
+        Divider(height: 16, color: context.borderColor),
+        _buildStatRow(context, 'الرصيد الحالي', balance, context.accentColor, bold: true),
       ],
     );
   }
@@ -75,13 +75,13 @@ class _TreasuryDetailModal extends StatelessWidget {
       borderRadius: BorderRadius.vertical(top: Radius.circular(AppConstants.radius3xl)),
       child: Container(
         height: MediaQuery.of(context).size.height * 0.6,
-        decoration: BoxDecoration(color: AppColors.darkBgSecondary),
+        decoration: BoxDecoration(color: context.bgSecondary),
         child: Column(
           children: [
             Container(
               padding: EdgeInsets.all(AppConstants.spacing16),
               decoration: BoxDecoration(
-                border: Border(bottom: BorderSide(color: AppColors.darkBorder)),
+                border: Border(bottom: BorderSide(color: context.borderColor)),
               ),
               child: Row(
                 children: [
@@ -91,7 +91,7 @@ class _TreasuryDetailModal extends StatelessWidget {
                   const Spacer(),
                   IconButton(
                     onPressed: () => Navigator.pop(context),
-                    icon: Icon(Icons.close, color: AppColors.darkTextSecondary, size: AppConstants.iconLg),
+                    icon: Icon(Icons.close, color: context.textSecondary, size: AppConstants.iconLg),
                   ),
                 ],
               ),
@@ -109,7 +109,7 @@ class _TreasuryDetailModal extends StatelessWidget {
                   ),
                   SizedBox(width: AppConstants.spacing10),
                   Expanded(
-                    child: _buildMetricCard(context, 'الرصيد', balance, AppColors.darkAccent, Icons.balance_rounded),
+                    child: _buildMetricCard(context, 'الرصيد', balance, context.accentColor, Icons.balance_rounded),
                   ),
                 ],
               ),
@@ -121,7 +121,7 @@ class _TreasuryDetailModal extends StatelessWidget {
                     return ListView.separated(
                       padding: EdgeInsets.symmetric(horizontal: AppConstants.spacing16),
                       itemCount: state.transactions.length > 20 ? 20 : state.transactions.length,
-                      separatorBuilder: (_, __) => Divider(height: 1, color: AppColors.darkBorder),
+                      separatorBuilder: (_, __) => Divider(height: 1, color: context.borderColor),
                       itemBuilder: (_, i) {
                         final tx = state.transactions.reversed.toList()[i];
                         return Padding(
@@ -155,7 +155,7 @@ class _TreasuryDetailModal extends StatelessWidget {
                       },
                     );
                   }
-                  return Center(child: CircularProgressIndicator(color: AppColors.darkAccent));
+                  return Center(child: CircularProgressIndicator(color: context.accentColor));
                 },
               ),
             ),
@@ -169,9 +169,9 @@ class _TreasuryDetailModal extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(AppConstants.spacing12),
       decoration: BoxDecoration(
-        color: AppColors.darkBgCard,
+        color: context.bgCard,
         borderRadius: BorderRadius.circular(AppConstants.radiusMd),
-        border: Border.all(color: AppColors.darkBorder),
+        border: Border.all(color: context.borderColor),
       ),
       child: Column(
         children: [

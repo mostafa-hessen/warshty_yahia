@@ -3,15 +3,6 @@ import 'package:flutter/material.dart';
 import '../../theme/app_colors.dart';
 import '../../theme/app_text_styles.dart';
 
-final _avatarColors = [
-  AppColors.success,
-  AppColors.info,
-  AppColors.purple,
-  AppColors.warning,
-  AppColors.danger,
-  AppColors.darkAccent,
-];
-
 class AvatarWidget extends StatelessWidget {
   final String name;
   final double size;
@@ -24,9 +15,10 @@ class AvatarWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = _getColors(context);
     final initials = _getInitials(name);
-    final colorIndex = name.hashCode % _avatarColors.length;
-    final bgColor = _avatarColors[colorIndex];
+    final colorIndex = name.hashCode % colors.length;
+    final bgColor = colors[colorIndex];
 
     return Container(
       width: size,
@@ -47,6 +39,15 @@ class AvatarWidget extends StatelessWidget {
       ),
     );
   }
+
+  List<Color> _getColors(BuildContext context) => [
+    AppColors.success,
+    AppColors.info,
+    AppColors.purple,
+    AppColors.warning,
+    AppColors.danger,
+    context.accentColor,
+  ];
 
   String _getInitials(String name) {
     final parts = name.trim().split(' ');

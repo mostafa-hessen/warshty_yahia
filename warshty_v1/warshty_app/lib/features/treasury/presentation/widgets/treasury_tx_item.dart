@@ -46,7 +46,7 @@ class TreasuryTxItem extends StatelessWidget {
                 borderRadius: BorderRadius.circular(AppConstants.radiusSm),
                 child: Padding(
                   padding: EdgeInsets.all(AppConstants.spacing4),
-                  child: Icon(Icons.close, size: AppConstants.iconMd, color: AppColors.darkTextMuted),
+                  child: Icon(Icons.close, size: AppConstants.iconMd, color: context.textMuted),
                 ),
               ),
             ],
@@ -108,7 +108,7 @@ class TreasuryTxItem extends StatelessWidget {
               Flexible(
                 child: Text(
                   '· ${transaction.workshopName}',
-                  style: AppTextStyles.txNoteLabel(context).copyWith(color: AppColors.darkTextMuted),
+                  style: AppTextStyles.txNoteLabel(context).copyWith(color: context.textMuted),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -149,7 +149,7 @@ class TreasuryTxItem extends StatelessWidget {
             Text(
               AppFormatters.currency(transaction.balanceBefore),
               style: AppTextStyles.txBeforeLabel(context).copyWith(
-                color: AppColors.darkTextSecondary,
+                color: context.textSecondary,
               ),
             ),
             SizedBox(width: AppConstants.spacing8),
@@ -157,7 +157,7 @@ class TreasuryTxItem extends StatelessWidget {
             Text(
               AppFormatters.currency(transaction.balanceAfter),
               style: AppTextStyles.txBeforeLabel(context).copyWith(
-                color: AppColors.darkAccent,
+                color: context.accentColor,
                 fontWeight: FontWeight.w700,
               ),
             ),

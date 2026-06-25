@@ -15,7 +15,7 @@ Future<bool> showConfirmDialog(
   return showDialog<bool>(
     context: context,
     builder: (ctx) => AlertDialog(
-      backgroundColor: AppColors.darkBgSecondary,
+      backgroundColor: context.bgSecondary,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(AppConstants.radius3xl)),
       ),
@@ -24,7 +24,7 @@ Future<bool> showConfirmDialog(
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(ctx, false),
-          child: Text(cancelText, style: AppTextStyles.button(context).copyWith(color: AppColors.darkTextSecondary)),
+          child: Text(cancelText, style: AppTextStyles.button(context).copyWith(color: context.textSecondary)),
         ),
         TextButton(
           onPressed: () => Navigator.pop(ctx, true),

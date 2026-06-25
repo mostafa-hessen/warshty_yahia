@@ -36,9 +36,9 @@ class HomeScreen extends StatelessWidget {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: AppColors.darkBgCard,
+        color: context.bgCard,
         borderRadius: BorderRadius.circular(AppConstants.radiusXl),
-        border: Border.all(color: AppColors.darkBorder),
+        border: Border.all(color: context.borderColor),
       ),
       child: Material(
         color: Colors.transparent,
@@ -49,7 +49,7 @@ class HomeScreen extends StatelessWidget {
             padding: EdgeInsets.all(AppConstants.spacing16),
             child: Row(
               children: [
-                Icon(icon, color: AppColors.darkAccent, size: AppConstants.iconXl),
+                Icon(icon, color: context.accentColor, size: AppConstants.iconXl),
                 SizedBox(width: AppConstants.spacing12),
                 Text(label, style: AppTextStyles.sectionTitle(context)),
               ],

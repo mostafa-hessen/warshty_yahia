@@ -19,9 +19,9 @@ class PersonDetailTabs extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
-        color: AppColors.darkBgCard,
+        color: context.bgCard,
         borderRadius: BorderRadius.circular(AppConstants.radiusMd),
-        border: Border.all(color: AppColors.darkBorder),
+        border: Border.all(color: context.borderColor),
       ),
       child: Row(
         children: [
@@ -48,14 +48,14 @@ class PersonDetailTabs extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 10),
         decoration: BoxDecoration(
-          color: isActive ? AppColors.darkAccent : Colors.transparent,
+          color: isActive ? context.accentColor : Colors.transparent,
           borderRadius: BorderRadius.circular(AppConstants.radiusSm),
         ),
         child: Text(
           label,
           textAlign: TextAlign.center,
           style: AppTextStyles.detailTab(context).copyWith(
-            color: isActive ? AppColors.darkTextPrimary : AppColors.darkTextSecondary,
+            color: isActive ? context.textPrimary : context.textSecondary,
           ),
         ),
       ),

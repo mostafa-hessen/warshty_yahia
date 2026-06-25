@@ -40,14 +40,14 @@ class PersonJobsTab extends StatelessWidget {
         Container(
           margin: EdgeInsets.only(top: AppConstants.spacing14),
           child: SummaryCard(
-            borderColor: AppColors.darkAccent,
+            borderColor: context.accentColor,
             rows: [
               SummaryRowData(label: 'إجمالي المتفق عليه', value: AppFormatters.currency(totalAgreed)),
               SummaryRowData(label: 'إجمالي المدفوع', value: AppFormatters.currency(totalPaid), valueColor: AppColors.success),
             ],
             totalLabel: 'المتبقي',
             totalValue: AppFormatters.currency(totalRemaining),
-            totalColor: totalRemaining > 0 ? AppColors.warning : AppColors.darkTextMuted,
+            totalColor: totalRemaining > 0 ? AppColors.warning : context.textMuted,
           ),
         ),
         SizedBox(height: AppConstants.spacing10),

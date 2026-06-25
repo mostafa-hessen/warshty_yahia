@@ -162,7 +162,7 @@ class _PersonsScreenState extends State<PersonsScreen> {
                 _showAddModal(context);
               }
             },
-            backgroundColor: AppColors.darkAccent,
+            backgroundColor: context.accentColor,
             child: const Icon(Icons.add, color: Colors.black),
           ),
         ),

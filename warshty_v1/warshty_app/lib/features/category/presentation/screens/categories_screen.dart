@@ -111,7 +111,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                 _showAddModal(context);
               }
             },
-            backgroundColor: AppColors.darkAccent,
+            backgroundColor: context.accentColor,
             child: const Icon(Icons.add, color: Colors.black),
           ),
         ),
@@ -178,7 +178,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        backgroundColor: AppColors.darkBgSecondary,
+        backgroundColor: context.bgSecondary,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppConstants.radiusLg),
         ),

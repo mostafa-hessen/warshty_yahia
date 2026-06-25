@@ -27,9 +27,9 @@ class ReportSectionCard extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.all(AppConstants.spacing14),
         decoration: BoxDecoration(
-          color: AppColors.darkBgCard,
+          color: context.bgCard,
           borderRadius: BorderRadius.circular(AppConstants.radiusXl),
-          border: Border.all(color: AppColors.darkBorder),
+          border: Border.all(color: context.borderColor),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -40,7 +40,7 @@ class ReportSectionCard extends StatelessWidget {
                 SizedBox(width: AppConstants.spacing8),
                 Text(title, style: AppTextStyles.sectionTitle(context).copyWith(color: accentColor)),
                 const Spacer(),
-                Icon(Icons.chevron_left_rounded, color: AppColors.darkTextMuted, size: AppConstants.iconLg),
+                Icon(Icons.chevron_left_rounded, color: context.textMuted, size: AppConstants.iconLg),
               ],
             ),
             SizedBox(height: AppConstants.spacing12),

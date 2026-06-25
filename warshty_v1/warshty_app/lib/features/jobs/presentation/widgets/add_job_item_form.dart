@@ -148,7 +148,7 @@ class _AddJobItemFormState extends State<AddJobItemForm> {
           AppFormField(
             initialValue: _date,
             labelText: 'التاريخ',
-            suffixIcon: Icon(Icons.calendar_today, size: AppConstants.iconMd, color: AppColors.darkTextMuted),
+            suffixIcon: Icon(Icons.calendar_today, size: AppConstants.iconMd, color: context.textMuted),
             onChanged: (v) => _date = v,
           ),
           SizedBox(height: AppConstants.spacing24),
@@ -157,7 +157,7 @@ class _AddJobItemFormState extends State<AddJobItemForm> {
             child: ElevatedButton(
               onPressed: _submitting ? null : _submit,
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.darkAccent,
+                backgroundColor: context.accentColor,
                 foregroundColor: Colors.black,
                 padding: const EdgeInsets.symmetric(vertical: 14),
                 shape: RoundedRectangleBorder(
@@ -179,14 +179,14 @@ class _AddJobItemFormState extends State<AddJobItemForm> {
               child: OutlinedButton(
                 onPressed: _submitting ? null : _submitAndContinue,
                 style: OutlinedButton.styleFrom(
-                  foregroundColor: AppColors.darkAccent,
-                  side: BorderSide(color: AppColors.darkAccent),
+                  foregroundColor: context.accentColor,
+                  side: BorderSide(color: context.accentColor),
                   padding: const EdgeInsets.symmetric(vertical: 14),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                   ),
                 ),
-                child: Text('إضافة وأخرى', style: AppTextStyles.button(context).copyWith(color: AppColors.darkAccent)),
+                child: Text('إضافة وأخرى', style: AppTextStyles.button(context).copyWith(color: context.accentColor)),
               ),
             ),
           ],
@@ -212,7 +212,7 @@ class _AddJobItemFormState extends State<AddJobItemForm> {
                 final isAll = _selectedCategoryId == null;
                 return _chip(context, 'بدون تصنيف', isAll, () {
                   if (!_submitting) setState(() => _selectedCategoryId = null);
-                }, AppColors.darkTextMuted);
+                }, context.textMuted);
               }
               final cat = _categories[i - 1];
               final isSelected = _selectedCategoryId == cat.id;
@@ -232,13 +232,13 @@ class _AddJobItemFormState extends State<AddJobItemForm> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.darkAccent.withValues(alpha: 0.15) : AppColors.darkBgCard,
+          color: isSelected ? context.accentColor.withValues(alpha: 0.15) : context.bgCard,
           borderRadius: BorderRadius.circular(AppConstants.radiusChip),
-          border: Border.all(color: isSelected ? AppColors.darkAccent : AppColors.darkBorder),
+          border: Border.all(color: isSelected ? context.accentColor : context.borderColor),
         ),
         child: Text(
           label,
-          style: TextStyle(fontSize: 12, color: isSelected ? AppColors.darkAccent : (inactiveColor ?? AppColors.darkTextSecondary)),
+          style: TextStyle(fontSize: 12, color: isSelected ? context.accentColor : (inactiveColor ?? context.textSecondary)),
         ),
       ),
     );

@@ -27,14 +27,14 @@ class PersonFinanceCards extends StatelessWidget {
               ? AppColors.success
               : balance < 0
                   ? AppColors.danger
-                  : AppColors.darkTextSecondary,
+                  : context.textSecondary,
         )),
         SizedBox(width: AppConstants.spacing10),
         Expanded(child: _card(
           context,
           'الشغلانات',
           jobsRemaining,
-          jobsRemaining > 0 ? AppColors.warning : AppColors.darkTextSecondary,
+          jobsRemaining > 0 ? AppColors.warning : context.textSecondary,
         )),
       ],
     );
@@ -44,7 +44,7 @@ class PersonFinanceCards extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(AppConstants.spacing18),
       decoration: BoxDecoration(
-        color: AppColors.darkBgCard,
+        color: context.bgCard,
         borderRadius: BorderRadius.circular(AppConstants.radiusXl),
         border: Border.all(color: color.withValues(alpha: 0.3)),
       ),

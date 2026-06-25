@@ -33,9 +33,9 @@ class PersonTransactionTab extends StatelessWidget {
     return Container(
       margin: EdgeInsets.only(top: AppConstants.spacing14),
       decoration: BoxDecoration(
-        color: AppColors.darkBgCard,
+        color: context.bgCard,
         borderRadius: BorderRadius.circular(AppConstants.radiusXl),
-        border: Border.all(color: AppColors.darkBorder),
+        border: Border.all(color: context.borderColor),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -52,7 +52,7 @@ class PersonTransactionTab extends StatelessWidget {
             return Container(
               key: ValueKey(tx.partialId),
               decoration: BoxDecoration(
-                border: Border(top: BorderSide(color: AppColors.darkBorder)),
+                border: Border(top: BorderSide(color: context.borderColor)),
               ),
               child: TransactionItem(
                 type: tx.type,

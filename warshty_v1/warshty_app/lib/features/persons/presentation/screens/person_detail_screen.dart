@@ -33,7 +33,7 @@ class PersonDetailScreen extends StatelessWidget {
         builder: (context) => Scaffold(
           appBar: AppBar(
             leading: IconButton(
-              icon: Icon(Icons.arrow_forward, color: AppColors.darkTextSecondary),
+              icon: Icon(Icons.arrow_forward, color: context.textSecondary),
               onPressed: () => context.pop(),
             ),
             title: const Text('تفاصيل الشخص'),

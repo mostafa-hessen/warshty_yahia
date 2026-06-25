@@ -53,7 +53,7 @@ class ReportsScreen extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(vertical: AppConstants.spacing10),
       decoration: BoxDecoration(
-        border: Border(bottom: BorderSide(color: AppColors.darkBorder)),
+        border: Border(bottom: BorderSide(color: context.borderColor)),
       ),
       child: SizedBox(
         height: 36,
@@ -70,18 +70,18 @@ class ReportsScreen extends StatelessWidget {
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
                 decoration: BoxDecoration(
-                  color: isActive ? AppColors.darkAccent.withValues(alpha: 0.15) : AppColors.darkBgCard,
+                  color: isActive ? context.accentColor.withValues(alpha: 0.15) : context.bgCard,
                   borderRadius: BorderRadius.circular(AppConstants.radiusChip),
-                  border: Border.all(color: isActive ? AppColors.darkAccent : AppColors.darkBorder),
+                  border: Border.all(color: isActive ? context.accentColor : context.borderColor),
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Icon(section.icon, size: AppConstants.iconSm,
-                      color: isActive ? AppColors.darkAccent : AppColors.darkTextSecondary),
+                      color: isActive ? context.accentColor : context.textSecondary),
                     SizedBox(width: AppConstants.spacing6),
                     Text(section.label, style: AppTextStyles.categoryChip(context).copyWith(
-                      color: isActive ? AppColors.darkAccent : AppColors.darkTextSecondary,
+                      color: isActive ? context.accentColor : context.textSecondary,
                     )),
                   ],
                 ),
@@ -134,16 +134,16 @@ class ReportsScreen extends StatelessWidget {
       builder: (ctx, child) => Theme(
         data: Theme.of(ctx).copyWith(
           datePickerTheme: DatePickerThemeData(
-            backgroundColor: AppColors.darkBgSecondary,
-            surfaceTintColor: AppColors.darkBgSecondary,
+            backgroundColor: context.bgSecondary,
+            surfaceTintColor: context.bgSecondary,
             dayForegroundColor: WidgetStateProperty.resolveWith((states) =>
-              states.contains(WidgetState.selected) ? Colors.black : AppColors.darkTextPrimary),
+              states.contains(WidgetState.selected) ? Colors.black : context.textPrimary),
             dayBackgroundColor: WidgetStateProperty.resolveWith((states) =>
-              states.contains(WidgetState.selected) ? AppColors.darkAccent : null),
-            headerForegroundColor: AppColors.darkTextPrimary,
-            todayForegroundColor: WidgetStateProperty.all(AppColors.darkAccent),
-            rangePickerBackgroundColor: AppColors.darkBgCard,
-            rangeSelectionBackgroundColor: AppColors.darkAccent.withValues(alpha: 0.3),
+              states.contains(WidgetState.selected) ? context.accentColor : null),
+            headerForegroundColor: context.textPrimary,
+            todayForegroundColor: WidgetStateProperty.all(context.accentColor),
+            rangePickerBackgroundColor: context.bgCard,
+            rangeSelectionBackgroundColor: context.accentColor.withValues(alpha: 0.3),
           ),
         ),
         child: child!,
@@ -204,7 +204,7 @@ class ReportsScreen extends StatelessWidget {
       final r = state;
       final txs = r.transactions;
       if (txs.isEmpty) {
-        return Center(child: Text('لا توجد معاملات في هذا النطاق', style: TextStyle(color: AppColors.darkTextSecondary)));
+        return Center(child: Text('لا توجد معاملات في هذا النطاق', style: TextStyle(color: context.textSecondary)));
       }
       return RefreshIndicator(
         onRefresh: () => context.read<ReportsCubit>().selectSection(ReportSection.treasury),
@@ -219,8 +219,8 @@ class ReportsScreen extends StatelessWidget {
                 children: [
                   _statRow(context, 'الوارد', r.income, AppColors.success),
                   _statRow(context, 'المصروفات', r.expense, AppColors.danger),
-                  const Divider(height: 16, color: AppColors.darkBorder),
-                  _statRow(context, 'الرصيد', r.balance, AppColors.darkAccent, bold: true),
+                  Divider(height: 16, color: context.borderColor),
+                  _statRow(context, 'الرصيد', r.balance, context.accentColor, bold: true),
                 ],
               ),
               SizedBox(height: AppConstants.spacing14),

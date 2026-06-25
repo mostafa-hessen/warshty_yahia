@@ -37,13 +37,13 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
         builder: (context) => Scaffold(
           appBar: AppBar(
             leading: IconButton(
-              icon: Icon(Icons.arrow_forward, color: AppColors.darkTextSecondary),
+              icon: Icon(Icons.arrow_forward, color: context.textSecondary),
               onPressed: () => context.pop(),
             ),
             title: const Text('تفاصيل الشغلانة'),
             actions: [
               IconButton(
-                icon: Icon(Icons.edit_outlined, color: AppColors.darkTextSecondary),
+                icon: Icon(Icons.edit_outlined, color: context.textSecondary),
                 onPressed: () => _showEditJobModal(context),
               ),
               IconButton(
@@ -100,9 +100,9 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
       margin: EdgeInsets.all(AppConstants.spacing16),
       padding: EdgeInsets.all(AppConstants.spacing16),
       decoration: BoxDecoration(
-        color: AppColors.darkBgCard,
+        color: context.bgCard,
         borderRadius: BorderRadius.circular(AppConstants.radiusXl),
-        border: Border.all(color: AppColors.darkBorder),
+        border: Border.all(color: context.borderColor),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -182,7 +182,7 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
         children: [
           Row(
             children: [
-              Expanded(child: _bigCard(context, 'المتفق عليه', AppFormatters.currency(state.job.agreedAmount), AppColors.darkAccent, Icons.check_circle_outline)),
+              Expanded(child: _bigCard(context, 'المتفق عليه', AppFormatters.currency(state.job.agreedAmount), context.accentColor, Icons.check_circle_outline)),
               SizedBox(width: AppConstants.spacing10),
               Expanded(child: _bigCard(context, 'المتبقي', AppFormatters.currency(state.remaining),
                   state.remaining > 0 ? AppColors.warning : AppColors.success, Icons.currency_exchange)),
@@ -212,7 +212,7 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
     return Container(
       padding: EdgeInsets.all(AppConstants.spacing14),
       decoration: BoxDecoration(
-        color: AppColors.darkBgCard,
+        color: context.bgCard,
         borderRadius: BorderRadius.circular(AppConstants.radiusXl),
         border: Border.all(color: color.withValues(alpha: 0.3)),
       ),
@@ -238,9 +238,9 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: AppConstants.spacing12, vertical: AppConstants.spacing10),
       decoration: BoxDecoration(
-        color: AppColors.darkBgCard,
+        color: context.bgCard,
         borderRadius: BorderRadius.circular(AppConstants.radiusMd),
-        border: Border.all(color: AppColors.darkBorder),
+        border: Border.all(color: context.borderColor),
       ),
       child: Row(
         children: [
@@ -337,21 +337,21 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
       child: Container(
         padding: EdgeInsets.all(AppConstants.spacing16),
         decoration: BoxDecoration(
-          color: AppColors.darkBgCard,
+          color: context.bgCard,
           borderRadius: BorderRadius.circular(AppConstants.radiusXl),
-          border: Border.all(color: AppColors.darkBorder),
+          border: Border.all(color: context.borderColor),
         ),
         child: Column(
           children: [
-            _totalRow(context, 'إجمالي المواد', state.totalMaterials, AppColors.darkTextSecondary),
+            _totalRow(context, 'إجمالي المواد', state.totalMaterials, context.textSecondary),
             SizedBox(height: AppConstants.spacing6),
-            _totalRow(context, 'إجمالي المصنعيات', state.totalLabors, AppColors.darkTextSecondary),
+            _totalRow(context, 'إجمالي المصنعيات', state.totalLabors, context.textSecondary),
             SizedBox(height: AppConstants.spacing6),
-            _totalRow(context, 'إجمالي التكاليف الأخرى', state.totalOtherCosts, AppColors.darkTextSecondary),
-            Divider(height: AppConstants.spacing20, color: AppColors.darkBorder),
+            _totalRow(context, 'إجمالي التكاليف الأخرى', state.totalOtherCosts, context.textSecondary),
+            Divider(height: AppConstants.spacing20, color: context.borderColor),
             _totalRow(context, 'إجمالي التكاليف', state.totalCosts, AppColors.warning),
             SizedBox(height: AppConstants.spacing6),
-            _totalRow(context, 'المتفق عليه', state.job.agreedAmount, AppColors.darkAccent),
+            _totalRow(context, 'المتفق عليه', state.job.agreedAmount, context.accentColor),
             SizedBox(height: AppConstants.spacing6),
             _totalRow(context, state.isProfitable ? 'الربح' : 'الخسارة',
                 state.profit.abs(), state.isProfitable ? AppColors.success : AppColors.danger),
@@ -391,7 +391,7 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
         margin: EdgeInsets.symmetric(horizontal: AppConstants.spacing16, vertical: AppConstants.spacing2),
         padding: EdgeInsets.symmetric(horizontal: AppConstants.spacing12, vertical: AppConstants.spacing8),
         decoration: BoxDecoration(
-          color: AppColors.darkBgSecondary,
+          color: context.bgSecondary,
           borderRadius: BorderRadius.circular(AppConstants.radiusSm),
         ),
         child: Row(
@@ -404,7 +404,7 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(AppFormatters.currency(amount), style: AppTextStyles.detailValue(context).copyWith(color: AppColors.darkAccent)),
+                  Text(AppFormatters.currency(amount), style: AppTextStyles.detailValue(context).copyWith(color: context.accentColor)),
                   if (desc != null && desc.isNotEmpty)
                     Text(desc, style: AppTextStyles.detailLabel(context), maxLines: 1, overflow: TextOverflow.ellipsis),
                 ],
@@ -420,7 +420,7 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
                 onTap: onDelete, borderRadius: BorderRadius.circular(AppConstants.radiusSm),
                 child: Padding(
                   padding: EdgeInsets.all(AppConstants.spacing4),
-                  child: Icon(Icons.close, size: AppConstants.iconSm, color: AppColors.darkTextMuted),
+                  child: Icon(Icons.close, size: AppConstants.iconSm, color: context.textMuted),
                 ),
               ),
             ],
@@ -467,7 +467,7 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        backgroundColor: AppColors.darkBgSecondary,
+        backgroundColor: context.bgSecondary,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppConstants.radiusLg)),
         title: const Text('تسليم الشغلانة'),
         content: const Text('هل أنت متأكد من تسليم الشغلانة؟'),
@@ -567,7 +567,7 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        backgroundColor: AppColors.darkBgSecondary,
+        backgroundColor: context.bgSecondary,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppConstants.radiusLg)),
         title: Text('حذف $label'),
         content: Text('هل أنت متأكد من حذف $label؟'),
@@ -587,7 +587,7 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
                       duration: const Duration(seconds: 4),
                       action: SnackBarAction(
                         label: 'تراجع',
-                        textColor: AppColors.darkAccent,
+                        textColor: context.accentColor,
                         onPressed: () {
                           context.read<JobCubit>().undoLastDelete();
                         },
@@ -614,7 +614,7 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        backgroundColor: AppColors.darkBgSecondary,
+        backgroundColor: context.bgSecondary,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppConstants.radiusLg)),
         title: const Text('حذف الشغلانة'),
         content: const Text('سيتم حذف الشغلانة وجميع بياناتها. هل أنت متأكد؟'),

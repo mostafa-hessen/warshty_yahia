@@ -150,7 +150,7 @@ class _AddTreasuryTxFormState extends State<AddTreasuryTxForm> {
           AppFormField(
             initialValue: _date,
             labelText: 'التاريخ',
-            suffixIcon: Icon(Icons.calendar_today, size: AppConstants.iconMd, color: AppColors.darkTextMuted),
+            suffixIcon: Icon(Icons.calendar_today, size: AppConstants.iconMd, color: context.textMuted),
             onChanged: (v) => _date = v,
           ),
           SizedBox(height: AppConstants.spacing24),
@@ -187,14 +187,14 @@ class _AddTreasuryTxFormState extends State<AddTreasuryTxForm> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
-          color: isSelected ? color.withValues(alpha: 0.15) : AppColors.darkBgCard,
+          color: isSelected ? color.withValues(alpha: 0.15) : context.bgCard,
           borderRadius: BorderRadius.circular(AppConstants.radiusLg),
-          border: Border.all(color: isSelected ? color : AppColors.darkBorder),
+          border: Border.all(color: isSelected ? color : context.borderColor),
         ),
         child: Text(
           type.displayName,
           style: AppTextStyles.formInput(context).copyWith(
-            color: isSelected ? color : AppColors.darkTextSecondary,
+            color: isSelected ? color : context.textSecondary,
             fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
           ),
         ),
@@ -220,7 +220,7 @@ class _AddTreasuryTxFormState extends State<AddTreasuryTxForm> {
                 final isAll = _selectedCategoryId == null;
                 return _chip(context, 'بدون تصنيف', isAll, () {
                   if (!_submitting) setState(() => _selectedCategoryId = null);
-                }, null, AppColors.darkTextMuted);
+                }, null, context.textMuted);
               }
               final cat = filtered[i - 1];
               final isSelected = _selectedCategoryId == cat.id;
@@ -251,7 +251,7 @@ class _AddTreasuryTxFormState extends State<AddTreasuryTxForm> {
                 final isGeneral = _selectedWorkshopId == null;
                 return _chip(context, 'عام', isGeneral, () {
                   if (!_submitting) setState(() => _selectedWorkshopId = null);
-                }, null, AppColors.darkTextMuted);
+                }, null, context.textMuted);
               }
               final ws = _workshops[i - 1];
               final isSelected = _selectedWorkshopId == ws.id;
@@ -266,21 +266,21 @@ class _AddTreasuryTxFormState extends State<AddTreasuryTxForm> {
   }
 
   Widget _chip(BuildContext context, String label, bool isSelected, VoidCallback onTap, Color? activeColor, Color? inactiveColor) {
-    final ac = activeColor ?? AppColors.darkAccent;
+    final ac = activeColor ?? context.accentColor;
     return GestureDetector(
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
         decoration: BoxDecoration(
-          color: isSelected ? ac.withValues(alpha: 0.15) : AppColors.darkBgCard,
+          color: isSelected ? ac.withValues(alpha: 0.15) : context.bgCard,
           borderRadius: BorderRadius.circular(AppConstants.radiusChip),
-          border: Border.all(color: isSelected ? ac : AppColors.darkBorder),
+          border: Border.all(color: isSelected ? ac : context.borderColor),
         ),
         child: Text(
           label,
           style: TextStyle(
             fontSize: 12,
-            color: isSelected ? ac : (inactiveColor ?? AppColors.darkTextSecondary),
+            color: isSelected ? ac : (inactiveColor ?? context.textSecondary),
           ),
         ),
       ),

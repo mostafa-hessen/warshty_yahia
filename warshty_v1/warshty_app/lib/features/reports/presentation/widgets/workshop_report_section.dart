@@ -29,7 +29,7 @@ class WorkshopReportSection extends StatelessWidget {
         _buildStatRow(context, 'إجمالي المدفوع', AppFormatters.currency(totalPaid)),
         if (workshops.isNotEmpty) ...[
           SizedBox(height: AppConstants.spacing10),
-          const Divider(height: 1, color: AppColors.darkBorder),
+          Divider(height: 1, color: context.borderColor),
           SizedBox(height: AppConstants.spacing6),
           ...workshops.take(2).map((w) => Padding(
             padding: EdgeInsets.only(top: AppConstants.spacing6),
@@ -84,13 +84,13 @@ class _WorkshopDetailModal extends StatelessWidget {
       borderRadius: BorderRadius.vertical(top: Radius.circular(AppConstants.radius3xl)),
       child: Container(
         height: MediaQuery.of(context).size.height * 0.5,
-        decoration: BoxDecoration(color: AppColors.darkBgSecondary),
+        decoration: BoxDecoration(color: context.bgSecondary),
         child: Column(
           children: [
             Container(
               padding: EdgeInsets.all(AppConstants.spacing16),
               decoration: BoxDecoration(
-                border: Border(bottom: BorderSide(color: AppColors.darkBorder)),
+                border: Border(bottom: BorderSide(color: context.borderColor)),
               ),
               child: Row(
                 children: [
@@ -100,7 +100,7 @@ class _WorkshopDetailModal extends StatelessWidget {
                   const Spacer(),
                   IconButton(
                     onPressed: () => Navigator.pop(context),
-                    icon: Icon(Icons.close, color: AppColors.darkTextSecondary, size: AppConstants.iconLg),
+                    icon: Icon(Icons.close, color: context.textSecondary, size: AppConstants.iconLg),
                   ),
                 ],
               ),
@@ -113,7 +113,7 @@ class _WorkshopDetailModal extends StatelessWidget {
                   SizedBox(width: AppConstants.spacing12),
                   _buildMetric(context, 'الشغلانات', '$totalJobs', AppColors.info),
                   SizedBox(width: AppConstants.spacing12),
-                  _buildMetric(context, 'الإجمالي', AppFormatters.currency(totalAgreed), AppColors.darkAccent),
+                  _buildMetric(context, 'الإجمالي', AppFormatters.currency(totalAgreed), context.accentColor),
                 ],
               ),
             ),
@@ -121,7 +121,7 @@ class _WorkshopDetailModal extends StatelessWidget {
               child: ListView.separated(
                 padding: EdgeInsets.symmetric(horizontal: AppConstants.spacing16),
                 itemCount: workshops.length,
-                separatorBuilder: (_, __) => Divider(height: 1, color: AppColors.darkBorder),
+                separatorBuilder: (_, __) => Divider(height: 1, color: context.borderColor),
                 itemBuilder: (_, i) {
                   final w = workshops[i];
                   return Padding(
@@ -159,9 +159,9 @@ class _WorkshopDetailModal extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.all(AppConstants.spacing12),
         decoration: BoxDecoration(
-          color: AppColors.darkBgCard,
-          borderRadius: BorderRadius.circular(AppConstants.radiusMd),
-          border: Border.all(color: AppColors.darkBorder),
+        color: context.bgCard,
+        borderRadius: BorderRadius.circular(AppConstants.radiusMd),
+        border: Border.all(color: context.borderColor),
         ),
         child: Column(
           children: [

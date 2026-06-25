@@ -48,7 +48,7 @@ class JobCard extends StatelessWidget {
               Text(
                 'متبقي: ${AppFormatters.currency(remaining)}',
                 style: AppTextStyles.detailLabel(context).copyWith(
-                  color: remaining > 0 ? AppColors.warning : AppColors.darkTextMuted,
+                  color: remaining > 0 ? AppColors.warning : context.textMuted,
                   fontWeight: FontWeight.w700,
                 ),
               ),

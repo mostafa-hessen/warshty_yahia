@@ -61,18 +61,18 @@ class AppFormField extends StatelessWidget {
             hintStyle: AppTextStyles.formPlaceholder(context),
             suffixIcon: suffixIcon,
             filled: true,
-            fillColor: AppColors.darkBgCard,
+            fillColor: context.bgCard,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(AppConstants.radiusMd),
-              borderSide: BorderSide(color: AppColors.darkBorder),
+              borderSide: BorderSide(color: context.borderColor),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(AppConstants.radiusMd),
-              borderSide: BorderSide(color: AppColors.darkBorder),
+              borderSide: BorderSide(color: context.borderColor),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(AppConstants.radiusMd),
-              borderSide: BorderSide(color: AppColors.darkAccent, width: 1.5),
+              borderSide: BorderSide(color: context.accentColor, width: 1.5),
             ),
           ),
           validator: required

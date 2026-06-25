@@ -19,8 +19,8 @@ class PersonBottomBar extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(AppConstants.spacing16),
       decoration: BoxDecoration(
-        color: AppColors.darkBgSecondary,
-        border: Border(top: BorderSide(color: AppColors.darkBorder)),
+        color: context.bgSecondary,
+        border: Border(top: BorderSide(color: context.borderColor)),
       ),
       child: Row(
         children: [

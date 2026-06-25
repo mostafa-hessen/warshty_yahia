@@ -25,14 +25,14 @@ class AppFilterChip extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
           decoration: BoxDecoration(
-            color: isActive ? AppColors.darkAccent.withValues(alpha: 0.15) : AppColors.darkBgCard,
+            color: isActive ? context.accentColor.withValues(alpha: 0.15) : context.bgCard,
             borderRadius: BorderRadius.circular(AppConstants.radiusChip),
-            border: Border.all(color: isActive ? AppColors.darkAccent : AppColors.darkBorder),
+            border: Border.all(color: isActive ? context.accentColor : context.borderColor),
           ),
           child: Text(
             label,
             style: AppTextStyles.categoryChip(context).copyWith(
-              color: isActive ? AppColors.darkAccent : AppColors.darkTextSecondary,
+              color: isActive ? context.accentColor : context.textSecondary,
             ),
           ),
         ),

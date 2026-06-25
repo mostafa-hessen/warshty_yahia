@@ -37,9 +37,9 @@ class JobsReportSection extends StatelessWidget {
           ],
         ),
         SizedBox(height: AppConstants.spacing10),
-        _buildStatRow(context, 'إجمالي المتفق عليه', totalAgreed, AppColors.darkAccent),
+        _buildStatRow(context, 'إجمالي المتفق عليه', totalAgreed, context.accentColor),
         _buildStatRow(context, 'إجمالي المدفوع', totalPaid, AppColors.info),
-        const Divider(height: 16, color: AppColors.darkBorder),
+        Divider(height: 16, color: context.borderColor),
         _buildStatRow(context, 'المتبقي', remaining, remaining > 0 ? AppColors.danger : AppColors.success, bold: true),
       ],
     );
@@ -109,13 +109,13 @@ class _JobsDetailModal extends StatelessWidget {
       borderRadius: BorderRadius.vertical(top: Radius.circular(AppConstants.radius3xl)),
       child: Container(
         padding: EdgeInsets.all(AppConstants.spacing20),
-        decoration: BoxDecoration(color: AppColors.darkBgSecondary),
+        decoration: BoxDecoration(color: context.bgSecondary),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
               width: 40, height: 4,
-              decoration: BoxDecoration(color: AppColors.darkBorder, borderRadius: BorderRadius.circular(2)),
+              decoration: BoxDecoration(color: context.borderColor, borderRadius: BorderRadius.circular(2)),
             ),
             SizedBox(height: AppConstants.spacing16),
             Text('تفاصيل الشغلانات', style: AppTextStyles.modalTitle(context)),
@@ -130,7 +130,7 @@ class _JobsDetailModal extends StatelessWidget {
             SizedBox(height: AppConstants.spacing16),
             _buildDetailRow(context, 'إجمالي المتفق عليه', AppFormatters.currency(totalAgreed)),
             _buildDetailRow(context, 'إجمالي المدفوع', AppFormatters.currency(totalPaid)),
-            const Divider(height: 20, color: AppColors.darkBorder),
+            Divider(height: 20, color: context.borderColor),
             _buildDetailRow(context, 'المتبقي', AppFormatters.currency(remaining),
               color: remaining > 0 ? AppColors.danger : AppColors.success),
           ],
@@ -143,7 +143,7 @@ class _JobsDetailModal extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(AppConstants.spacing16),
       decoration: BoxDecoration(
-        color: AppColors.darkBgCard,
+        color: context.bgCard,
         borderRadius: BorderRadius.circular(AppConstants.radiusMd),
         border: Border.all(color: color.withValues(alpha: 0.3)),
       ),

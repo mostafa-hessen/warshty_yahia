@@ -36,16 +36,16 @@ class JobDetailSection extends StatelessWidget {
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                     decoration: BoxDecoration(
-                      color: AppColors.darkAccent.withValues(alpha: 0.15),
+                      color: context.accentColor.withValues(alpha: 0.15),
                       borderRadius: BorderRadius.circular(AppConstants.radiusChip),
-                      border: Border.all(color: AppColors.darkAccent.withValues(alpha: 0.3)),
+                      border: Border.all(color: context.accentColor.withValues(alpha: 0.3)),
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(Icons.add, size: AppConstants.iconSm, color: AppColors.darkAccent),
+                        Icon(Icons.add, size: AppConstants.iconSm, color: context.accentColor),
                         SizedBox(width: AppConstants.spacing3),
-                        Text('إضافة', style: TextStyle(fontSize: 11, color: AppColors.darkAccent, fontWeight: FontWeight.w600)),
+                        Text('إضافة', style: TextStyle(fontSize: 11, color: context.accentColor, fontWeight: FontWeight.w600)),
                       ],
                     ),
                   ),

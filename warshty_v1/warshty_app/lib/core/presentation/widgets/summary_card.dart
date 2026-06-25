@@ -37,9 +37,9 @@ class SummaryCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(AppConstants.spacing14),
       decoration: BoxDecoration(
-        color: AppColors.darkBgCard,
+        color: context.bgCard,
         borderRadius: BorderRadius.circular(AppConstants.radiusXl),
-        border: Border.all(color: borderColor ?? AppColors.darkBorder),
+        border: Border.all(color: borderColor ?? context.borderColor),
       ),
       child: Column(
         children: [
@@ -50,7 +50,7 @@ class SummaryCard extends StatelessWidget {
             isLast: entry.key == rows.length - 1 && totalLabel == null,
           )),
           if (totalLabel != null && totalValue != null) ...[
-            const Divider(height: 20, color: AppColors.darkBorder),
+            Divider(height: 20, color: context.borderColor),
             _buildTotalRow(context, totalLabel!, totalValue!, totalColor),
           ],
         ],
@@ -76,7 +76,7 @@ class SummaryCard extends StatelessWidget {
       children: [
         Text(label, style: AppTextStyles.summaryTotal(context)),
         const Spacer(),
-        Text(value, style: AppTextStyles.summaryTotal(context).copyWith(color: color ?? AppColors.darkAccent)),
+        Text(value, style: AppTextStyles.summaryTotal(context).copyWith(color: color ?? context.accentColor)),
       ],
     );
   }

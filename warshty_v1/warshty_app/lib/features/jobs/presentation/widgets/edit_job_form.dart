@@ -88,7 +88,7 @@ class _EditJobFormState extends State<EditJobForm> {
             child: ElevatedButton(
               onPressed: _submitting ? null : _submit,
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.darkAccent,
+                backgroundColor: context.accentColor,
                 foregroundColor: Colors.black,
                 padding: const EdgeInsets.symmetric(vertical: 14),
                 shape: RoundedRectangleBorder(

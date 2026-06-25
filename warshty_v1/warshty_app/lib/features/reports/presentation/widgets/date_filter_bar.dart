@@ -61,20 +61,20 @@ class _DateFilterBarState extends State<DateFilterBar> {
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
-                  color: isActive ? AppColors.darkAccent.withValues(alpha: 0.15) : AppColors.darkBgCard,
+                  color: isActive ? context.accentColor.withValues(alpha: 0.15) : context.bgCard,
                   borderRadius: BorderRadius.circular(AppConstants.radiusChip),
-                  border: Border.all(color: isActive ? AppColors.darkAccent : AppColors.darkBorder),
+                  border: Border.all(color: isActive ? context.accentColor : context.borderColor),
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Icon(Icons.date_range, size: AppConstants.iconSm,
-                      color: isActive ? AppColors.darkAccent : AppColors.darkTextSecondary),
+                      color: isActive ? context.accentColor : context.textSecondary),
                     SizedBox(width: 4),
                     Text(
                       widget.customLabel ?? 'مخصص',
                       style: AppTextStyles.categoryChip(context).copyWith(
-                        color: isActive ? AppColors.darkAccent : AppColors.darkTextSecondary,
+                        color: isActive ? context.accentColor : context.textSecondary,
                       ),
                     ),
                   ],

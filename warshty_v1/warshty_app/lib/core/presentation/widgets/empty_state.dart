@@ -28,10 +28,10 @@ class EmptyState extends StatelessWidget {
               width: 70,
               height: 70,
               decoration: BoxDecoration(
-                color: AppColors.darkBgCard,
+                color: context.bgCard,
                 borderRadius: BorderRadius.circular(35),
               ),
-              child: Icon(icon, color: AppColors.darkTextMuted, size: 28),
+              child: Icon(icon, color: context.textMuted, size: 28),
             ),
             SizedBox(height: AppConstants.spacing16),
             Text(title, style: AppTextStyles.emptyTitle(context)),

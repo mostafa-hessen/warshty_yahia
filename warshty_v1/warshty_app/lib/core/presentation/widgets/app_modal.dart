@@ -29,12 +29,12 @@ class AppModal extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.darkBgSecondary,
+        color: context.bgSecondary,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(AppConstants.radius3xl)),
         border: Border(
-          top: BorderSide(color: AppColors.darkBorder),
-          left: BorderSide(color: AppColors.darkBorder),
-          right: BorderSide(color: AppColors.darkBorder),
+          top: BorderSide(color: context.borderColor),
+          left: BorderSide(color: context.borderColor),
+          right: BorderSide(color: context.borderColor),
         ),
       ),
       child: ClipRRect(
@@ -65,10 +65,10 @@ class AppModal extends StatelessWidget {
             width: 30,
             height: 30,
             decoration: BoxDecoration(
-              color: AppColors.darkBgCard,
+              color: context.bgCard,
               borderRadius: BorderRadius.circular(15),
             ),
-            child: Icon(Icons.close, size: 16, color: AppColors.darkTextSecondary),
+            child: Icon(Icons.close, size: 16, color: context.textSecondary),
           ),
         ),
       ],

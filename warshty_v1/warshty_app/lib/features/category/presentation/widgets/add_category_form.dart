@@ -80,8 +80,8 @@ class _AddCategoryFormState extends State<AddCategoryForm> {
             child: ElevatedButton(
               onPressed: _submitting ? null : _submit,
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.darkAccent,
-                foregroundColor: AppColors.darkTextPrimary,
+                backgroundColor: context.accentColor,
+                foregroundColor: context.textPrimary,
                 padding: const EdgeInsets.symmetric(vertical: 14),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(AppConstants.radiusMd),
@@ -107,14 +107,14 @@ class _AddCategoryFormState extends State<AddCategoryForm> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.darkAccent.withValues(alpha: 0.15) : AppColors.darkBgCard,
+          color: isSelected ? context.accentColor.withValues(alpha: 0.15) : context.bgCard,
           borderRadius: BorderRadius.circular(AppConstants.radiusLg),
-          border: Border.all(color: isSelected ? AppColors.darkAccent : AppColors.darkBorder),
+          border: Border.all(color: isSelected ? context.accentColor : context.borderColor),
         ),
         child: Text(
           type.displayName,
           style: AppTextStyles.formInput(context).copyWith(
-            color: isSelected ? AppColors.darkAccent : AppColors.darkTextSecondary,
+            color: isSelected ? context.accentColor : context.textSecondary,
           ),
         ),
       ),

@@ -24,9 +24,9 @@ class CategoryCard extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.darkBgCard,
+        color: context.bgCard,
         borderRadius: BorderRadius.circular(AppConstants.radiusXl),
-        border: Border.all(color: AppColors.darkBorder),
+        border: Border.all(color: context.borderColor),
       ),
       child: Material(
         color: Colors.transparent,

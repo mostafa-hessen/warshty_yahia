@@ -98,9 +98,9 @@ class _TreasuryScreenState extends State<TreasuryScreen> {
                         child: Container(
                           margin: EdgeInsets.symmetric(horizontal: AppConstants.spacing16),
                           decoration: BoxDecoration(
-                            color: AppColors.darkBgCard,
+                            color: context.bgCard,
                             borderRadius: BorderRadius.circular(AppConstants.radiusXl),
-                            border: Border.all(color: AppColors.darkBorder),
+                            border: Border.all(color: context.borderColor),
                           ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -110,7 +110,7 @@ class _TreasuryScreenState extends State<TreasuryScreen> {
                                 child: Text(
                                   'المعاملات (${state.transactions.length})',
                                   style: TextStyle(
-                                    color: AppColors.darkTextSecondary,
+                                    color: context.textSecondary,
                                     fontSize: 13,
                                     fontWeight: FontWeight.w600,
                                   ),
@@ -122,7 +122,7 @@ class _TreasuryScreenState extends State<TreasuryScreen> {
                                   child: ListView.separated(
                                     physics: const AlwaysScrollableScrollPhysics(),
                                     itemCount: state.displayList.length,
-                                    separatorBuilder: (_, __) => Divider(height: 1, color: AppColors.darkBorder),
+                                    separatorBuilder: (_, __) => Divider(height: 1, color: context.borderColor),
                                     itemBuilder: (_, i) {
                                       final tx = state.displayList[i];
                                       return TreasuryTxItem(
@@ -150,7 +150,7 @@ class _TreasuryScreenState extends State<TreasuryScreen> {
                 _showAddModal(context);
               }
             },
-            backgroundColor: AppColors.darkAccent,
+            backgroundColor: context.accentColor,
             child: const Icon(Icons.add, color: Colors.black),
           ),
         );
@@ -245,7 +245,7 @@ class _TreasuryScreenState extends State<TreasuryScreen> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        backgroundColor: AppColors.darkBgSecondary,
+        backgroundColor: context.bgSecondary,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppConstants.radiusLg),
         ),
@@ -270,7 +270,7 @@ class _TreasuryScreenState extends State<TreasuryScreen> {
                       duration: const Duration(seconds: 4),
                       action: SnackBarAction(
                         label: 'تراجع',
-                        textColor: AppColors.darkAccent,
+                        textColor: context.accentColor,
                         onPressed: () {
                           context.read<TreasuryCubit>().undoDelete();
                         },

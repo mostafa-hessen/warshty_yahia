@@ -29,10 +29,10 @@ class PersonsReportSection extends StatelessWidget {
       children: [
         _buildStatRow(context, 'إجمالي الأشخاص', '$total'),
         _buildStatRow(context, 'إجمالي الرصيد', AppFormatters.currency(totalBalance),
-          color: totalBalance >= 0 ? AppColors.darkAccent : AppColors.danger),
+          color: totalBalance >= 0 ? context.accentColor : AppColors.danger),
         if (topPersons.isNotEmpty) ...[
           SizedBox(height: AppConstants.spacing10),
-          const Divider(height: 1, color: AppColors.darkBorder),
+          Divider(height: 1, color: context.borderColor),
           SizedBox(height: AppConstants.spacing8),
           Text('أبرز الأشخاص', style: AppTextStyles.detailLabel(context)),
           ...topPersons.take(3).map((p) => Padding(
@@ -91,13 +91,13 @@ class _PersonsDetailModal extends StatelessWidget {
       borderRadius: BorderRadius.vertical(top: Radius.circular(AppConstants.radius3xl)),
       child: Container(
         height: MediaQuery.of(context).size.height * 0.5,
-        decoration: BoxDecoration(color: AppColors.darkBgSecondary),
+        decoration: BoxDecoration(color: context.bgSecondary),
         child: Column(
           children: [
             Container(
               padding: EdgeInsets.all(AppConstants.spacing16),
               decoration: BoxDecoration(
-                border: Border(bottom: BorderSide(color: AppColors.darkBorder)),
+                border: Border(bottom: BorderSide(color: context.borderColor)),
               ),
               child: Row(
                 children: [
@@ -107,7 +107,7 @@ class _PersonsDetailModal extends StatelessWidget {
                   const Spacer(),
                   IconButton(
                     onPressed: () => Navigator.pop(context),
-                    icon: Icon(Icons.close, color: AppColors.darkTextSecondary, size: AppConstants.iconLg),
+                    icon: Icon(Icons.close, color: context.textSecondary, size: AppConstants.iconLg),
                   ),
                 ],
               ),
@@ -127,7 +127,7 @@ class _PersonsDetailModal extends StatelessWidget {
               child: ListView.separated(
                 padding: EdgeInsets.symmetric(horizontal: AppConstants.spacing16),
                 itemCount: topPersons.length,
-                separatorBuilder: (_, __) => Divider(height: 1, color: AppColors.darkBorder),
+                separatorBuilder: (_, __) => Divider(height: 1, color: context.borderColor),
                 itemBuilder: (_, i) {
                   final p = topPersons[i];
                   return Padding(
@@ -163,9 +163,9 @@ class _PersonsDetailModal extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.all(AppConstants.spacing12),
         decoration: BoxDecoration(
-          color: AppColors.darkBgCard,
-          borderRadius: BorderRadius.circular(AppConstants.radiusMd),
-          border: Border.all(color: AppColors.darkBorder),
+        color: context.bgCard,
+        borderRadius: BorderRadius.circular(AppConstants.radiusMd),
+        border: Border.all(color: context.borderColor),
         ),
         child: Column(
           children: [
