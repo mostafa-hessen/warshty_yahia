@@ -8,6 +8,7 @@ import '../../features/persons/presentation/screens/persons_screen.dart';
 import '../../features/persons/presentation/screens/person_detail_screen.dart';
 import '../../features/treasury/presentation/screens/treasury_screen.dart';
 import '../../features/reports/presentation/screens/reports_screen.dart';
+import '../../features/settings/presentation/screens/settings_screen.dart';
 import '../presentation/app_shell.dart';
 import 'route_paths.dart';
 
@@ -78,6 +79,10 @@ final router = GoRouter(
     GoRoute(
       path: RoutePaths.categories,
       builder: (context, state) => const CategoriesScreen(),
+    ),
+    GoRoute(
+      path: RoutePaths.settings,
+      builder: (context, state) => const SettingsScreen(),
     ),
   ],
 );

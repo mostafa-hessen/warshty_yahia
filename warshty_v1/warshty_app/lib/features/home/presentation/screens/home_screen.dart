@@ -23,7 +23,14 @@ class HomeScreen extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: const Text('ورشتي'),
-          actions: [const ThemeToggleButton()],
+          actions: [
+            IconButton(
+              icon: Icon(Icons.settings_rounded),
+              tooltip: 'الإعدادات',
+              onPressed: () => context.push('/settings'),
+            ),
+            const ThemeToggleButton(),
+          ],
         ),
         body: BlocBuilder<HomeCubit, HomeState>(
           builder: (context, state) {

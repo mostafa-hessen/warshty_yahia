@@ -93,9 +93,16 @@ class DatabaseHelper {
     }
   }
 
-  // ── Close (للـ Testing بس) ────────────────────────────────
+  // ── DB Path ────────────────────────────────────────────────
+  Future<String> getDbPath() async {
+    final dbPath = await getDatabasesPath();
+    return join(dbPath, AppConstants.dbName);
+  }
+
+  // ── Close ──────────────────────────────────────────────────
   Future<void> close() async {
-    await _database?.close();
+    final db = _database;
     _database = null;
+    await db?.close();
   }
 }

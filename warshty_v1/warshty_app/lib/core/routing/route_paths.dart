@@ -5,6 +5,7 @@ abstract final class RoutePaths {
   static const categories = '/categories';
   static const treasury = '/treasury';
   static const reports = '/reports';
+  static const settings = '/settings';
 
   // للمسارات الديناميكية (لما نضيفها بعدين)
   static String workshop(int id) => '/workshop/$id';
