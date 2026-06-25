@@ -22,6 +22,7 @@ import '../../features/persons/data/repositories/person_repository_impl.dart';
 import '../../features/persons/domain/repositories/person_repository.dart';
 import '../../features/persons/presentation/cubits/person_cubit.dart';
 import '../../features/reports/presentation/cubits/reports_cubit.dart';
+import '../../features/home/presentation/cubits/home_cubit.dart';
 
 final sl = GetIt.instance;
 
@@ -78,5 +79,14 @@ Future<void> init() async {
     jobDataSource: sl(),
     personDataSource: sl(),
     workshopDataSource: sl(),
+  ));
+
+  // ==========================================================
+  //  Home Feature
+  // ==========================================================
+  sl.registerFactory(() => HomeCubit(
+    treasuryDataSource: sl(),
+    jobDataSource: sl(),
+    personDataSource: sl(),
   ));
 }
