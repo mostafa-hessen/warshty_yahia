@@ -21,6 +21,7 @@ import '../../features/persons/data/datasources/person_local_datasource.dart';
 import '../../features/persons/data/repositories/person_repository_impl.dart';
 import '../../features/persons/domain/repositories/person_repository.dart';
 import '../../features/persons/presentation/cubits/person_cubit.dart';
+import '../../features/reports/presentation/cubits/reports_cubit.dart';
 
 final sl = GetIt.instance;
 
@@ -68,4 +69,14 @@ Future<void> init() async {
   sl.registerLazySingleton(() => JobLocalDataSource(sl()));
   sl.registerLazySingleton<JobRepository>(() => JobRepositoryImpl(sl()));
   sl.registerFactory(() => JobCubit(sl(), sl()));
+
+  // ==========================================================
+  //  Reports Feature
+  // ==========================================================
+  sl.registerFactory(() => ReportsCubit(
+    treasuryDataSource: sl(),
+    jobDataSource: sl(),
+    personDataSource: sl(),
+    workshopDataSource: sl(),
+  ));
 }
