@@ -8,13 +8,23 @@ import '../../features/persons/presentation/screens/persons_screen.dart';
 import '../../features/persons/presentation/screens/person_detail_screen.dart';
 import '../../features/treasury/presentation/screens/treasury_screen.dart';
 import '../../features/reports/presentation/screens/reports_screen.dart';
+import '../../features/auth/presentation/screens/splash_screen.dart';
+import '../../features/auth/presentation/screens/password_screen.dart';
 import '../../features/settings/presentation/screens/settings_screen.dart';
 import '../presentation/app_shell.dart';
 import 'route_paths.dart';
 
 final router = GoRouter(
-  initialLocation: RoutePaths.home,
+  initialLocation: RoutePaths.splash,
   routes: [
+    GoRoute(
+      path: RoutePaths.splash,
+      builder: (context, state) => const SplashScreen(),
+    ),
+    GoRoute(
+      path: RoutePaths.password,
+      builder: (context, state) => const PasswordScreen(),
+    ),
     StatefulShellRoute.indexedStack(
       builder: (context, state, navigationShell) =>
           AppShell(navigationShell: navigationShell),

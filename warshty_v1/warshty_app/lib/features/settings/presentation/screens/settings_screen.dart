@@ -149,6 +149,8 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 
+  static String _p(int n) => n.toString().padLeft(2, '0');
+
   // ── Backup Logic ───────────────────────────────────────────
   Future<void> _doBackup(BuildContext context) async {
     try {
@@ -157,7 +159,9 @@ class SettingsScreen extends StatelessWidget {
 
       final src = await helper.getDbPath();
       final tempDir = await getTemporaryDirectory();
-      final backupPath = '${tempDir.path}/warshty_backup.db';
+      final now = DateTime.now();
+      final ts = '${now.year}-${_p(now.month)}-${_p(now.day)}_${_p(now.hour)}-${_p(now.minute)}-${_p(now.second)}';
+      final backupPath = '${tempDir.path}/warshty_$ts.db';
       await File(src).copy(backupPath);
 
       await helper.database;

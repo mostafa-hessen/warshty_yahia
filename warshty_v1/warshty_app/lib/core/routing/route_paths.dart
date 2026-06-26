@@ -1,4 +1,6 @@
 abstract final class RoutePaths {
+  static const splash = '/splash';
+  static const password = '/password';
   static const home = '/home';
   static const persons = '/persons';
   static const jobs = '/jobs';
